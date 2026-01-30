@@ -1325,7 +1325,7 @@
         // 보안 관련 변수
         let isUnlocked = false;
         let lockTimer = null;
-        let remainingTime = 30 * 60; // 30분 (초 단위)
+        let remainingTime = 5 * 60; // 5분 (초 단위)
         let lockInterval = null;
 
         // 요일 배열
@@ -1390,7 +1390,7 @@
             
             if (password === settings.editPassword) {
                 isUnlocked = true;
-                remainingTime = 30 * 60; // 30분 리셋
+                remainingTime = 5 * 60; // 5분 리셋
                 
                 // 자동 잠금 타이머 시작
                 startAutoLockTimer();
@@ -1402,7 +1402,7 @@
                 updateLockStatus();
                 
                 // 알림 메시지
-                showAlert('잠금이 해제되었습니다! 30분 후 자동으로 잠깁니다.');
+                showAlert('잠금이 해제되었습니다! 5분 후 자동으로 잠깁니다.');
                 
                 // 활동 타이머 리셋 함수 연결
                 resetLockTimer();
@@ -1461,7 +1461,7 @@
         // 타이머 리셋 (활동 감지)
         function resetLockTimer() {
             if (isUnlocked) {
-                remainingTime = 30 * 60; // 30분으로 리셋
+                remainingTime = 5 * 60; // 5분으로 리셋
                 updateTimerDisplay();
             }
         }
