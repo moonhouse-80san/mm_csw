@@ -7,6 +7,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#2196F3">
     <title>회원 관리 앱</title>
+    <link rel="manifest" href="manifest.json">
     <style>
         * {
             margin: 0;
@@ -181,35 +182,35 @@
             border-color: #2196F3;
         }
 
-        .photo-btn {
-            padding: 12px;
-            background: linear-gradient(135deg, #2196F3, #1976D2);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .photo-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
-        }
-
-        .photo-preview-container {
-            margin-top: 10px;
-            display: none;
+        /* 사진 업로드 스타일 */
+        .photo-upload-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         .photo-preview {
-            position: relative;
-            width: 150px;
-            height: 150px;
+            width: 100%;
+            height: 200px;
+            border: 2px dashed #e0e0e0;
             border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
             overflow: hidden;
-            border: 2px solid #e0e0e0;
+            background: #f8f9fa;
+            transition: all 0.3s;
+        }
+
+        .photo-preview:hover {
+            border-color: #2196F3;
+            background: #f0f7ff;
+        }
+
+        .photo-preview.has-image {
+            border-style: solid;
+            padding: 0;
         }
 
         .photo-preview img {
@@ -218,21 +219,30 @@
             object-fit: cover;
         }
 
+        .photo-placeholder {
+            text-align: center;
+            color: #999;
+        }
+
+        .photo-placeholder p {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
         .remove-photo-btn {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            width: 30px;
-            height: 30px;
+            padding: 8px 16px;
             background: #f44336;
             color: white;
             border: none;
-            border-radius: 50%;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .remove-photo-btn:hover {
+            background: #d32f2f;
         }
 
         .time-group {
@@ -367,24 +377,33 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             display: flex;
             gap: 15px;
-            align-items: flex-start;
         }
 
-        .member-photo-container {
+        .member-photo-thumb {
             width: 80px;
             height: 80px;
+            border-radius: 8px;
+            overflow: hidden;
             flex-shrink: 0;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .member-photo {
+        .member-photo-thumb img {
             width: 100%;
             height: 100%;
-            border-radius: 8px;
             object-fit: cover;
-            border: 2px solid #e0e0e0;
         }
 
-        .member-info-container {
+        .member-photo-thumb svg {
+            width: 40px;
+            height: 40px;
+            color: #ccc;
+        }
+
+        .member-details {
             flex: 1;
         }
 
@@ -683,23 +702,11 @@
 
             .member-card {
                 flex-direction: column;
-                align-items: center;
-                text-align: center;
             }
 
-            .member-photo-container {
-                width: 100px;
-                height: 100px;
-            }
-
-            .member-header {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .member-actions {
+            .member-photo-thumb {
                 width: 100%;
-                justify-content: center;
+                height: 150px;
             }
         }
     </style>
@@ -710,7 +717,7 @@
             <div class="sync-status" id="syncStatus">☁️ 동기화</div>
             <div class="settings-icon" onclick="openSettings()">
                 <svg viewBox="0 0 24 24">
-                    <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c.04-0.24.24-0.41.48-0.41 h3.84c0.24,0,0.43,0.17,0.47,0.41L19.25,5.35c0.59,0.24,1.13,0.56,1.62,0.94l2.39-0.96c0.22-0.08,0.47,0,0.59,0.22l1.92,3.32 c0.12,0.22,0.07,0.47-0.12,0.61l-2.03,1.58c0.05,0.3,0.07,0.63,0.07,0.94s-0.02,0.64-0.07,0.94l2.03,1.58 c0.18,0.14,0.23,0.41,0.12,0.61l-1.92,3.32c-0.12,0.22-0.37,0.29-0.59,0.22l-2.39-0.96c-0.5,0.38-1.03,0.7-1.62,0.94l-0.36,2.54 c-0.05,0.24-0.24,0.41-0.47,0.41h-3.84c-0.24,0-0.44-0.17-0.48-0.41l-0.36-2.54c-0.59-0.24-1.13-0.56-1.62-0.94l-2.39,0.96 c-0.22,0.08-0.47,0-0.59-0.22l-1.92-3.32c-0.12-0.22-0.07-0.47,0.12-0.61l2.03-1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94 l-2.03,1.58c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94 l0.36,2.54c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92,3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
+                    <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c.04-0.24.24-0.41.48-0.41 h3.84c0.24,0,0.43,0.17,0.47,0.41L19.25,5.35c0.59,0.24,1.13,0.56,1.62,0.94l2.39-0.96c0.22-0.08,0.47,0,0.59,0.22l1.92,3.32 c0.12,0.22,0.07,0.47-0.12,0.61l-2.03,1.58c0.05,0.3,0.07,0.63,0.07,0.94s-0.02,0.64-0.07,0.94l2.03,1.58 c0.18,0.14,0.23,0.41,0.12,0.61l-1.92,3.32c-0.12,0.22-0.37,0.29-0.59,0.22l-2.39-0.96c-0.5,0.38-1.03,0.7-1.62,0.94l-0.36,2.54 c-0.05,0.24-0.24,0.41-0.47,0.41h-3.84c-0.24,0-0.44-0.17-0.48-0.41l-0.36-2.54c-0.59-0.24-1.13-0.56-1.62-0.94l-2.39,0.96 c-0.22,0.08-0.47,0-0.59-0.22l-1.92-3.32c-0.12-0.22-0.07-0.47,0.12-0.61l2.03-1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94 l-2.03,1.58c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94 l0.36,2.54c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
                 </svg>
             </div>
             <h1>👥 회원 관리</h1>
@@ -739,30 +746,21 @@
                     <label for="phone">전화번호</label>
                     <input type="tel" id="phone" placeholder="010-1234-5678">
                 </div>
-                
                 <div class="form-group full-width">
                     <label for="photo">회원 사진</label>
-                    <div style="display: flex; flex-direction: column; gap: 10px;">
-                        <div style="display: flex; gap: 10px;">
-                            <button type="button" class="photo-btn" onclick="openCamera()" style="flex: 1;">
-                                📷 카메라로 찍기
-                            </button>
-                            <button type="button" class="photo-btn" onclick="document.getElementById('photoInput').click()" style="flex: 1;">
-                                📁 갤러리에서 선택
-                            </button>
-                        </div>
-                        
-                        <div class="photo-preview-container" id="photoPreviewContainer">
-                            <div class="photo-preview">
-                                <img id="photoPreview" src="" alt="회원 사진 미리보기">
-                                <button type="button" class="remove-photo-btn" onclick="removePhoto()">🗑️</button>
+                    <div class="photo-upload-section">
+                        <input type="file" id="photoInput" accept="image/*" capture="environment" style="display: none;" onchange="handlePhotoUpload(event)">
+                        <div class="photo-preview" id="photoPreview" onclick="document.getElementById('photoInput').click()">
+                            <div class="photo-placeholder">
+                                <svg viewBox="0 0 24 24" fill="currentColor" style="width: 40px; height: 40px; color: #999;">
+                                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                                </svg>
+                                <p>사진 추가</p>
                             </div>
                         </div>
-                        
-                        <input type="file" id="photoInput" accept="image/*" style="display: none;" onchange="handlePhotoUpload(event)">
+                        <button type="button" class="remove-photo-btn" id="removePhotoBtn" onclick="removePhoto()" style="display: none;">사진 삭제</button>
                     </div>
                 </div>
-
                 <div class="form-group">
                     <label for="registerDate">회원등록일</label>
                     <input type="date" id="registerDate">
@@ -872,22 +870,6 @@
         </div>
     </div>
 
-    <!-- 카메라 모달 -->
-    <div id="cameraModal" class="modal">
-        <div class="modal-content" style="max-width: 600px;">
-            <div class="modal-header">
-                <h2>📷 카메라</h2>
-                <button class="close-btn" onclick="closeCamera()">×</button>
-            </div>
-            <div style="text-align: center;">
-                <video id="cameraVideo" autoplay style="width: 100%; height: auto; border-radius: 10px;"></video>
-                <div style="margin-top: 20px;">
-                    <button class="btn" style="background: #4CAF50;" onclick="capturePhoto()">사진 찍기</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div id="passwordModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -964,16 +946,20 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 
     <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+
         // Firebase 설정
         const firebaseConfig = {
-            apiKey: "AIzaSyD4GrNs2Vw9tSxGHSpKp9MvE8hsJwGo34U",
-            authDomain: "mmcsw-880ce.firebaseapp.com",
-            databaseURL: "https://mmcsw-880ce-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "mmcsw-880ce",
-            storageBucket: "mmcsw-880ce.firebasestorage.app",
-            messagingSenderId: "78114283532",
-            appId: "1:78114283532:web:7d32e87fae15796e684e29"
-        };
+		  apiKey: "AIzaSyD4GrNs2Vw9tSxGHSpKp9MvE8hsJwGo34U",
+		  authDomain: "mmcsw-880ce.firebaseapp.com",
+		  databaseURL: "https://mmcsw-880ce-default-rtdb.asia-southeast1.firebasedatabase.app",
+		  projectId: "mmcsw-880ce",
+		  storageBucket: "mmcsw-880ce.firebasestorage.app",
+		  messagingSenderId: "78114283532",
+		  appId: "1:78114283532:web:7d32e87fae15796e684e29"
+		};
 
         let members = [];
         let filteredMembers = [];
@@ -986,8 +972,7 @@
             adminPassword: '0000'
         };
         let firebaseDb = null;
-        let currentPhotoData = null;
-        let cameraStream = null;
+        let currentPhotoData = null; // 현재 선택된 사진 데이터
 
         // 요일 배열
         const daysOfWeek = ['월', '화', '수', '목', '금', '토', '일'];
@@ -1001,7 +986,7 @@
             '일': '일요일'
         };
 
-        // Firebase 초기화
+        // Firebase 자동 초기화
         try {
             firebase.initializeApp(firebaseConfig);
             firebaseDb = firebase.database();
@@ -1016,6 +1001,7 @@
             const file = event.target.files[0];
             if (!file) return;
 
+            // 파일 크기 체크 (5MB 제한)
             if (file.size > 5 * 1024 * 1024) {
                 showAlert('사진 크기는 5MB 이하여야 합니다.');
                 return;
@@ -1024,87 +1010,38 @@
             const reader = new FileReader();
             reader.onload = function(e) {
                 currentPhotoData = e.target.result;
-                displayPhotoPreview();
+                displayPhoto(currentPhotoData);
             };
             reader.readAsDataURL(file);
         }
 
-        // 사진 미리보기 표시
-        function displayPhotoPreview() {
-            const container = document.getElementById('photoPreviewContainer');
-            const preview = document.getElementById('photoPreview');
+        // 사진 표시
+        function displayPhoto(photoData) {
+            const previewEl = document.getElementById('photoPreview');
+            const removeBtn = document.getElementById('removePhotoBtn');
             
-            if (currentPhotoData) {
-                preview.src = currentPhotoData;
-                container.style.display = 'block';
-            } else {
-                container.style.display = 'none';
-            }
+            previewEl.innerHTML = `<img src="${photoData}" alt="회원 사진">`;
+            previewEl.classList.add('has-image');
+            removeBtn.style.display = 'block';
         }
 
         // 사진 삭제
         function removePhoto() {
             currentPhotoData = null;
-            displayPhotoPreview();
+            const previewEl = document.getElementById('photoPreview');
+            const removeBtn = document.getElementById('removePhotoBtn');
+            
+            previewEl.innerHTML = `
+                <div class="photo-placeholder">
+                    <svg viewBox="0 0 24 24" fill="currentColor" style="width: 40px; height: 40px; color: #999;">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                    <p>사진 추가</p>
+                </div>
+            `;
+            previewEl.classList.remove('has-image');
+            removeBtn.style.display = 'none';
             document.getElementById('photoInput').value = '';
-        }
-
-        // 카메라 열기
-        async function openCamera() {
-            try {
-                const constraints = {
-                    video: {
-                        facingMode: 'environment',
-                        width: { ideal: 1280 },
-                        height: { ideal: 720 }
-                    },
-                    audio: false
-                };
-                
-                cameraStream = await navigator.mediaDevices.getUserMedia(constraints);
-                const video = document.getElementById('cameraVideo');
-                video.srcObject = cameraStream;
-                document.getElementById('cameraModal').classList.add('active');
-            } catch (error) {
-                console.error('카메라 접근 실패:', error);
-                showAlert('카메라에 접근할 수 없습니다. 갤러리에서 사진을 선택해주세요.');
-                document.getElementById('photoInput').click();
-            }
-        }
-
-        // 카메라 닫기
-        function closeCamera() {
-            if (cameraStream) {
-                cameraStream.getTracks().forEach(track => track.stop());
-                cameraStream = null;
-            }
-            
-            const video = document.getElementById('cameraVideo');
-            video.srcObject = null;
-            document.getElementById('cameraModal').classList.remove('active');
-        }
-
-        // 사진 찍기
-        function capturePhoto() {
-            const video = document.getElementById('cameraVideo');
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
-            
-            canvas.toBlob((blob) => {
-                if (blob) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        currentPhotoData = e.target.result;
-                        displayPhotoPreview();
-                        closeCamera();
-                    };
-                    reader.readAsDataURL(blob);
-                }
-            }, 'image/jpeg', 0.8);
         }
 
         function loadFromFirebase() {
@@ -1153,6 +1090,7 @@
             firebaseDb.ref('settings').set(settings);
         }
 
+        // 시간 충돌 검사 함수
         function checkTimeConflict(day1, startTime1, endTime1, day2, startTime2, endTime2, excludeIndex = null) {
             for (let i = 0; i < members.length; i++) {
                 if (excludeIndex !== null && i === excludeIndex) continue;
@@ -1305,15 +1243,17 @@
                 
                 // 사진 썸네일
                 const photoThumb = member.photo ? 
-                    `<img src="${member.photo}" class="member-photo" alt="${member.name}">` :
-                    `<div class="member-photo" style="display: flex; align-items: center; justify-content: center; background: #f0f0f0; color: #999; font-size: 32px;">👤</div>`;
+                    `<img src="${member.photo}" alt="${member.name}">` :
+                    `<svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>`;
                 
                 return `
                 <div class="member-card">
-                    <div class="member-photo-container">
+                    <div class="member-photo-thumb">
                         ${photoThumb}
                     </div>
-                    <div class="member-info-container">
+                    <div class="member-details">
                         <div class="member-header">
                             <div class="member-name">${member.name}</div>
                             <div class="member-actions">
@@ -1480,7 +1420,7 @@
             const member = {
                 name,
                 phone,
-                photo: currentPhotoData,
+                photo: currentPhotoData || null,
                 registerDate: registerDate || new Date().toISOString().split('T')[0],
                 fee: fee ? parseInt(fee) : null,
                 day1: day1 || null,
@@ -1597,9 +1537,10 @@
             document.getElementById('email').value = member.email || '';
             document.getElementById('address').value = member.address || '';
             
+            // 사진 표시
             if (member.photo) {
                 currentPhotoData = member.photo;
-                displayPhotoPreview();
+                displayPhoto(member.photo);
             } else {
                 removePhoto();
             }
