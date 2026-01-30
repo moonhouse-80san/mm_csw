@@ -31,30 +31,31 @@
             overflow: hidden;
         }
 
-        /* 암호 입력 섹션 - 주황색 배경 */
+        /* 암호 입력 섹션 - 주황색 배경, 크기 축소 */
         .password-section {
             background: linear-gradient(135deg, #FF9800, #F57C00);
-            padding: 15px 20px;
+            padding: 12px 15px; /* 크기 축소 */
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px; /* 간격 축소 */
             border-bottom: 2px solid #e0e0e0;
         }
 
         .password-input-group {
             display: flex;
-            gap: 10px;
+            gap: 8px; /* 간격 축소 */
             align-items: center;
         }
 
         .password-input {
             flex: 1;
-            padding: 12px 15px;
+            padding: 10px 12px; /* 크기 축소 */
             border: 2px solid rgba(255,255,255,0.5);
-            border-radius: 10px;
-            font-size: 16px;
+            border-radius: 8px; /* 둥글기 축소 */
+            font-size: 14px; /* 폰트 크기 축소 */
             background: rgba(255,255,255,0.9);
             color: #333;
+            height: 40px; /* 높이 고정 */
         }
 
         .password-input:focus {
@@ -64,16 +65,17 @@
         }
 
         .unlock-btn {
-            padding: 12px 20px;
+            padding: 8px 15px; /* 크기 축소 */
             background: #2196F3;
             color: white;
             border: none;
-            border-radius: 10px;
-            font-size: 16px;
+            border-radius: 8px; /* 둥글기 축소 */
+            font-size: 14px; /* 폰트 크기 축소 */
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
             white-space: nowrap;
+            height: 40px; /* 높이 고정 */
         }
 
         .unlock-btn:hover {
@@ -85,14 +87,14 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            font-size: 14px;
+            gap: 6px; /* 간격 축소 */
+            font-size: 12px; /* 폰트 크기 축소 */
             color: white;
             font-weight: 500;
-            padding: 5px 10px;
+            padding: 4px 8px; /* 패딩 축소 */
             background: rgba(0,0,0,0.2);
-            border-radius: 15px;
-            margin-top: 5px;
+            border-radius: 12px; /* 둥글기 축소 */
+            margin-top: 3px; /* 마진 축소 */
         }
 
         .lock-status.locked {
@@ -103,6 +105,7 @@
             color: #4CAF50;
         }
 
+        /* 나머지 CSS는 동일하게 유지 */
         .header {
             background: linear-gradient(135deg, #2196F3, #1976D2);
             color: white;
@@ -539,69 +542,9 @@
             background: #f44336;
         }
 
-        /* 잠금 상태에서 비활성화된 수정/삭제 버튼 */
-        .btn-edit-disabled, .btn-delete-disabled {
-            background: #9E9E9E !important;
-            cursor: not-allowed;
-            opacity: 0.6;
-            position: relative;
-        }
-
-        .btn-edit-disabled::after,
-        .btn-delete-disabled::after {
-            content: "🔒 잠금 해제 필요";
-            position: absolute;
-            top: -30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #333;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 12px;
-            white-space: nowrap;
-            opacity: 0;
-            transition: opacity 0.3s;
-            pointer-events: none;
-            z-index: 1000;
-        }
-
-        .btn-edit-disabled:hover::after,
-        .btn-delete-disabled:hover::after {
-            opacity: 1;
-        }
-
-        .member-info {
-            font-size: 14px;
-            color: #666;
-            line-height: 1.8;
-        }
-
-        .member-info div {
-            margin-bottom: 3px;
-        }
-
-        .info-badge {
-            display: inline-block;
-            padding: 3px 8px;
-            background: #e3f2fd;
-            color: #1976d2;
-            border-radius: 4px;
-            font-size: 12px;
-            margin-right: 5px;
-            margin-top: 5px;
-        }
-
-        .schedule-badge {
-            display: inline-block;
-            padding: 3px 8px;
-            background: #f0f4ff;
-            color: #4a6bff;
-            border-radius: 4px;
-            font-size: 12px;
-            margin-right: 5px;
-            margin-top: 5px;
-            border-left: 3px solid #4a6bff;
+        /* 잠금 상태에서 수정/삭제 버튼 숨기기 */
+        .btn-hidden {
+            display: none !important;
         }
 
         .empty-state {
@@ -994,7 +937,7 @@
             <div class="sync-status" id="syncStatus">☁️ 동기화</div>
             <div class="settings-icon" onclick="openSettings()">
                 <svg viewBox="0 0 24 24">
-                    <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c.04-0.24.24-0.41.48-0.41 h3.84c0.24,0,0.43,0.17,0.47,0.41L19.25,5.35c0.59,0.24,1.13,0.56,1.62,0.94l2.39-0.96c0.22-0.08,0.47,0,0.59,0.22l1.92,3.32 c0.12,0.22,0.07,0.47-0.12,0.61l-2.03,1.58c0.05,0.3,0.07,0.63,0.07,0.94s-0.02,0.64-0.07,0.94l2.03,1.58 c0.18,0.14,0.23,0.41,0.12,0.61l-1.92,3.32c-0.12,0.22-0.37,0.29-0.59,0.22l-2.39-0.96c-0.5,0.38-1.03,0.7-1.62,0.94l-0.36,2.54 c-0.05,0.24-0.24,0.41-0.47,0.41h-3.84c-0.24,0-0.44-0.17-0.48-0.41l-0.36-2.54c-0.59-0.24-1.13-0.56-1.62-0.94l-2.39,0.96 c-0.22,0.08-0.47,0-0.59-0.22l-1.92,3.32c-0.12-0.22-0.07-0.47,0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
+                    <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c.04-0.24.24-0.41.48-0.41 h3.84c0.24,0,0.43,0.17,0.47,0.41L19.25,5.35c0.59,0.24,1.13,0.56,1.62,0.94l2.39-0.96c0.22-0.08,0.47,0,0.59,0.22l1.92,3.32 c0.12,0.22,0.07,0.47-0.12,0.61l-2.03,1.58c0.05,0.3,0.07,0.63,0.07,0.94s-0.02,0.64-0.07,0.94l2.03,1.58 c0.18,0.14,0.23,0.41,0.12,0.61l-1.92,3.32c-0.12,0.22-0.37,0.29-0.59,0.22l-2.39-0.96c-0.5,0.38-1.03,0.7-1.62,0.94l-0.36,2.54 c 0.05,0.24-0.24,0.41-0.47,0.41h-3.84c-0.24,0-0.44-0.17-0.48-0.41l-0.36-2.54c-0.59-0.24-1.13-0.56-1.62-0.94l-2.39,0.96 c-0.22,0.08-0.47,0-0.59-0.22l-1.92,3.32c-0.12-0.22-0.07-0.47,0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
                 </svg>
             </div>
             <h1>👥 회원 관리</h1>
@@ -1157,7 +1100,7 @@
             </div>
         </div>
 
-        <!-- 암호 입력 섹션 - 주황색 배경 -->
+        <!-- 암호 입력 섹션 - 주황색 배경, 크기 축소 -->
         <div class="password-section">
             <div class="password-input-group">
                 <input type="password" 
@@ -1167,13 +1110,12 @@
                        onkeyup="if(event.key === 'Enter') unlockEditButtons()">
                 <button class="unlock-btn" onclick="unlockEditButtons()">
                     🔓 잠금 해제 
-					<div class="lock-status locked" id="lockStatus">
-						🔒 잠김 상태 - 수정/삭제 기능 사용 불가
-						<span class="lock-timer" id="lockTimer"></span>
-					</div>
                 </button>
             </div>
-
+            <div class="lock-status locked" id="lockStatus">
+                🔒 잠김 상태 - 수정/삭제 버튼 숨김
+                <span class="lock-timer" id="lockTimer"></span>
+            </div>
         </div>
     </div>
 
@@ -1254,6 +1196,22 @@
                     ※ 상단 암호 입력 칸에 사용할 암호입니다.
                 </div>
             </div>
+            <!-- 잠금 해제 시간 설정 추가 -->
+            <div class="form-group">
+                <label for="unlockDuration">잠금 해제 유지 시간 (분)</label>
+                <select id="unlockDuration" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 16px;">
+                    <option value="1">1분</option>
+                    <option value="3">3분</option>
+                    <option value="5" selected>5분</option>
+                    <option value="10">10분</option>
+                    <option value="15">15분</option>
+                    <option value="20">20분</option>
+                    <option value="30">30분</option>
+                </select>
+                <div style="font-size: 12px; color: #666; margin-top: 5px;">
+                    ※ 잠금 해제 후 자동으로 다시 잠기기까지의 시간입니다.
+                </div>
+            </div>
             <div class="form-group">
                 <label for="adminPassword">관리자 비밀번호</label>
                 <input type="password" id="adminPassword" placeholder="새 비밀번호 입력">
@@ -1316,7 +1274,8 @@
             clubName: '',
             feePresets: [40000, 70000, 100000, 200000, 300000],
             adminPassword: '0000',
-            editPassword: '0000' // 수정/삭제용 암호 추가
+            editPassword: '0000', // 수정/삭제용 암호 추가
+            unlockDuration: 5 // 기본 5분
         };
         let firebaseDb = null;
         let currentPhotoData = null;
@@ -1326,7 +1285,7 @@
         // 보안 관련 변수
         let isUnlocked = false;
         let lockTimer = null;
-        let remainingTime = 5 * 60; // 5분 (초 단위)
+        let remainingTime = settings.unlockDuration * 60; // 초 단위
         let lockInterval = null;
 
         // 요일 배열
@@ -1368,10 +1327,10 @@
                 updateBtn.classList.add('btn-update');
                 updateBtn.textContent = '수정';
                 
-                // 회원 목록의 수정/삭제 버튼 활성화
-                activateMemberButtons();
+                // 회원 목록의 수정/삭제 버튼 표시
+                showMemberButtons();
             } else {
-                lockStatusEl.innerHTML = `🔒 잠김 상태 - 수정/삭제 기능 사용 불가 <span class="lock-timer" id="lockTimer"></span>`;
+                lockStatusEl.innerHTML = `🔒 잠김 상태 - 수정/삭제 버튼 숨김 <span class="lock-timer" id="lockTimer"></span>`;
                 lockStatusEl.classList.remove('unlocked');
                 lockStatusEl.classList.add('locked');
                 
@@ -1380,8 +1339,8 @@
                 updateBtn.classList.add('btn-disabled');
                 updateBtn.textContent = '수정';
                 
-                // 회원 목록의 수정/삭제 버튼 비활성화
-                deactivateMemberButtons();
+                // 회원 목록의 수정/삭제 버튼 숨기기
+                hideMemberButtons();
             }
         }
 
@@ -1391,7 +1350,7 @@
             
             if (password === settings.editPassword) {
                 isUnlocked = true;
-                remainingTime = 5 * 60; // 5분 리셋
+                remainingTime = settings.unlockDuration * 60; // 설정된 시간으로 리셋
                 
                 // 자동 잠금 타이머 시작
                 startAutoLockTimer();
@@ -1403,7 +1362,7 @@
                 updateLockStatus();
                 
                 // 알림 메시지
-                showAlert('잠금이 해제되었습니다! 5분 후 자동으로 잠깁니다.');
+                showAlert(`잠금이 해제되었습니다! ${settings.unlockDuration}분 후 자동으로 잠깁니다.`);
                 
                 // 활동 타이머 리셋 함수 연결
                 resetLockTimer();
@@ -1462,48 +1421,30 @@
         // 타이머 리셋 (활동 감지)
         function resetLockTimer() {
             if (isUnlocked) {
-                remainingTime = 5 * 60; // 5분으로 리셋
+                remainingTime = settings.unlockDuration * 60; // 설정된 시간으로 리셋
                 updateTimerDisplay();
             }
         }
 
-        // 회원 목록의 수정/삭제 버튼 활성화
-        function activateMemberButtons() {
-            document.querySelectorAll('.btn-edit-disabled').forEach(btn => {
-                btn.classList.remove('btn-edit-disabled');
-                btn.classList.add('btn-edit');
-                btn.textContent = '수정';
-                btn.onclick = function() {
-                    const index = parseInt(this.getAttribute('data-index'));
-                    editMember(index);
-                };
-            });
-            
-            document.querySelectorAll('.btn-delete-disabled').forEach(btn => {
-                btn.classList.remove('btn-delete-disabled');
-                btn.classList.add('btn-delete');
-                btn.textContent = '삭제';
-                btn.onclick = function() {
-                    const index = parseInt(this.getAttribute('data-index'));
-                    showDeleteModal(index);
-                };
-            });
-        }
-
-        // 회원 목록의 수정/삭제 버튼 비활성화
-        function deactivateMemberButtons() {
+        // 회원 목록의 수정/삭제 버튼 표시
+        function showMemberButtons() {
             document.querySelectorAll('.btn-edit').forEach(btn => {
-                btn.classList.remove('btn-edit');
-                btn.classList.add('btn-edit-disabled');
-                btn.textContent = '수정';
-                btn.onclick = null;
+                btn.classList.remove('btn-hidden');
             });
             
             document.querySelectorAll('.btn-delete').forEach(btn => {
-                btn.classList.remove('btn-delete');
-                btn.classList.add('btn-delete-disabled');
-                btn.textContent = '삭제';
-                btn.onclick = null;
+                btn.classList.remove('btn-hidden');
+            });
+        }
+
+        // 회원 목록의 수정/삭제 버튼 숨기기
+        function hideMemberButtons() {
+            document.querySelectorAll('.btn-edit').forEach(btn => {
+                btn.classList.add('btn-hidden');
+            });
+            
+            document.querySelectorAll('.btn-delete').forEach(btn => {
+                btn.classList.add('btn-hidden');
             });
         }
 
@@ -1516,18 +1457,6 @@
             }
             resetLockTimer(); // 활동 감지 - 타이머 리셋
             updateMember();
-            return true;
-        }
-
-        // 삭제 전 잠금 확인
-        function checkLockBeforeDelete(index) {
-            if (!isUnlocked) {
-                showAlert('삭제 기능을 사용하려면 먼저 잠금을 해제해주세요!');
-                document.getElementById('lockPassword').focus();
-                return false;
-            }
-            resetLockTimer(); // 활동 감지 - 타이머 리셋
-            showDeleteModal(index);
             return true;
         }
 
@@ -1756,11 +1685,18 @@
                     if (data.feePresets) settings.feePresets = data.feePresets;
                     if (data.adminPassword) settings.adminPassword = data.adminPassword;
                     if (data.editPassword) settings.editPassword = data.editPassword;
+                    if (data.unlockDuration) settings.unlockDuration = data.unlockDuration;
                     
                     document.getElementById('clubNameDisplay').textContent = settings.clubName || '구장명을 설정하세요';
                     updateFeePresetButtons();
                     
+                    // 잠금 해제 시간 설정 업데이트
+                    if (settings.unlockDuration) {
+                        document.getElementById('unlockDuration').value = settings.unlockDuration;
+                    }
+                    
                     // 초기 잠금 상태 설정
+                    remainingTime = settings.unlockDuration * 60;
                     updateLockStatus();
                 }
             });
@@ -1943,8 +1879,8 @@
                     `<div class="member-photo" style="display: flex; align-items: center; justify-content: center; background: #f0f0f0; color: #999; font-size: 32px;">👤</div>`;
                 
                 // 잠금 상태에 따라 버튼 클래스 결정
-                const editBtnClass = isUnlocked ? 'btn-edit' : 'btn-edit-disabled';
-                const deleteBtnClass = isUnlocked ? 'btn-delete' : 'btn-delete-disabled';
+                const editBtnClass = isUnlocked ? 'btn-edit' : 'btn-edit btn-hidden';
+                const deleteBtnClass = isUnlocked ? 'btn-delete' : 'btn-delete btn-hidden';
                 
                 return `
                 <div class="member-card">
@@ -2005,7 +1941,7 @@
             
             let scheduleHTML = '';
             
-            daysOfWeek.forEach(day => {
+            daysOfWeek.forEach(day) => {
                 const dayMembers = scheduleByDay[day];
                 
                 const timeSlots = {};
@@ -2352,6 +2288,7 @@
             document.getElementById('feePreset4').value = settings.feePresets[3] || '';
             document.getElementById('feePreset5').value = settings.feePresets[4] || '';
             document.getElementById('editPassword').value = settings.editPassword || '0000';
+            document.getElementById('unlockDuration').value = settings.unlockDuration || 5;
             document.getElementById('adminPassword').value = '';
             document.getElementById('settingsModal').classList.add('active');
         }
@@ -2376,6 +2313,12 @@
                 settings.editPassword = newEditPassword;
             }
             
+            // 잠금 해제 시간 설정 저장
+            const unlockDuration = parseInt(document.getElementById('unlockDuration').value);
+            if (unlockDuration && unlockDuration >= 1 && unlockDuration <= 30) {
+                settings.unlockDuration = unlockDuration;
+            }
+            
             const newPassword = document.getElementById('adminPassword').value;
             if (newPassword) {
                 settings.adminPassword = newPassword;
@@ -2393,6 +2336,12 @@
             if (newEditPassword) {
                 isUnlocked = false;
                 updateLockStatus();
+            }
+            
+            // 잠금 해제 시간 변경 시 타이머 업데이트
+            if (isUnlocked) {
+                remainingTime = settings.unlockDuration * 60;
+                startAutoLockTimer();
             }
         }
 
@@ -2443,6 +2392,9 @@
                         }
                         if (data.settings.editPassword) {
                             settings.editPassword = data.settings.editPassword;
+                        }
+                        if (data.settings.unlockDuration) {
+                            settings.unlockDuration = data.settings.unlockDuration;
                         }
                         updateFeePresetButtons();
                     }
