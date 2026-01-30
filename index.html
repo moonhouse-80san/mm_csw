@@ -187,7 +187,7 @@
             color: white;
             border: none;
             border-radius: 10px;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
@@ -266,7 +266,7 @@
         .fee-presets {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 5px;
             margin-top: 5px;
         }
 
@@ -741,8 +741,13 @@
             }
 
             .button-group {
-                grid-template-columns: 1fr;
-            }
+                display: flex;
+				gap: 8px;
+						}
+
+			.button-group button {
+				flex: 1; /* 동일 너비 */
+			}
 
             .filter-buttons {
                 font-size: 11px;
