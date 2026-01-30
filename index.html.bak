@@ -1199,23 +1199,23 @@
             </div>
         </div>
 
-        <!-- 수정: 암호 입력 섹션을 더 작게 -->
-        <div class="password-section">
-            <div class="password-input-group">
-                <input type="password" 
-                       id="lockPassword" 
-                       class="password-input" 
-                       placeholder="수정/삭제 암호 입력"
-                       onkeyup="if(event.key === 'Enter') unlockEditButtons()">
-                <button class="unlock-btn" onclick="unlockEditButtons()">
-                    🔓 잠금 해제
-					<div class="lock-status locked" id="lockStatus">
-						🔒 잠김 상태 - 수정/삭제 버튼 숨김
-						<span class="lock-timer" id="lockTimer"></span>
-					</div>
-                </button>
-            </div>
-        </div>
+		<!-- 암호 입력 섹션 -->
+		<div class="password-section">
+			<div class="password-input-group">
+				<input type="password" 
+					   id="lockPassword" 
+					   class="password-input" 
+					   placeholder="수정/삭제 암호 입력"
+					   onkeyup="if(event.key === 'Enter') toggleLock()">
+				<button class="unlock-btn" onclick="toggleLock()" id="lockToggleBtn">
+					🔓 잠금 해제
+				</button>
+			</div>
+			<div class="lock-status locked" id="lockStatus">
+				🔒 잠김 상태 - 수정/삭제 버튼 숨김
+				<span class="lock-timer" id="lockTimer"></span>
+			</div>
+		</div>
     </div>
 
     <!-- 카메라 모달 -->
@@ -1403,118 +1403,107 @@
             console.error('Firebase 초기화 실패:', error);
         }
 
-        // ========== 개선된 보안 기능 ==========
-        
-        // 잠금 상태 업데이트
-        function updateLockStatus() {
-            const lockStatusEl = document.getElementById('lockStatus');
-            const updateBtn = document.getElementById('updateBtn');
-            
-            if (isUnlocked) {
-                lockStatusEl.innerHTML = `🔓 잠금 해제됨 - ${formatTime(remainingTime)} 후 자동 잠금 <span class="lock-timer" id="lockTimer"></span>`;
-                lockStatusEl.classList.remove('locked');
-                lockStatusEl.classList.add('unlocked');
-                
-                // 수정 버튼 활성화
-                updateBtn.classList.remove('btn-disabled');
-                updateBtn.classList.add('btn-update');
-                updateBtn.textContent = '수정';
-                
-                // 회원 목록의 수정/삭제 버튼 표시
-                showMemberButtons();
-            } else {
-                lockStatusEl.innerHTML = `🔒 잠김 상태 - 수정/삭제 버튼 숨김 <span class="lock-timer" id="lockTimer"></span>`;
-                lockStatusEl.classList.remove('unlocked');
-                lockStatusEl.classList.add('locked');
-                
-                // 수정 버튼 비활성화
-                updateBtn.classList.remove('btn-update');
-                updateBtn.classList.add('btn-disabled');
-                updateBtn.textContent = '수정';
-                
-                // 회원 목록의 수정/삭제 버튼 숨기기
-                hideMemberButtons();
-            }
-        }
+		// 잠금 해제/잠금 토글 함수
+		function toggleLock() {
+			const password = document.getElementById('lockPassword').value;
+			
+			if (!password) {
+				showAlert('암호를 입력해주세요!');
+				return;
+			}
+			
+			if (!isUnlocked) {
+				// 잠금 상태 → 잠금 해제
+				if (password === settings.editPassword) {
+					unlockEditButtons();
+				} else {
+					showAlert('암호가 틀렸습니다!');
+				}
+			} else {
+				// 잠금 해제 상태 → 잠금
+				if (password === settings.editPassword) {
+					lockEditButtons();
+				} else {
+					showAlert('암호가 틀렸습니다!');
+				}
+			}
+		}
 
-        // 잠금 해제
-        function unlockEditButtons() {
-            const password = document.getElementById('lockPassword').value;
-            
-            if (!password) {
-                showAlert('암호를 입력해주세요!');
-                return;
-            }
-            
-            if (password === settings.editPassword) {
-                isUnlocked = true;
-                remainingTime = settings.lockTimeout * 60; // 설정된 시간으로 리셋
-                
-                // 자동 잠금 타이머 시작
-                startAutoLockTimer();
-                
-                // 암호 입력칸 초기화
-                document.getElementById('lockPassword').value = '';
-                
-                // 상태 업데이트
-                updateLockStatus();
-                
-                // 알림 메시지
-                showAlert(`잠금이 해제되었습니다! ${settings.lockTimeout}분 후 자동으로 잠깁니다.`);
-                
-                // 활동 타이머 리셋 함수 연결
-                resetLockTimer();
-            } else {
-                showAlert('암호가 틀렸습니다!');
-            }
-        }
+		// 잠금 상태 업데이트
+		function updateLockStatus() {
+			const lockStatusEl = document.getElementById('lockStatus');
+			const updateBtn = document.getElementById('updateBtn');
+			const unlockBtn = document.querySelector('.unlock-btn');
+			
+			if (isUnlocked) {
+				lockStatusEl.innerHTML = `🔓 잠금 해제됨 - ${formatTime(remainingTime)} 후 자동 잠금 <span class="lock-timer" id="lockTimer"></span>`;
+				lockStatusEl.classList.remove('locked');
+				lockStatusEl.classList.add('unlocked');
+				
+				// 잠금 해제 버튼 텍스트 변경
+				unlockBtn.innerHTML = '🔒 다시 잠금';
+				
+				// 수정 버튼 활성화
+				updateBtn.classList.remove('btn-disabled');
+				updateBtn.classList.add('btn-update');
+				updateBtn.textContent = '수정';
+				
+				// 회원 목록의 수정/삭제 버튼 표시
+				showMemberButtons();
+			} else {
+				lockStatusEl.innerHTML = `🔒 잠김 상태 - 수정/삭제 버튼 숨김 <span class="lock-timer" id="lockTimer"></span>`;
+				lockStatusEl.classList.remove('unlocked');
+				lockStatusEl.classList.add('locked');
+				
+				// 잠금 버튼 텍스트 변경
+				unlockBtn.innerHTML = '🔓 잠금 해제';
+				
+				// 수정 버튼 비활성화
+				updateBtn.classList.remove('btn-update');
+				updateBtn.classList.add('btn-disabled');
+				updateBtn.textContent = '수정';
+				
+				// 회원 목록의 수정/삭제 버튼 숨기기
+				hideMemberButtons();
+			}
+		}
 
-        // 자동 잠금 타이머 시작
-        function startAutoLockTimer() {
-            if (lockInterval) {
-                clearInterval(lockInterval);
-            }
-            
-            lockInterval = setInterval(() => {
-                remainingTime--;
-                
-                // 타이머 업데이트
-                updateTimerDisplay();
-                
-                if (remainingTime <= 0) {
-                    lockEditButtons();
-                }
-            }, 1000);
-        }
+		// 잠금 해제
+		function unlockEditButtons() {
+			isUnlocked = true;
+			remainingTime = settings.lockTimeout * 60; // 설정된 시간으로 리셋
+			
+			// 자동 잠금 타이머 시작
+			startAutoLockTimer();
+			
+			// 암호 입력칸 초기화
+			document.getElementById('lockPassword').value = '';
+			
+			// 상태 업데이트
+			updateLockStatus();
+			
+			// 알림 메시지
+			showAlert(`잠금이 해제되었습니다! ${settings.lockTimeout}분 후 자동으로 잠깁니다.`);
+			
+			// 활동 타이머 리셋 함수 연결
+			resetLockTimer();
+		}
 
-        // 타이머 표시 업데이트
-        function updateTimerDisplay() {
-            if (isUnlocked) {
-                document.getElementById('lockTimer').textContent = `(${formatTime(remainingTime)})`;
-            } else {
-                document.getElementById('lockTimer').textContent = '';
-            }
-        }
-
-        // 시간 형식화 (MM:SS)
-        function formatTime(seconds) {
-            const mins = Math.floor(seconds / 60);
-            const secs = seconds % 60;
-            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-        }
-
-        // 잠금
-        function lockEditButtons() {
-            isUnlocked = false;
-            
-            if (lockInterval) {
-                clearInterval(lockInterval);
-                lockInterval = null;
-            }
-            
-            updateLockStatus();
-            showAlert('자동 잠금되었습니다. 다시 암호를 입력해주세요.');
-        }
+		// 잠금
+		function lockEditButtons() {
+			isUnlocked = false;
+			
+			if (lockInterval) {
+				clearInterval(lockInterval);
+				lockInterval = null;
+			}
+			
+			// 암호 입력칸 초기화
+			document.getElementById('lockPassword').value = '';
+			
+			updateLockStatus();
+			showAlert('다시 잠금되었습니다.');
+		}
 
         // 타이머 리셋 (활동 감지)
         function resetLockTimer() {
