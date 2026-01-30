@@ -1204,11 +1204,11 @@
 					   onkeyup="if(event.key === 'Enter') unlockEditButtons()">
 				<button class="unlock-btn" onclick="unlockEditButtons()">
 					🔓 잠금 해제
+					<div class="lock-status locked" id="lockStatus">
+						🔒 잠김 상태 - 수정/삭제 버튼 숨김
+						<span class="lock-timer" id="lockTimer"></span>
+					</div>
 				</button>
-			</div>
-			<div class="lock-status locked" id="lockStatus">
-				🔒 잠김 상태 - 수정/삭제 버튼 숨김
-				<span class="lock-timer" id="lockTimer"></span>
 			</div>
 		</div>
 	</div>
