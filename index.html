@@ -1439,6 +1439,28 @@
 				return;
 			}
 			
+			// 이미 잠금 해제된 상태에서 올바른 암호를 입력하면 즉시 잠금
+			if (isUnlocked && password === settings.editPassword) {
+				isUnlocked = false;
+				remainingTime = settings.lockTimeout * 60;
+				
+				// 자동 잠금 타이머 중지
+				if (lockInterval) {
+					clearInterval(lockInterval);
+					lockInterval = null;
+				}
+				
+				// 암호 입력칸 초기화
+				document.getElementById('lockPassword').value = '';
+				
+				// 상태 업데이트
+				updateLockStatus();
+				
+				// 알림 메시지
+				showAlert('앱이 잠겼습니다!');
+				return;
+			}
+			
 			if (password === settings.editPassword) {
 				isUnlocked = true;
 				remainingTime = settings.lockTimeout * 60; // 설정된 시간으로 리셋
