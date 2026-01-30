@@ -4,7 +4,7 @@
   "description": "회원 정보를 관리하는 웹 앱",
   "start_url": "/mm_csw/",
   "display": "standalone",
-  "background_color": "#667eea",
+  "background_color": "transparent",
   "theme_color": "#2196F3",
   "orientation": "portrait",
   "scope": "/",
