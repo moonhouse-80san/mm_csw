@@ -1039,24 +1039,6 @@
             <div class="member-count">총 <span id="memberCount">0</span>명</div>
         </div>
 
-        <!-- 수정: 암호 입력 섹션을 더 작게 -->
-        <div class="password-section">
-            <div class="password-input-group">
-                <input type="password" 
-                       id="lockPassword" 
-                       class="password-input" 
-                       placeholder="수정/삭제 암호 입력"
-                       onkeyup="if(event.key === 'Enter') unlockEditButtons()">
-                <button class="unlock-btn" onclick="unlockEditButtons()">
-                    🔓 잠금 해제
-                </button>
-            </div>
-            <div class="lock-status locked" id="lockStatus">
-                🔒 잠김 상태 - 수정/삭제 버튼 숨김
-                <span class="lock-timer" id="lockTimer"></span>
-            </div>
-        </div>
-
         <div class="search-section">
             <div class="search-box">
                 <input type="text" id="searchInput" placeholder="🔍 이름, 전화번호로 검색..." onkeyup="searchMembers()">
@@ -1209,6 +1191,24 @@
                 <div id="scheduleContent">
                     <!-- 일주일 스케줄이 여기에 표시됩니다 -->
                 </div>
+            </div>
+        </div>
+
+        <!-- 수정: 암호 입력 섹션을 더 작게 -->
+        <div class="password-section">
+            <div class="password-input-group">
+                <input type="password" 
+                       id="lockPassword" 
+                       class="password-input" 
+                       placeholder="수정/삭제 암호 입력"
+                       onkeyup="if(event.key === 'Enter') unlockEditButtons()">
+                <button class="unlock-btn" onclick="unlockEditButtons()">
+                    🔓 잠금 해제
+					<div class="lock-status locked" id="lockStatus">
+						🔒 잠김 상태 - 수정/삭제 버튼 숨김
+						<span class="lock-timer" id="lockTimer"></span>
+					</div>
+                </button>
             </div>
         </div>
     </div>
