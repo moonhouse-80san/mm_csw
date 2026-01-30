@@ -990,24 +990,6 @@
 </head>
 <body>
     <div class="container">
-        <!-- 암호 입력 섹션 - 주황색 배경 -->
-        <div class="password-section">
-            <div class="password-input-group">
-                <input type="password" 
-                       id="lockPassword" 
-                       class="password-input" 
-                       placeholder="암호 입력 (기본: 0000)"
-                       onkeyup="if(event.key === 'Enter') unlockEditButtons()">
-                <button class="unlock-btn" onclick="unlockEditButtons()">
-                    🔓 잠금 해제
-                </button>
-            </div>
-            <div class="lock-status locked" id="lockStatus">
-                🔒 잠김 상태 - 수정/삭제 기능 사용 불가
-                <span class="lock-timer" id="lockTimer"></span>
-            </div>
-        </div>
-
         <div class="header">
             <div class="sync-status" id="syncStatus">☁️ 동기화</div>
             <div class="settings-icon" onclick="openSettings()">
@@ -1172,6 +1154,24 @@
                 <div id="scheduleContent">
                     <!-- 일주일 스케줄이 여기에 표시됩니다 -->
                 </div>
+            </div>
+        </div>
+
+        <!-- 암호 입력 섹션 - 주황색 배경 -->
+        <div class="password-section">
+            <div class="password-input-group">
+                <input type="password" 
+                       id="lockPassword" 
+                       class="password-input" 
+                       placeholder="암호 입력 (기본: 0000)"
+                       onkeyup="if(event.key === 'Enter') unlockEditButtons()">
+                <button class="unlock-btn" onclick="unlockEditButtons()">
+                    🔓 잠금 해제
+                </button>
+            </div>
+            <div class="lock-status locked" id="lockStatus">
+                🔒 잠김 상태 - 수정/삭제 기능 사용 불가
+                <span class="lock-timer" id="lockTimer"></span>
             </div>
         </div>
     </div>
