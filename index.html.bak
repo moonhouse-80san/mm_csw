@@ -1163,16 +1163,17 @@
                 <input type="password" 
                        id="lockPassword" 
                        class="password-input" 
-                       placeholder="암호 입력 (기본: 0000)"
+                       placeholder="암호 입력"
                        onkeyup="if(event.key === 'Enter') unlockEditButtons()">
                 <button class="unlock-btn" onclick="unlockEditButtons()">
-                    🔓 잠금 해제
+                    🔓 잠금 해제 
+					<span class="lock-status locked" id="lockStatus">
+						🔒 잠김 상태 - 수정/삭제 기능 사용 불가
+					<span class="lock-timer" id="lockTimer"></span>
+            </span>
                 </button>
             </div>
-            <div class="lock-status locked" id="lockStatus">
-                🔒 잠김 상태 - 수정/삭제 기능 사용 불가
-                <span class="lock-timer" id="lockTimer"></span>
-            </div>
+
         </div>
     </div>
 
@@ -1247,7 +1248,7 @@
             </div>
             <!-- 수정/삭제 암호 설정 추가 -->
             <div class="form-group">
-                <label for="editPassword">수정/삭제 암호 (기본: 0000)</label>
+                <label for="editPassword">수정/삭제 암호</label>
                 <input type="password" id="editPassword" placeholder="수정/삭제 암호 입력">
                 <div style="font-size: 12px; color: #666; margin-top: 5px;">
                     ※ 상단 암호 입력 칸에 사용할 암호입니다.
@@ -1407,7 +1408,7 @@
                 // 활동 타이머 리셋 함수 연결
                 resetLockTimer();
             } else {
-                showAlert('암호가 틀렸습니다! 기본 암호: 0000');
+                showAlert('암호가 틀렸습니다! ');
             }
         }
 
