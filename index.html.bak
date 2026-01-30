@@ -1553,115 +1553,88 @@
             return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
 
-async function addMember() {
-    const name = document.getElementById('name').value.trim();
-    const phone = document.getElementById('phone').value.trim();
-    const registerDate = document.getElementById('registerDate').value;
-    const fee = document.getElementById('fee').value;
-    const day1 = document.getElementById('day1').value;
-    const startTime1 = document.getElementById('startTime1').value;
-    const endTime1 = document.getElementById('endTime1').value;
-    const day2 = document.getElementById('day2').value;
-    const startTime2 = document.getElementById('startTime2').value;
-    const endTime2 = document.getElementById('endTime2').value;
-    const email = document.getElementById('email').value.trim();
-    const address = document.getElementById('address').value.trim();
+        async function addMember() {
+            const name = document.getElementById('name').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const registerDate = document.getElementById('registerDate').value;
+            const fee = document.getElementById('fee').value;
+            const day1 = document.getElementById('day1').value;
+            const startTime1 = document.getElementById('startTime1').value;
+            const endTime1 = document.getElementById('endTime1').value;
+            const day2 = document.getElementById('day2').value;
+            const startTime2 = document.getElementById('startTime2').value;
+            const endTime2 = document.getElementById('endTime2').value;
+            const email = document.getElementById('email').value.trim();
+            const address = document.getElementById('address').value.trim();
 
-    if (!name) {
-        showAlert('이름을 입력해주세요!');
-        return;
-    }
+            if (!name) {
+                showAlert('이름을 입력해주세요!');
+                return;
+            }
 
-    // 시간 입력 검증 및 충돌 검사
-    const schedules = [];
-    
-    if (day1 && startTime1 && endTime1) {
-        if (startTime1 >= endTime1) {
-            showAlert('첫 번째 스케줄의 종료시간은 시작시간보다 커야 합니다!');
-            return;
+            // 시간 입력 검증 및 충돌 검사
+            const schedules = [];
+            
+            if (day1 && startTime1 && endTime1) {
+                if (startTime1 >= endTime1) {
+                    showAlert('첫 번째 스케줄의 종료시간은 시작시간보다 커야 합니다!');
+                    return;
+                }
+                schedules.push({ day: day1, startTime: startTime1, endTime: endTime1 });
+            }
+            
+            if (day2 && startTime2 && endTime2) {
+                if (startTime2 >= endTime2) {
+                    showAlert('두 번째 스케줄의 종료시간은 시작시간보다 커야 합니다!');
+                    return;
+                }
+                schedules.push({ day: day2, startTime: startTime2, endTime: endTime2 });
+            }
+            
+            // 시간 충돌 검사
+            for (const schedule of schedules) {
+                const conflict = checkTimeConflict(
+                    schedule.day, 
+                    schedule.startTime, 
+                    schedule.endTime,
+                    null, null, null
+                );
+                if (conflict.conflict) {
+                    showAlert(`시간 충돌! ${conflict.memberName} 회원이 이미 ${conflict.existingTime}에 등록되어 있습니다.`);
+                    return;
+                }
+            }
+
+            // 사진이 있으면 업로드
+            let photoUrl = null;
+            if (currentPhotoFile) {
+                photoUrl = await uploadPhotoToStorage(currentPhotoFile, name);
+            }
+
+            const member = {
+                name,
+                phone,
+                registerDate: registerDate || new Date().toISOString().split('T')[0],
+                fee: fee ? parseInt(fee) : null,
+                day1: day1 || null,
+                startTime1: startTime1 || null,
+                endTime1: endTime1 || null,
+                day2: day2 || null,
+                startTime2: startTime2 || null,
+                endTime2: endTime2 || null,
+                email,
+                address,
+                photoUrl
+            };
+
+            members.push(member);
+            await saveToFirebase();
+            filteredMembers = [...members];
+            renderMembers();
+            renderSchedule();
+            clearForm();
+            showAlert('회원이 추가되었습니다!');
         }
-        schedules.push({ day: day1, startTime: startTime1, endTime: endTime1 });
-    }
-    
-    if (day2 && startTime2 && endTime2) {
-        if (startTime2 >= endTime2) {
-            showAlert('두 번째 스케줄의 종료시간은 시작시간보다 커야 합니다!');
-            return;
-        }
-        schedules.push({ day: day2, startTime: startTime2, endTime: endTime2 });
-    }
-    
-    // 시간 충돌 검사
-    for (const schedule of schedules) {
-        const conflict = checkTimeConflict(
-            schedule.day, 
-            schedule.startTime, 
-            schedule.endTime,
-            null, null, null
-        );
-        if (conflict.conflict) {
-            showAlert(`시간 충돌! ${conflict.memberName} 회원이 이미 ${conflict.existingTime}에 등록되어 있습니다.`);
-            return;
-        }
-    }
-
-    // 사진이 있으면 업로드 (에러 처리를 위해 try-catch 추가)
-    let photoUrl = null;
-    try {
-        if (currentPhotoFile) {
-            photoUrl = await uploadPhotoToStorage(currentPhotoFile, name);
-        }
-    } catch (error) {
-        console.error('사진 업로드 실패:', error);
-        // 사진 업로드 실패해도 회원 추가는 진행
-    }
-
-    const member = {
-        name,
-        phone,
-        registerDate: registerDate || new Date().toISOString().split('T')[0],
-        fee: fee ? parseInt(fee) : null,
-        day1: day1 || null,
-        startTime1: startTime1 || null,
-        endTime1: endTime1 || null,
-        day2: day2 || null,
-        startTime2: startTime2 || null,
-        endTime2: endTime2 || null,
-        email,
-        address,
-        photoUrl
-    };
-
-    try {
-        members.push(member);
-        await saveToFirebase();
-        filteredMembers = [...members];
-        renderMembers();
-        renderSchedule();
-        clearForm();
-        showAlert('회원이 추가되었습니다!');
-    } catch (error) {
-        console.error('회원 추가 실패:', error);
-        showAlert('회원 추가에 실패했습니다. 다시 시도해주세요.');
-        // 에러 발생 시 추가된 회원 롤백
-        members.pop();
-    }
-}
-
-async function saveToFirebase() {
-    try {
-        const membersObj = {};
-        members.forEach((member, index) => {
-            membersObj[index] = member;
-        });
-        
-        await firebaseDb.ref('members').set(membersObj);
-        await firebaseDb.ref('settings').set(settings);
-    } catch (error) {
-        console.error('Firebase 저장 실패:', error);
-        throw error; // 에러를 상위로 전파
-    }
-}
 
         async function updateMember() {
             if (currentEditIndex === null) {
