@@ -996,7 +996,7 @@
                 <input type="password" 
                        id="lockPassword" 
                        class="password-input" 
-                       placeholder="암호 입력 (기본: 1234)"
+                       placeholder="암호 입력 (기본: 0000)"
                        onkeyup="if(event.key === 'Enter') unlockEditButtons()">
                 <button class="unlock-btn" onclick="unlockEditButtons()">
                     🔓 잠금 해제
@@ -1247,7 +1247,7 @@
             </div>
             <!-- 수정/삭제 암호 설정 추가 -->
             <div class="form-group">
-                <label for="editPassword">수정/삭제 암호 (기본: 1234)</label>
+                <label for="editPassword">수정/삭제 암호 (기본: 0000)</label>
                 <input type="password" id="editPassword" placeholder="수정/삭제 암호 입력">
                 <div style="font-size: 12px; color: #666; margin-top: 5px;">
                     ※ 상단 암호 입력 칸에 사용할 암호입니다.
@@ -1315,7 +1315,7 @@
             clubName: '',
             feePresets: [40000, 70000, 100000, 200000, 300000],
             adminPassword: '0000',
-            editPassword: '1234' // 수정/삭제용 암호 추가
+            editPassword: '0000' // 수정/삭제용 암호 추가
         };
         let firebaseDb = null;
         let currentPhotoData = null;
@@ -1407,7 +1407,7 @@
                 // 활동 타이머 리셋 함수 연결
                 resetLockTimer();
             } else {
-                showAlert('암호가 틀렸습니다! 기본 암호: 1234');
+                showAlert('암호가 틀렸습니다! 기본 암호: 0000');
             }
         }
 
@@ -2350,7 +2350,7 @@
             document.getElementById('feePreset3').value = settings.feePresets[2] || '';
             document.getElementById('feePreset4').value = settings.feePresets[3] || '';
             document.getElementById('feePreset5').value = settings.feePresets[4] || '';
-            document.getElementById('editPassword').value = settings.editPassword || '1234';
+            document.getElementById('editPassword').value = settings.editPassword || '0000';
             document.getElementById('adminPassword').value = '';
             document.getElementById('settingsModal').classList.add('active');
         }
