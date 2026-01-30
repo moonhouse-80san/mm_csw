@@ -2,7 +2,7 @@
   "name": "회원 관리 앱",
   "short_name": "회원관리",
   "description": "간편한 회원 관리 웹 앱",
-  "start_url": "/member-manager/",
+  "start_url": "/mm_csw/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2196F3",
