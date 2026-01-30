@@ -64,7 +64,7 @@
         }
 
         .unlock-btn {
-            padding: 10px;
+            padding: 12px 20px;
             background: #2196F3;
             color: white;
             border: none;
@@ -912,30 +912,51 @@
                 order: 2;
             }
 
-            /* 회원 카드 모바일 레이아웃 */
-            .member-card {
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-            }
+			.member-card {
+				display: flex;
+				gap: 14px;
+				align-items: flex-start;
+			}
 
-            .member-photo-container {
-                width: 120px;
-                height: 120px;
-                margin-right: 0;
-                margin-bottom: 15px;
-            }
+			/* 사진 영역 */
+			.member-photo-container img {
+				width: 90px;
+				height: 90px;
+				object-fit: cover;
+				border-radius: 8px;
+			}
 
-            .member-header {
-                flex-direction: column;
-                gap: 10px;
-            }
+			/* 오른쪽 전체 정보 영역 */
+			.member-info-container {
+				flex: 1;
+			}
 
-            .member-actions {
-                width: 100%;
-                justify-content: center;
-                margin-top: 10px;
-            }
+			/* 상단: 이름 + 수정/삭제 버튼 (같은 줄) */
+			.member-header {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin-bottom: 6px;
+			}
+
+			/* 이름 강조 */
+			.member-name {
+				font-weight: bold;
+				font-size: 17px;
+			}
+
+			/* 버튼 그룹 */
+			.member-actions {
+				display: flex;
+				gap: 6px;
+			}
+
+			/* 하단: 전화번호 + 기타 정보 (이름 아래) */
+			.member-info {
+				font-size: 14px;
+				color: #555;
+				line-height: 1.5;
+			}
 
             .photo-preview {
                 width: 300px;
