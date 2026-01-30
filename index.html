@@ -874,15 +874,31 @@
 
     <!-- 카메라 모달 -->
     <div id="cameraModal" class="modal">
-        <div class="modal-content" style="max-width: 600px;">
+        <div class="modal-content">
             <div class="modal-header">
                 <h2>📷 카메라</h2>
                 <button class="close-btn" onclick="closeCamera()">×</button>
             </div>
             <div style="text-align: center;">
-                <video id="cameraVideo" autoplay style="width: 100%; height: auto; border-radius: 10px;"></video>
-                <div style="margin-top: 20px;">
-                    <button class="btn" style="background: #4CAF50;" onclick="capturePhoto()">사진 찍기</button>
+                <!-- 카메라 전환 버튼 -->
+                <div class="camera-controls">
+                    <button class="camera-btn active" id="frontCameraBtn" onclick="switchCamera('user')">
+                        📱 전면 카메라
+                    </button>
+                    <button class="camera-btn" id="rearCameraBtn" onclick="switchCamera('environment')">
+                        📷 후면 카메라
+                    </button>
+                </div>
+                
+                <video id="cameraVideo" autoplay playsinline></video>
+                
+                <!-- 사진 찍기 버튼 -->
+                <div class="capture-btn" onclick="capturePhoto()">
+                    <div class="capture-inner"></div>
+                </div>
+                
+                <div style="text-align: center; color: #666; font-size: 14px;">
+                    사진을 찍으려면 원형 버튼을 누르세요
                 </div>
             </div>
         </div>
@@ -1011,42 +1027,49 @@
             console.error('Firebase 초기화 실패:', error);
         }
 
-        // 사진 업로드 처리
-        function handlePhotoUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            if (file.size > 5 * 1024 * 1024) {
-                showAlert('사진 크기는 5MB 이하여야 합니다.');
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                currentPhotoData = e.target.result;
-                displayPhotoPreview();
-            };
-            reader.readAsDataURL(file);
-        }
-
-        // 사진 미리보기 표시
-        function displayPhotoPreview() {
-            const container = document.getElementById('photoPreviewContainer');
-            const preview = document.getElementById('photoPreview');
+        // 카메라 전환 함수
+        function switchCamera(cameraType) {
+            currentCameraType = cameraType;
             
-            if (currentPhotoData) {
-                preview.src = currentPhotoData;
-                container.style.display = 'block';
-            } else {
-                container.style.display = 'none';
-            }
+            // 버튼 활성화 상태 업데이트
+            document.getElementById('frontCameraBtn').classList.toggle('active', cameraType === 'user');
+            document.getElementById('rearCameraBtn').classList.toggle('active', cameraType === 'environment');
+            
+            // 카메라 재시작
+            restartCamera();
         }
 
-        // 사진 삭제
-        function removePhoto() {
-            currentPhotoData = null;
-            displayPhotoPreview();
-            document.getElementById('photoInput').value = '';
+        // 카메라 재시작
+        async function restartCamera() {
+            if (cameraStream) {
+                cameraStream.getTracks().forEach(track => track.stop());
+            }
+            
+            try {
+                const constraints = {
+                    video: {
+                        facingMode: currentCameraType,
+                        width: { ideal: 1280 },
+                        height: { ideal: 1280 }
+                    },
+                    audio: false
+                };
+                
+                cameraStream = await navigator.mediaDevices.getUserMedia(constraints);
+                const video = document.getElementById('cameraVideo');
+                video.srcObject = cameraStream;
+                
+                // 전면 카메라일 때만 미러 효과 적용
+                if (currentCameraType === 'user') {
+                    video.style.transform = 'scaleX(-1)';
+                } else {
+                    video.style.transform = 'none';
+                }
+                
+            } catch (error) {
+                console.error('카메라 재시작 실패:', error);
+                showAlert('카메라에 접근할 수 없습니다.');
+            }
         }
 
         // 카메라 열기
@@ -1054,7 +1077,7 @@
             try {
                 const constraints = {
                     video: {
-                        facingMode: 'user',
+                        facingMode: currentCameraType,
                         width: { ideal: 400 },
                         height: { ideal: 400 }
                     },
@@ -1064,7 +1087,14 @@
                 cameraStream = await navigator.mediaDevices.getUserMedia(constraints);
                 const video = document.getElementById('cameraVideo');
                 video.srcObject = cameraStream;
+                
+                // 전면 카메라일 때만 미러 효과 적용
+                if (currentCameraType === 'user') {
+                    video.style.transform = 'scaleX(-1)';
+                }
+                
                 document.getElementById('cameraModal').classList.add('active');
+                
             } catch (error) {
                 console.error('카메라 접근 실패:', error);
                 showAlert('카메라에 접근할 수 없습니다. 갤러리에서 사진을 선택해주세요.');
@@ -1081,6 +1111,7 @@
             
             const video = document.getElementById('cameraVideo');
             video.srcObject = null;
+            video.style.transform = '';
             document.getElementById('cameraModal').classList.remove('active');
         }
 

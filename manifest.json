@@ -1,6 +1,6 @@
 {
-  "name": "회원 관리 앱",
-  "short_name": "회원관리",
+  "name": "최세욱 관리앱",
+  "short_name": "최세욱 회원관리",
   "description": "간편한 회원 관리 웹 앱",
   "start_url": "/mm_csw/",
   "display": "standalone",
