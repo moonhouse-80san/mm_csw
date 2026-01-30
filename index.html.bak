@@ -1054,7 +1054,7 @@
             try {
                 const constraints = {
                     video: {
-                        facingMode: 'user',
+                        facingMode: 'environment',
                         width: { ideal: 1280 },
                         height: { ideal: 720 }
                     },
