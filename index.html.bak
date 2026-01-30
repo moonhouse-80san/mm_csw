@@ -183,23 +183,34 @@
         }
 
         /* 사진 업로드 스타일 */
-        .photo-upload-container {
-            grid-column: 1 / -1;
-            margin-bottom: 15px;
+        .photo-upload-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         .photo-preview {
-            width: 120px;
-            height: 120px;
+            width: 100%;
+            height: 200px;
+            border: 2px dashed #e0e0e0;
             border-radius: 10px;
-            overflow: hidden;
-            margin-bottom: 10px;
-            border: 2px solid #e0e0e0;
-            background-color: #f5f5f5;
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+            background: #f8f9fa;
+            transition: all 0.3s;
+        }
+
+        .photo-preview:hover {
+            border-color: #2196F3;
+            background: #f0f7ff;
+        }
+
+        .photo-preview.has-image {
+            border-style: solid;
+            padding: 0;
         }
 
         .photo-preview img {
@@ -208,42 +219,30 @@
             object-fit: cover;
         }
 
-        .photo-preview .default-icon {
-            font-size: 48px;
-            color: #ccc;
+        .photo-placeholder {
+            text-align: center;
+            color: #999;
         }
 
-        .photo-controls {
-            display: flex;
-            gap: 10px;
+        .photo-placeholder p {
             margin-top: 10px;
+            font-size: 14px;
         }
 
-        .photo-btn {
+        .remove-photo-btn {
             padding: 8px 16px;
+            background: #f44336;
+            color: white;
             border: none;
             border-radius: 8px;
+            cursor: pointer;
             font-size: 14px;
             font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            color: white;
+            transition: background 0.3s;
         }
 
-        .photo-btn.take {
-            background: linear-gradient(135deg, #4CAF50, #45a049);
-        }
-
-        .photo-btn.upload {
-            background: linear-gradient(135deg, #2196F3, #1976D2);
-        }
-
-        .photo-btn.remove {
-            background: linear-gradient(135deg, #f44336, #d32f2f);
-        }
-
-        .hidden-file-input {
-            display: none;
+        .remove-photo-btn:hover {
+            background: #d32f2f;
         }
 
         .time-group {
@@ -369,7 +368,6 @@
             padding: 20px;
         }
 
-        /* 회원 카드 사진 추가 */
         .member-card {
             background: white;
             border: 2px solid #e0e0e0;
@@ -379,25 +377,33 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             display: flex;
             gap: 15px;
-            align-items: flex-start;
         }
 
-        .member-photo-container {
-            flex-shrink: 0;
+        .member-photo-thumb {
             width: 80px;
             height: 80px;
+            border-radius: 8px;
+            overflow: hidden;
+            flex-shrink: 0;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .member-photo {
+        .member-photo-thumb img {
             width: 100%;
             height: 100%;
-            border-radius: 8px;
             object-fit: cover;
-            border: 2px solid #e0e0e0;
-            background-color: #f5f5f5;
         }
 
-        .member-info-container {
+        .member-photo-thumb svg {
+            width: 40px;
+            height: 40px;
+            color: #ccc;
+        }
+
+        .member-details {
             flex: 1;
         }
 
@@ -672,68 +678,6 @@
             animation: slideIn 0.3s ease;
         }
 
-        /* 카메라 모달 스타일 */
-        .camera-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.9);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .camera-modal.active {
-            display: flex;
-        }
-
-        .camera-container {
-            width: 100%;
-            max-width: 500px;
-            background: black;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .camera-video {
-            width: 100%;
-            height: auto;
-            background: black;
-        }
-
-        .camera-controls {
-            padding: 20px;
-            background: rgba(0,0,0,0.8);
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-        }
-
-        .camera-btn {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-        }
-
-        .camera-btn.capture {
-            background: white;
-            color: black;
-        }
-
-        .camera-btn.cancel {
-            background: #f44336;
-            color: white;
-        }
-
         @media (max-width: 600px) {
             .form-grid {
                 grid-template-columns: 1fr;
@@ -758,23 +702,11 @@
 
             .member-card {
                 flex-direction: column;
-                align-items: center;
-                text-align: center;
             }
 
-            .member-photo-container {
-                width: 100px;
-                height: 100px;
-            }
-
-            .member-header {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .member-actions {
+            .member-photo-thumb {
                 width: 100%;
-                justify-content: center;
+                height: 150px;
             }
         }
     </style>
@@ -785,7 +717,7 @@
             <div class="sync-status" id="syncStatus">☁️ 동기화</div>
             <div class="settings-icon" onclick="openSettings()">
                 <svg viewBox="0 0 24 24">
-                    <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c.04-0.24.24-0.41.48-0.41 h3.84c0.24,0,0.43,0.17,0.47,0.41L19.25,5.35c0.59,0.24,1.13,0.56,1.62,0.94l2.39-0.96c0.22-0.08,0.47,0,0.59,0.22l1.92,3.32 c0.12,0.22,0.07,0.47-0.12,0.61l-2.03,1.58c0.05,0.3,0.07,0.63,0.07,0.94s-0.02,0.64-0.07,0.94l2.03,1.58 c0.18,0.14,0.23,0.41,0.12,0.61l-1.92,3.32c-0.12,0.22-0.37,0.29-0.59,0.22l-2.39-0.96c-0.5,0.38-1.03,0.7-1.62,0.94l-0.36,2.54 c-0.05,0.24-0.24,0.41-0.47,0.41h-3.84c-0.24,0-0.44-0.17-0.48-0.41l-0.36-2.54c-0.59-0.24-1.13-0.56-1.62-0.94l-2.39,0.96 c-0.22,0.08-0.47,0-0.59-0.22l-1.92-3.32c-0.12-0.22-0.07-0.47,0.12-0.61l2.03-1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94 l-2.03,1.58c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94 l0.36,2.54c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92,3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
+                    <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c.04-0.24.24-0.41.48-0.41 h3.84c0.24,0,0.43,0.17,0.47,0.41L19.25,5.35c0.59,0.24,1.13,0.56,1.62,0.94l2.39-0.96c0.22-0.08,0.47,0,0.59,0.22l1.92,3.32 c0.12,0.22,0.07,0.47-0.12,0.61l-2.03,1.58c0.05,0.3,0.07,0.63,0.07,0.94s-0.02,0.64-0.07,0.94l2.03,1.58 c0.18,0.14,0.23,0.41,0.12,0.61l-1.92,3.32c-0.12,0.22-0.37,0.29-0.59,0.22l-2.39-0.96c-0.5,0.38-1.03,0.7-1.62,0.94l-0.36,2.54 c-0.05,0.24-0.24,0.41-0.47,0.41h-3.84c-0.24,0-0.44-0.17-0.48-0.41l-0.36-2.54c-0.59-0.24-1.13-0.56-1.62-0.94l-2.39,0.96 c-0.22,0.08-0.47,0-0.59-0.22l-1.92-3.32c-0.12-0.22-0.07-0.47,0.12-0.61l2.03-1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94 l-2.03,1.58c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94 l0.36,2.54c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
                 </svg>
             </div>
             <h1>👥 회원 관리</h1>
@@ -806,21 +738,6 @@
 
         <div class="form-section">
             <div class="form-grid">
-                <!-- 사진 업로드 섹션 -->
-                <div class="form-group photo-upload-container full-width">
-                    <label>회원 사진</label>
-                    <div class="photo-preview" id="photoPreview">
-                        <div class="default-icon">👤</div>
-                        <img id="photoPreviewImage" style="display: none;">
-                    </div>
-                    <div class="photo-controls">
-                        <button class="photo-btn take" onclick="openCamera()">📷 사진 찍기</button>
-                        <button class="photo-btn upload" onclick="document.getElementById('photoInput').click()">📁 갤러리에서 선택</button>
-                        <button class="photo-btn remove" onclick="removePhoto()" style="display: none;" id="removePhotoBtn">🗑️ 삭제</button>
-                    </div>
-                    <input type="file" id="photoInput" class="hidden-file-input" accept="image/*" capture="environment" onchange="handlePhotoUpload(event)">
-                </div>
-
                 <div class="form-group">
                     <label for="name">이름 *</label>
                     <input type="text" id="name" placeholder="이름 입력">
@@ -828,6 +745,21 @@
                 <div class="form-group">
                     <label for="phone">전화번호</label>
                     <input type="tel" id="phone" placeholder="010-1234-5678">
+                </div>
+                <div class="form-group full-width">
+                    <label for="photo">회원 사진</label>
+                    <div class="photo-upload-section">
+                        <input type="file" id="photoInput" accept="image/*" capture="environment" style="display: none;" onchange="handlePhotoUpload(event)">
+                        <div class="photo-preview" id="photoPreview" onclick="document.getElementById('photoInput').click()">
+                            <div class="photo-placeholder">
+                                <svg viewBox="0 0 24 24" fill="currentColor" style="width: 40px; height: 40px; color: #999;">
+                                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                                </svg>
+                                <p>사진 추가</p>
+                            </div>
+                        </div>
+                        <button type="button" class="remove-photo-btn" id="removePhotoBtn" onclick="removePhoto()" style="display: none;">사진 삭제</button>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="registerDate">회원등록일</label>
@@ -938,17 +870,6 @@
         </div>
     </div>
 
-    <!-- 카메라 모달 -->
-    <div id="cameraModal" class="camera-modal">
-        <div class="camera-container">
-            <video id="cameraVideo" class="camera-video" autoplay></video>
-            <div class="camera-controls">
-                <button class="camera-btn cancel" onclick="closeCamera()">❌</button>
-                <button class="camera-btn capture" onclick="capturePhoto()">📸</button>
-            </div>
-        </div>
-    </div>
-
     <div id="passwordModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1023,10 +944,13 @@
 
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
 
     <script>
-        // Firebase 설정 (자동으로 연결됨)
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+
+        // Firebase 설정
         const firebaseConfig = {
 		  apiKey: "AIzaSyD4GrNs2Vw9tSxGHSpKp9MvE8hsJwGo34U",
 		  authDomain: "mmcsw-880ce.firebaseapp.com",
@@ -1048,10 +972,7 @@
             adminPassword: '0000'
         };
         let firebaseDb = null;
-        let firebaseStorage = null;
-        let currentPhoto = null;
-        let currentPhotoFile = null;
-        let stream = null;
+        let currentPhotoData = null; // 현재 선택된 사진 데이터
 
         // 요일 배열
         const daysOfWeek = ['월', '화', '수', '목', '금', '토', '일'];
@@ -1069,11 +990,58 @@
         try {
             firebase.initializeApp(firebaseConfig);
             firebaseDb = firebase.database();
-            firebaseStorage = firebase.storage();
             loadFromFirebase();
             listenToFirebaseChanges();
         } catch (error) {
             console.error('Firebase 초기화 실패:', error);
+        }
+
+        // 사진 업로드 처리
+        function handlePhotoUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // 파일 크기 체크 (5MB 제한)
+            if (file.size > 5 * 1024 * 1024) {
+                showAlert('사진 크기는 5MB 이하여야 합니다.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                currentPhotoData = e.target.result;
+                displayPhoto(currentPhotoData);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // 사진 표시
+        function displayPhoto(photoData) {
+            const previewEl = document.getElementById('photoPreview');
+            const removeBtn = document.getElementById('removePhotoBtn');
+            
+            previewEl.innerHTML = `<img src="${photoData}" alt="회원 사진">`;
+            previewEl.classList.add('has-image');
+            removeBtn.style.display = 'block';
+        }
+
+        // 사진 삭제
+        function removePhoto() {
+            currentPhotoData = null;
+            const previewEl = document.getElementById('photoPreview');
+            const removeBtn = document.getElementById('removePhotoBtn');
+            
+            previewEl.innerHTML = `
+                <div class="photo-placeholder">
+                    <svg viewBox="0 0 24 24" fill="currentColor" style="width: 40px; height: 40px; color: #999;">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                    <p>사진 추가</p>
+                </div>
+            `;
+            previewEl.classList.remove('has-image');
+            removeBtn.style.display = 'none';
+            document.getElementById('photoInput').value = '';
         }
 
         function loadFromFirebase() {
@@ -1112,159 +1080,14 @@
             });
         }
 
-        async function saveToFirebase() {
-            // 먼저 현재 사진이 있으면 Storage에 업로드
-            if (currentEditIndex !== null && currentPhotoFile) {
-                const member = members[currentEditIndex];
-                await uploadPhotoToStorage(currentPhotoFile, member.name);
-            }
-            
+        function saveToFirebase() {
             const membersObj = {};
             members.forEach((member, index) => {
                 membersObj[index] = member;
             });
             
-            await firebaseDb.ref('members').set(membersObj);
-            await firebaseDb.ref('settings').set(settings);
-        }
-
-        // 사진 업로드 처리
-        function handlePhotoUpload(event) {
-            const file = event.target.files[0];
-            if (file) {
-                if (file.size > 5 * 1024 * 1024) { // 5MB 제한
-                    showAlert('파일 크기는 5MB 이하여야 합니다.');
-                    return;
-                }
-                
-                if (!file.type.startsWith('image/')) {
-                    showAlert('이미지 파일만 업로드 가능합니다.');
-                    return;
-                }
-                
-                currentPhotoFile = file;
-                previewPhoto(file);
-            }
-        }
-
-        // 사진 미리보기
-        function previewPhoto(file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                currentPhoto = e.target.result;
-                const previewImage = document.getElementById('photoPreviewImage');
-                const defaultIcon = document.querySelector('.default-icon');
-                const removeBtn = document.getElementById('removePhotoBtn');
-                
-                previewImage.src = currentPhoto;
-                previewImage.style.display = 'block';
-                defaultIcon.style.display = 'none';
-                removeBtn.style.display = 'block';
-            };
-            reader.readAsDataURL(file);
-        }
-
-        // 사진 제거
-        function removePhoto() {
-            currentPhoto = null;
-            currentPhotoFile = null;
-            const previewImage = document.getElementById('photoPreviewImage');
-            const defaultIcon = document.querySelector('.default-icon');
-            const removeBtn = document.getElementById('removePhotoBtn');
-            
-            previewImage.src = '';
-            previewImage.style.display = 'none';
-            defaultIcon.style.display = 'block';
-            removeBtn.style.display = 'none';
-        }
-
-        // 카메라 열기
-        async function openCamera() {
-            const cameraModal = document.getElementById('cameraModal');
-            const video = document.getElementById('cameraVideo');
-            
-            try {
-                // 모바일에서는 후면 카메라, 데스크톱에서는 사용 가능한 카메라
-                const constraints = {
-                    video: {
-                        facingMode: 'environment', // 후면 카메라 우선
-                        width: { ideal: 1280 },
-                        height: { ideal: 720 }
-                    },
-                    audio: false
-                };
-                
-                stream = await navigator.mediaDevices.getUserMedia(constraints);
-                video.srcObject = stream;
-                cameraModal.classList.add('active');
-                
-                // 카메라가 회전되어 있을 수 있으므로 방향 조정
-                video.onloadedmetadata = () => {
-                    video.play();
-                };
-            } catch (error) {
-                console.error('카메라 접근 실패:', error);
-                showAlert('카메라에 접근할 수 없습니다. 권한을 확인해주세요.');
-                // 카메라 실패 시 파일 업로드 창 열기
-                document.getElementById('photoInput').click();
-            }
-        }
-
-        // 카메라 닫기
-        function closeCamera() {
-            const cameraModal = document.getElementById('cameraModal');
-            const video = document.getElementById('cameraVideo');
-            
-            if (stream) {
-                stream.getTracks().forEach(track => track.stop());
-                stream = null;
-            }
-            
-            video.srcObject = null;
-            cameraModal.classList.remove('active');
-        }
-
-        // 사진 찍기
-        function capturePhoto() {
-            const video = document.getElementById('cameraVideo');
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            
-            // 비디오 크기에 맞게 캔버스 설정
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            
-            // 비디오 프레임 캡처
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
-            
-            // 캔버스를 Blob으로 변환
-            canvas.toBlob((blob) => {
-                if (blob) {
-                    currentPhotoFile = new File([blob], 'photo.jpg', { type: 'image/jpeg' });
-                    previewPhoto(currentPhotoFile);
-                    closeCamera();
-                }
-            }, 'image/jpeg', 0.8); // 80% 품질
-        }
-
-        // Firebase Storage에 사진 업로드
-        async function uploadPhotoToStorage(file, memberName) {
-            try {
-                const fileName = `members/${memberName}_${Date.now()}.jpg`;
-                const storageRef = firebaseStorage.ref(fileName);
-                const snapshot = await storageRef.put(file);
-                const downloadURL = await snapshot.ref.getDownloadURL();
-                
-                // 다운로드 URL을 회원 정보에 저장
-                if (currentEditIndex !== null) {
-                    members[currentEditIndex].photoUrl = downloadURL;
-                }
-                return downloadURL;
-            } catch (error) {
-                console.error('사진 업로드 실패:', error);
-                showAlert('사진 업로드에 실패했습니다.');
-                return null;
-            }
+            firebaseDb.ref('members').set(membersObj);
+            firebaseDb.ref('settings').set(settings);
         }
 
         // 시간 충돌 검사 함수
@@ -1274,7 +1097,6 @@
                 
                 const member = members[i];
                 
-                // 첫 번째 스케줄 충돌 검사
                 if (member.day1 === day1 && member.startTime1 && member.endTime1) {
                     if ((startTime1 >= member.startTime1 && startTime1 < member.endTime1) ||
                         (endTime1 > member.startTime1 && endTime1 <= member.endTime1) ||
@@ -1287,7 +1109,6 @@
                     }
                 }
                 
-                // 두 번째 스케줄 충돌 검사
                 if (member.day2 === day1 && member.startTime2 && member.endTime2) {
                     if ((startTime1 >= member.startTime2 && startTime1 < member.endTime2) ||
                         (endTime1 > member.startTime2 && endTime1 <= member.endTime2) ||
@@ -1300,7 +1121,6 @@
                     }
                 }
                 
-                // 두 번째 입력에 대한 검사 (day1 대신 day2 사용)
                 if (day2) {
                     if (member.day1 === day2 && member.startTime1 && member.endTime1) {
                         if ((startTime2 >= member.startTime1 && startTime2 < member.endTime1) ||
@@ -1330,7 +1150,6 @@
             return { conflict: false };
         }
 
-        // 회비 기본값 버튼 업데이트
         function updateFeePresetButtons() {
             const feePresetsEl = document.getElementById('feePresets');
             feePresetsEl.innerHTML = '';
@@ -1422,17 +1241,19 @@
                     scheduleBadges += `<span class="schedule-badge">${dayNames[member.day2]} ${member.startTime2}~${member.endTime2}</span>`;
                 }
                 
-                // 사진 URL이 있으면 사용, 없으면 기본 아이콘
-                const photoHtml = member.photoUrl 
-                    ? `<img src="${member.photoUrl}" class="member-photo" alt="${member.name}">`
-                    : `<div class="member-photo" style="display: flex; align-items: center; justify-content: center; background: #f0f0f0; color: #999; font-size: 32px;">👤</div>`;
+                // 사진 썸네일
+                const photoThumb = member.photo ? 
+                    `<img src="${member.photo}" alt="${member.name}">` :
+                    `<svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>`;
                 
                 return `
                 <div class="member-card">
-                    <div class="member-photo-container">
-                        ${photoHtml}
+                    <div class="member-photo-thumb">
+                        ${photoThumb}
                     </div>
-                    <div class="member-info-container">
+                    <div class="member-details">
                         <div class="member-header">
                             <div class="member-name">${member.name}</div>
                             <div class="member-actions">
@@ -1455,18 +1276,15 @@
             `}).join('');
         }
 
-        // 전체 스케줄 렌더링 함수
         function renderSchedule() {
             const scheduleEl = document.getElementById('scheduleContent');
             
-            // 요일별로 회원 그룹화
             const scheduleByDay = {};
             daysOfWeek.forEach(day => {
                 scheduleByDay[day] = [];
             });
             
             members.forEach(member => {
-                // 첫 번째 스케줄 추가
                 if (member.day1 && member.startTime1 && member.endTime1) {
                     scheduleByDay[member.day1].push({
                         name: member.name,
@@ -1474,7 +1292,6 @@
                         endTime: member.endTime1
                     });
                 }
-                // 두 번째 스케줄 추가
                 if (member.day2 && member.startTime2 && member.endTime2) {
                     scheduleByDay[member.day2].push({
                         name: member.name,
@@ -1484,13 +1301,11 @@
                 }
             });
             
-            // 시간별로 정렬하고 같은 시간대의 회원들을 그룹화
             let scheduleHTML = '';
             
             daysOfWeek.forEach(day => {
                 const dayMembers = scheduleByDay[day];
                 
-                // 시간대별로 그룹화
                 const timeSlots = {};
                 dayMembers.forEach(member => {
                     const timeKey = `${member.startTime}-${member.endTime}`;
@@ -1504,7 +1319,6 @@
                     timeSlots[timeKey].members.push(member.name);
                 });
                 
-                // 시간대별로 정렬
                 const sortedTimeSlots = Object.values(timeSlots).sort((a, b) => {
                     return a.startTime.localeCompare(b.startTime);
                 });
@@ -1553,7 +1367,7 @@
             return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
 
-        async function addMember() {
+        function addMember() {
             const name = document.getElementById('name').value.trim();
             const phone = document.getElementById('phone').value.trim();
             const registerDate = document.getElementById('registerDate').value;
@@ -1572,7 +1386,6 @@
                 return;
             }
 
-            // 시간 입력 검증 및 충돌 검사
             const schedules = [];
             
             if (day1 && startTime1 && endTime1) {
@@ -1591,7 +1404,6 @@
                 schedules.push({ day: day2, startTime: startTime2, endTime: endTime2 });
             }
             
-            // 시간 충돌 검사
             for (const schedule of schedules) {
                 const conflict = checkTimeConflict(
                     schedule.day, 
@@ -1605,15 +1417,10 @@
                 }
             }
 
-            // 사진이 있으면 업로드
-            let photoUrl = null;
-            if (currentPhotoFile) {
-                photoUrl = await uploadPhotoToStorage(currentPhotoFile, name);
-            }
-
             const member = {
                 name,
                 phone,
+                photo: currentPhotoData || null,
                 registerDate: registerDate || new Date().toISOString().split('T')[0],
                 fee: fee ? parseInt(fee) : null,
                 day1: day1 || null,
@@ -1623,12 +1430,11 @@
                 startTime2: startTime2 || null,
                 endTime2: endTime2 || null,
                 email,
-                address,
-                photoUrl
+                address
             };
 
             members.push(member);
-            await saveToFirebase();
+            saveToFirebase();
             filteredMembers = [...members];
             renderMembers();
             renderSchedule();
@@ -1636,7 +1442,7 @@
             showAlert('회원이 추가되었습니다!');
         }
 
-        async function updateMember() {
+        function updateMember() {
             if (currentEditIndex === null) {
                 showAlert('수정할 회원을 선택해주세요!');
                 return;
@@ -1660,7 +1466,6 @@
                 return;
             }
 
-            // 시간 입력 검증 및 충돌 검사
             const schedules = [];
             
             if (day1 && startTime1 && endTime1) {
@@ -1679,7 +1484,6 @@
                 schedules.push({ day: day2, startTime: startTime2, endTime: endTime2 });
             }
             
-            // 시간 충돌 검사 (현재 수정 중인 회원 제외)
             for (const schedule of schedules) {
                 const conflict = checkTimeConflict(
                     schedule.day, 
@@ -1694,18 +1498,10 @@
                 }
             }
 
-            // 기존 사진 URL 유지
-            const existingPhotoUrl = members[currentEditIndex].photoUrl;
-            let photoUrl = existingPhotoUrl;
-            
-            // 새 사진이 있으면 업로드
-            if (currentPhotoFile) {
-                photoUrl = await uploadPhotoToStorage(currentPhotoFile, name);
-            }
-
             members[currentEditIndex] = {
                 name,
                 phone,
+                photo: currentPhotoData !== null ? currentPhotoData : members[currentEditIndex].photo,
                 registerDate: registerDate || members[currentEditIndex].registerDate,
                 fee: fee ? parseInt(fee) : null,
                 day1: day1 || null,
@@ -1715,11 +1511,10 @@
                 startTime2: startTime2 || null,
                 endTime2: endTime2 || null,
                 email,
-                address,
-                photoUrl
+                address
             };
 
-            await saveToFirebase();
+            saveToFirebase();
             filteredMembers = [...members];
             renderMembers();
             renderSchedule();
@@ -1742,18 +1537,10 @@
             document.getElementById('email').value = member.email || '';
             document.getElementById('address').value = member.address || '';
             
-            // 사진 미리보기 설정
-            if (member.photoUrl) {
-                currentPhoto = member.photoUrl;
-                const previewImage = document.getElementById('photoPreviewImage');
-                const defaultIcon = document.querySelector('.default-icon');
-                const removeBtn = document.getElementById('removePhotoBtn');
-                
-                previewImage.src = member.photoUrl;
-                previewImage.style.display = 'block';
-                defaultIcon.style.display = 'none';
-                removeBtn.style.display = 'block';
-                currentPhotoFile = null; // 기존 파일은 없음
+            // 사진 표시
+            if (member.photo) {
+                currentPhotoData = member.photo;
+                displayPhoto(member.photo);
             } else {
                 removePhoto();
             }
@@ -1767,10 +1554,10 @@
             document.getElementById('deleteModal').classList.add('active');
         }
 
-        async function confirmDelete() {
+        function confirmDelete() {
             if (deleteIndex !== null) {
                 members.splice(deleteIndex, 1);
-                await saveToFirebase();
+                saveToFirebase();
                 filteredMembers = [...members];
                 renderMembers();
                 renderSchedule();
@@ -1810,7 +1597,6 @@
             currentEditIndex = null;
         }
 
-        // 탭 전환 함수
         function switchTab(tabName) {
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.classList.remove('active');
@@ -1832,7 +1618,6 @@
             }
         }
 
-        // 비밀번호 확인 후 설정 열기
         function openSettings() {
             document.getElementById('passwordInput').value = '';
             document.getElementById('passwordModal').classList.add('active');
@@ -1867,10 +1652,9 @@
             document.getElementById('settingsModal').classList.remove('active');
         }
 
-        async function saveSettings() {
+        function saveSettings() {
             settings.clubName = document.getElementById('clubNameInput').value.trim();
             
-            // 월회비 기본값 저장
             settings.feePresets = [
                 parseInt(document.getElementById('feePreset1').value) || 0,
                 parseInt(document.getElementById('feePreset2').value) || 0,
@@ -1879,13 +1663,12 @@
                 parseInt(document.getElementById('feePreset5').value) || 0
             ];
             
-            // 비밀번호 변경
             const newPassword = document.getElementById('adminPassword').value;
             if (newPassword) {
                 settings.adminPassword = newPassword;
             }
             
-            await saveToFirebase();
+            saveToFirebase();
             if (settings.clubName) {
                 document.getElementById('clubNameDisplay').textContent = settings.clubName;
             }
@@ -1912,7 +1695,7 @@
             showAlert('데이터가 내보내기되었습니다!');
         }
 
-        async function importData(event) {
+        function importData(event) {
             const file = event.target.files[0];
             if (!file) return;
             
@@ -1959,24 +1742,7 @@
         document.getElementById('startTime2').value = "19:00";
         document.getElementById('endTime2').value = "21:00";
         
-        // 회비 기본값 버튼 초기화
         updateFeePresetButtons();
-
-        // 모바일에서 카메라 접근 권한 체크
-        function checkCameraPermission() {
-            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                console.log('카메라 API를 지원하지 않는 브라우저입니다.');
-                return false;
-            }
-            return true;
-        }
-
-        // 페이지 로드 시 카메라 권한 확인
-        if (checkCameraPermission()) {
-            console.log('카메라 기능 사용 가능');
-        } else {
-            console.log('카메라 기능 사용 불가능');
-        }
     </script>
 </body>
 </html>
