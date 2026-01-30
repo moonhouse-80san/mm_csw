@@ -763,23 +763,19 @@
             }
 
             .member-card {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
             }
 
-            .member-photo-container img {
+            .member-photo-container {
                 width: 120px;
                 height: 120px;
-				    object-fit: cover;
-    border-radius: 8px;
             }
 
             .member-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
+                flex-direction: column;
+                gap: 10px;
             }
 
             .member-actions {
