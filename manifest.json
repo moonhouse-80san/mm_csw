@@ -2,7 +2,7 @@
   "name": "최세욱탁구클럽 회원관리 앱",
   "short_name": "최세욱회원",
   "description": "회원 정보를 관리하는 웹 앱",
-  "start_url": "/index.html",
+  "start_url": "mm_csw/index.html",
   "display": "standalone",
   "background_color": "#667eea",
   "theme_color": "#2196F3",
