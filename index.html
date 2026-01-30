@@ -336,12 +336,19 @@
             border-bottom: 2px solid #e0e0e0;
         }
 
-        .fee-presets {
-            display: flex;
-            flex-wrap: wrap;
-            padding: 2px;
-            margin-top: 5px;
-        }
+		.fee-presets {
+			display: flex;
+			flex-wrap: nowrap; /* 줄바꿈 방지 */
+			gap: 5px;          /* 요소 사이 간격 */
+			margin-top: 10px;
+		}
+
+		.fee-presets input {
+			flex: 1;           /* 모든 input이 동일한 비율로 가로 너비를 나눠 가짐 */
+			min-width: 0;      /* flex 아이템이 컨테이너를 벗어나는 것 방지 */
+			padding: 8px 5px;  /* 내부 여백 추가 */
+			text-align: center;
+		}
 
         .fee-preset-btn {
             padding: 6px 12px;
