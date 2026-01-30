@@ -201,19 +201,15 @@
         .photo-preview-container {
             margin-top: 10px;
             display: none;
-            text-align: center;
         }
 
         .photo-preview {
             position: relative;
-            width: 400px;
-            height: 400px;
-            max-width: 100%;
+            width: 150px;
+            height: 150px;
             border-radius: 10px;
             overflow: hidden;
             border: 2px solid #e0e0e0;
-            margin: 0 auto;
-            background: #f0f0f0;
         }
 
         .photo-preview img {
@@ -224,21 +220,19 @@
 
         .remove-photo-btn {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 40px;
-            height: 40px;
+            top: 5px;
+            right: 5px;
+            width: 30px;
+            height: 30px;
             background: #f44336;
             color: white;
             border: none;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 20px;
+            font-size: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-            z-index: 10;
         }
 
         .time-group {
@@ -377,8 +371,8 @@
         }
 
         .member-photo-container {
-            width: 100px;
-            height: 100px;
+            width: 80px;
+            height: 80px;
             flex-shrink: 0;
         }
 
@@ -633,76 +627,6 @@
             font-size: 14px;
         }
 
-        /* 카메라 모달 전용 스타일 */
-        #cameraModal .modal-content {
-            max-width: 500px !important;
-            width: 95%;
-            padding: 20px;
-        }
-
-        .camera-controls {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-            justify-content: center;
-        }
-
-        .camera-btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            background: #4CAF50;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            flex: 1;
-        }
-
-        .camera-btn.active {
-            background: #2196F3;
-            box-shadow: 0 0 0 2px #fff, 0 0 0 4px #2196F3;
-        }
-
-        .camera-btn:last-child {
-            background: #2196F3;
-        }
-
-        #cameraVideo {
-            width: 100%;
-            height: auto;
-            max-height: 60vh;
-            border-radius: 10px;
-            background: #000;
-            object-fit: cover;
-        }
-
-        .capture-btn {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            background: white;
-            border: 4px solid #f0f0f0;
-            margin: 20px auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .capture-btn:active {
-            transform: scale(0.95);
-            background: #f0f0f0;
-        }
-
-        .capture-inner {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: #f44336;
-            border: 2px solid white;
-        }
-
         .content-section::-webkit-scrollbar {
             width: 8px;
         }
@@ -764,8 +688,8 @@
             }
 
             .member-photo-container {
-                width: 120px;
-                height: 120px;
+                width: 100px;
+                height: 100px;
             }
 
             .member-header {
@@ -777,31 +701,6 @@
                 width: 100%;
                 justify-content: center;
             }
-
-            .photo-preview {
-                width: 300px;
-                height: 300px;
-            }
-
-            #cameraModal .modal-content {
-                padding: 15px;
-                margin: 10px;
-            }
-
-            .camera-controls {
-                flex-direction: column;
-            }
-
-            .camera-btn {
-                width: 100%;
-            }
-        }
-
-        @media (max-width: 400px) {
-            .photo-preview {
-                width: 250px;
-                height: 250px;
-            }
         }
     </style>
 </head>
@@ -811,7 +710,7 @@
             <div class="sync-status" id="syncStatus">☁️ 동기화</div>
             <div class="settings-icon" onclick="openSettings()">
                 <svg viewBox="0 0 24 24">
-                    <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c.04-0.24.24-0.41.48-0.41 h3.84c0.24,0,0.43,0.17,0.47,0.41L19.25,5.35c0.59,0.24,1.13,0.56,1.62,0.94l2.39-0.96c0.22-0.08,0.47,0,0.59,0.22l1.92,3.32 c0.12,0.22,0.07,0.47-0.12,0.61l-2.03,1.58c0.05,0.3,0.07,0.63,0.07,0.94s-0.02,0.64-0.07,0.94l2.03,1.58 c0.18,0.14,0.23,0.41,0.12,0.61l-1.92,3.32c-0.12,0.22-0.37,0.29-0.59,0.22l-2.39-0.96c-0.5,0.38-1.03,0.7-1.62,0.94l-0.36,2.54 c-0.05,0.24-0.24,0.41-0.47,0.41h-3.84c-0.24,0-0.44-0.17-0.48-0.41l-0.36-2.54c-0.59-0.24-1.13-0.56-1.62-0.94l-2.39,0.96 c-0.22,0.08-0.47,0-0.59-0.22l-1.92,3.32c-0.12-0.22-0.07-0.47,0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
+                    <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c.04-0.24.24-0.41.48-0.41 h3.84c0.24,0,0.43,0.17,0.47,0.41L19.25,5.35c0.59,0.24,1.13,0.56,1.62,0.94l2.39-0.96c0.22-0.08,0.47,0,0.59,0.22l1.92,3.32 c0.12,0.22,0.07,0.47-0.12,0.61l-2.03,1.58c0.05,0.3,0.07,0.63,0.07,0.94s-0.02,0.64-0.07,0.94l2.03,1.58 c0.18,0.14,0.23,0.41,0.12,0.61l-1.92,3.32c-0.12,0.22-0.37,0.29-0.59,0.22l-2.39-0.96c-0.5,0.38-1.03,0.7-1.62,0.94l-0.36,2.54 c-0.05,0.24-0.24,0.41-0.47,0.41h-3.84c-0.24,0-0.44-0.17-0.48-0.41l-0.36-2.54c-0.59-0.24-1.13-0.56-1.62-0.94l-2.39,0.96 c-0.22,0.08-0.47,0-0.59-0.22l-1.92-3.32c-0.12-0.22-0.07-0.47,0.12-0.61l2.03-1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94 l-2.03,1.58c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94 l0.36,2.54c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92,3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
                 </svg>
             </div>
             <h1>👥 회원 관리</h1>
@@ -975,31 +874,15 @@
 
     <!-- 카메라 모달 -->
     <div id="cameraModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content" style="max-width: 600px;">
             <div class="modal-header">
                 <h2>📷 카메라</h2>
                 <button class="close-btn" onclick="closeCamera()">×</button>
             </div>
             <div style="text-align: center;">
-                <!-- 카메라 전환 버튼 -->
-                <div class="camera-controls">
-                    <button class="camera-btn active" id="frontCameraBtn" onclick="switchCamera('user')">
-                        📱 전면 카메라
-                    </button>
-                    <button class="camera-btn" id="rearCameraBtn" onclick="switchCamera('environment')">
-                        📷 후면 카메라
-                    </button>
-                </div>
-                
-                <video id="cameraVideo" autoplay playsinline></video>
-                
-                <!-- 사진 찍기 버튼 -->
-                <div class="capture-btn" onclick="capturePhoto()">
-                    <div class="capture-inner"></div>
-                </div>
-                
-                <div style="text-align: center; color: #666; font-size: 14px;">
-                    사진을 찍으려면 원형 버튼을 누르세요
+                <video id="cameraVideo" autoplay style="width: 100%; height: auto; border-radius: 10px;"></video>
+                <div style="margin-top: 20px;">
+                    <button class="btn" style="background: #4CAF50;" onclick="capturePhoto()">사진 찍기</button>
                 </div>
             </div>
         </div>
@@ -1105,7 +988,6 @@
         let firebaseDb = null;
         let currentPhotoData = null;
         let cameraStream = null;
-        let currentCameraType = 'user'; // 기본값: 전면 카메라
 
         // 요일 배열
         const daysOfWeek = ['월', '화', '수', '목', '금', '토', '일'];
@@ -1129,163 +1011,6 @@
             console.error('Firebase 초기화 실패:', error);
         }
 
-        // 카메라 전환 함수
-        function switchCamera(cameraType) {
-            currentCameraType = cameraType;
-            
-            // 버튼 활성화 상태 업데이트
-            document.getElementById('frontCameraBtn').classList.toggle('active', cameraType === 'user');
-            document.getElementById('rearCameraBtn').classList.toggle('active', cameraType === 'environment');
-            
-            // 카메라 재시작
-            restartCamera();
-        }
-
-        // 카메라 재시작
-        async function restartCamera() {
-            if (cameraStream) {
-                cameraStream.getTracks().forEach(track => track.stop());
-            }
-            
-            try {
-                const constraints = {
-                    video: {
-                        facingMode: currentCameraType,
-                        width: { ideal: 1280 },
-                        height: { ideal: 1280 }
-                    },
-                    audio: false
-                };
-                
-                cameraStream = await navigator.mediaDevices.getUserMedia(constraints);
-                const video = document.getElementById('cameraVideo');
-                video.srcObject = cameraStream;
-                
-                // 전면 카메라일 때만 미러 효과 적용
-                if (currentCameraType === 'user') {
-                    video.style.transform = 'scaleX(-1)';
-                } else {
-                    video.style.transform = 'none';
-                }
-                
-            } catch (error) {
-                console.error('카메라 재시작 실패:', error);
-                showAlert('카메라에 접근할 수 없습니다.');
-            }
-        }
-
-        // 카메라 열기
-        async function openCamera() {
-            try {
-                const constraints = {
-                    video: {
-                        facingMode: currentCameraType,
-                        width: { ideal: 1280 },
-                        height: { ideal: 1280 }
-                    },
-                    audio: false
-                };
-                
-                cameraStream = await navigator.mediaDevices.getUserMedia(constraints);
-                const video = document.getElementById('cameraVideo');
-                video.srcObject = cameraStream;
-                
-                // 전면 카메라일 때만 미러 효과 적용
-                if (currentCameraType === 'user') {
-                    video.style.transform = 'scaleX(-1)';
-                }
-                
-                document.getElementById('cameraModal').classList.add('active');
-                
-            } catch (error) {
-                console.error('카메라 접근 실패:', error);
-                showAlert('카메라에 접근할 수 없습니다. 갤러리에서 사진을 선택해주세요.');
-                document.getElementById('photoInput').click();
-            }
-        }
-
-        // 카메라 닫기
-        function closeCamera() {
-            if (cameraStream) {
-                cameraStream.getTracks().forEach(track => track.stop());
-                cameraStream = null;
-            }
-            
-            const video = document.getElementById('cameraVideo');
-            video.srcObject = null;
-            video.style.transform = '';
-            document.getElementById('cameraModal').classList.remove('active');
-        }
-
-        // 사진 찍기
-        function capturePhoto() {
-            const video = document.getElementById('cameraVideo');
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            
-            // 400x400 크기로 설정
-            canvas.width = 400;
-            canvas.height = 400;
-            
-            // 비디오의 비율 계산
-            const videoAspect = video.videoWidth / video.videoHeight;
-            const canvasAspect = 1; // 1:1 비율
-            
-            let drawWidth, drawHeight, offsetX, offsetY;
-            
-            if (videoAspect > canvasAspect) {
-                // 비디오가 더 넓은 경우: 세로 기준
-                drawHeight = video.videoHeight;
-                drawWidth = video.videoHeight * canvasAspect;
-                offsetX = (video.videoWidth - drawWidth) / 2;
-                offsetY = 0;
-            } else {
-                // 비디오가 더 높은 경우: 가로 기준
-                drawWidth = video.videoWidth;
-                drawHeight = video.videoWidth / canvasAspect;
-                offsetX = 0;
-                offsetY = (video.videoHeight - drawHeight) / 2;
-            }
-            
-            // 캔버스에 그리기 (중앙 크롭)
-            context.drawImage(
-                video, 
-                offsetX, offsetY, drawWidth, drawHeight,
-                0, 0, canvas.width, canvas.height
-            );
-            
-            // 전면 카메라일 경우 미러 효과 제거
-            if (currentCameraType === 'user') {
-                const tempCanvas = document.createElement('canvas');
-                const tempContext = tempCanvas.getContext('2d');
-                tempCanvas.width = canvas.width;
-                tempCanvas.height = canvas.height;
-                
-                // 미러 효과 제거 (원래대로 되돌리기)
-                tempContext.translate(canvas.width, 0);
-                tempContext.scale(-1, 1);
-                tempContext.drawImage(canvas, 0, 0);
-                
-                // 원본 캔버스에 다시 복사
-                context.clearRect(0, 0, canvas.width, canvas.height);
-                context.drawImage(tempCanvas, 0, 0);
-            }
-            
-            // 이미지 품질 설정 (80%)
-            canvas.toBlob((blob) => {
-                if (blob) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        currentPhotoData = e.target.result;
-                        displayPhotoPreview();
-                        closeCamera();
-                        showAlert('사진이 촬영되었습니다!');
-                    };
-                    reader.readAsDataURL(blob);
-                }
-            }, 'image/jpeg', 0.8);
-        }
-
         // 사진 업로드 처리
         function handlePhotoUpload(event) {
             const file = event.target.files[0];
@@ -1298,33 +1023,8 @@
 
             const reader = new FileReader();
             reader.onload = function(e) {
-                const img = new Image();
-                img.onload = function() {
-                    // 400x400 크기로 리사이징
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-                    
-                    canvas.width = 400;
-                    canvas.height = 400;
-                    
-                    // 이미지 중앙 크롭 (1:1 비율)
-                    const scale = Math.max(
-                        400 / img.width,
-                        400 / img.height
-                    );
-                    
-                    const newWidth = img.width * scale;
-                    const newHeight = img.height * scale;
-                    const x = (400 - newWidth) / 2;
-                    const y = (400 - newHeight) / 2;
-                    
-                    ctx.drawImage(img, x, y, newWidth, newHeight);
-                    
-                    currentPhotoData = canvas.toDataURL('image/jpeg', 0.8);
-                    displayPhotoPreview();
-                    showAlert('사진이 업로드되었습니다!');
-                };
-                img.src = e.target.result;
+                currentPhotoData = e.target.result;
+                displayPhotoPreview();
             };
             reader.readAsDataURL(file);
         }
@@ -1347,6 +1047,64 @@
             currentPhotoData = null;
             displayPhotoPreview();
             document.getElementById('photoInput').value = '';
+        }
+
+        // 카메라 열기
+        async function openCamera() {
+            try {
+                const constraints = {
+                    video: {
+                        facingMode: 'user',
+                        width: { ideal: 400 },
+                        height: { ideal: 400 }
+                    },
+                    audio: false
+                };
+                
+                cameraStream = await navigator.mediaDevices.getUserMedia(constraints);
+                const video = document.getElementById('cameraVideo');
+                video.srcObject = cameraStream;
+                document.getElementById('cameraModal').classList.add('active');
+            } catch (error) {
+                console.error('카메라 접근 실패:', error);
+                showAlert('카메라에 접근할 수 없습니다. 갤러리에서 사진을 선택해주세요.');
+                document.getElementById('photoInput').click();
+            }
+        }
+
+        // 카메라 닫기
+        function closeCamera() {
+            if (cameraStream) {
+                cameraStream.getTracks().forEach(track => track.stop());
+                cameraStream = null;
+            }
+            
+            const video = document.getElementById('cameraVideo');
+            video.srcObject = null;
+            document.getElementById('cameraModal').classList.remove('active');
+        }
+
+        // 사진 찍기
+        function capturePhoto() {
+            const video = document.getElementById('cameraVideo');
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+            canvas.toBlob((blob) => {
+                if (blob) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        currentPhotoData = e.target.result;
+                        displayPhotoPreview();
+                        closeCamera();
+                    };
+                    reader.readAsDataURL(blob);
+                }
+            }, 'image/jpeg', 0.8);
         }
 
         function loadFromFirebase() {
@@ -1545,7 +1303,7 @@
                     scheduleBadges += `<span class="schedule-badge">${dayNames[member.day2]} ${member.startTime2}~${member.endTime2}</span>`;
                 }
                 
-                // 사진 썸네일 (400x400 크기로 표시)
+                // 사진 썸네일
                 const photoThumb = member.photo ? 
                     `<img src="${member.photo}" class="member-photo" alt="${member.name}">` :
                     `<div class="member-photo" style="display: flex; align-items: center; justify-content: center; background: #f0f0f0; color: #999; font-size: 32px;">👤</div>`;
