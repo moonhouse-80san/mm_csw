@@ -762,30 +762,53 @@
                 order: 2;
             }
 
-            .member-card {
+/* 전체 카드 가로 정렬 */
+.member-card {
     display: flex;
-    align-items: center;
-    gap: 12px;
-            }
+    gap: 14px;
+    align-items: flex-start;
+}
 
-            .member-photo-container img {
-                width: 120px;
-                height: 120px;
-				    object-fit: cover;
+/* 사진 영역 */
+.member-photo-container img {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
     border-radius: 8px;
-            }
+}
 
-            .member-header {
+/* 오른쪽 전체 정보 영역 */
+.member-info-container {
+    flex: 1;
+}
+
+/* 상단: 이름 + 수정/삭제 */
+.member-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
-            }
+    margin-bottom: 6px;
+}
 
-            .member-actions {
-                width: 100%;
-                justify-content: center;
-            }
+/* 이름 */
+.member-name {
+    font-size: 17px;
+    font-weight: bold;
+}
+
+/* 버튼 영역 */
+.member-actions {
+    display: flex;
+    gap: 6px;
+}
+
+/* 하단 정보 영역 */
+.member-info {
+    font-size: 14px;
+    color: #444;
+    line-height: 1.5;
+}
+
 
             .photo-preview {
                 width: 300px;
