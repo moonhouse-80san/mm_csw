@@ -36,7 +36,7 @@
 				<button class="filter-btn" onclick="sortMembers('fee')">회비순</button>
 			</div>
 
-			<div class="tab-section">
+			<div class="tab-section" style="margin-top:15px">
 				<div class="tabs">
 					<button class="tab-btn active" onclick="switchTab('list')">회원 목록</button>
 					<button class="tab-btn" onclick="switchTab('schedule')">📅 전체 스케줄</button>
@@ -60,24 +60,6 @@
 				</div>
 			</div>
 
-			<!-- 달력 -->
-			<div class="form-group full-width" style="margin-top:20px;">
-				<label>출석 관리</label>
-				<button type="button" class="photo-btn" onclick="toggleCalendar()" style="margin-bottom: 10px;">
-					📅 <span id="calendarToggleText">달력 열기</span>
-				</button>
-				<div class="calendar-container" id="formCalendar" style="display: none;">
-					<div class="calendar-header">
-						<h3 id="formCalendarTitle">2026년 1월</h3>
-						<div class="calendar-nav">
-							<button class="calendar-nav-btn" onclick="previousMonthForm()">◀ 이전</button>
-							<button class="calendar-nav-btn" onclick="nextMonthForm()">다음 ▶</button>
-						</div>
-					</div>
-					<div class="calendar-grid" id="formCalendarGrid"></div>
-				</div>
-			</div>
-
 			<!-- 수정: 암호 입력 섹션을 더 작게 -->
 			<div class="password-section">
 				<div class="password-input-group">
@@ -93,6 +75,24 @@
 							<span class="lock-timer" id="lockTimer"></span>
 						</div>
 					</button>
+				</div>
+			</div>
+
+			<!-- 달력 -->
+			<div class="form-group full-width" style="margin-top:20px;">
+				<label>출석 관리</label>
+				<button type="button" class="photo-btn" onclick="toggleCalendar()" style="margin-bottom: 10px;">
+					📅 <span id="calendarToggleText">달력 열기</span>
+				</button>
+				<div class="calendar-container" id="formCalendar" style="display: none;">
+					<div class="calendar-header">
+						<h3 id="formCalendarTitle">2026년 1월</h3>
+						<div class="calendar-nav">
+							<button class="calendar-nav-btn" onclick="previousMonthForm()">◀ 이전</button>
+							<button class="calendar-nav-btn" onclick="nextMonthForm()">다음 ▶</button>
+						</div>
+					</div>
+					<div class="calendar-grid" id="formCalendarGrid"></div>
 				</div>
 			</div>
 		</div>
