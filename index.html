@@ -907,9 +907,6 @@
 			color: rgba(255,255,255,0.8);
 		}
 
-
-
-
 		/* ========== 출석 관리 추가 스타일 ========== */
 		.attendance-count {
 			display: inline-flex;
@@ -2044,10 +2041,13 @@
 					document.getElementById('clubNameDisplay').textContent = settings.clubName || '구장명을 설정하세요';
 					updateFeePresetButtons();
 
-					// 초기 잠금 상태 설정
-					remainingTime = settings.lockTimeout * 60;
-					updateLockStatus();
-				}
+				// 초기 잠금 상태 설정
+						remainingTime = settings.lockTimeout * 60;
+						updateLockStatus();
+					} else {
+						// Firebase에 설정 데이터가 없는 경우 기본값 설정
+						settings.lockTimeout = 60;
+					}
 			});
 		}
 
@@ -2659,7 +2659,7 @@
 
 		function openSettingsDialog() {
 			document.getElementById('clubNameInput').value = settings.clubName || '';
-			document.getElementById('lockTimeoutInput').value = settings.lockTimeout || 5;
+			document.getElementById('lockTimeoutInput').value = settings.lockTimeout || 60;
 			document.getElementById('feePreset1').value = settings.feePresets[0] || '';
 			document.getElementById('feePreset2').value = settings.feePresets[1] || '';
 			document.getElementById('feePreset3').value = settings.feePresets[2] || '';
@@ -2792,10 +2792,11 @@
 
 		// 초기화
 		document.getElementById('registerDate').valueAsDate = new Date();
-		document.getElementById('startTime1').value = "19:00";
-		document.getElementById('endTime1').value = "21:00";
-		document.getElementById('startTime2').value = "19:00";
-		document.getElementById('endTime2').value = "21:00";
+		document.getElementById('startTime1').value = "13:00";
+		document.getElementById('endTime1').value = "13:20";
+		document.getElementById('startTime2').value = "13:00";
+		document.getElementById('endTime2').value = "13:20";
+		document.getElementById('targetCount').value = "0";
 
 		updateFeePresetButtons();
 		updateLockStatus(); // 초기 잠금 상태 설정
