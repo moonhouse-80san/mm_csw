@@ -1429,11 +1429,6 @@ function nextMonthForm() {
 }
 
 function selectDate(year, month, date) {
-	if (!isUnlocked) {
-		showAlert('먼저 잠금을 해제해주세요!');
-		return;
-	}
-
 	// 목표 횟수가 설정된 회원이 있는지 확인
 	const hasMembersWithTarget = members.some(member => {
 		const targetCount = member.targetCount || 0;
@@ -1447,7 +1442,6 @@ function selectDate(year, month, date) {
 
 	selectedDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
 	showAttendanceSelectModal();
-	resetLockTimer();
 }
 
 function showAttendanceSelectModal() {
@@ -1609,7 +1603,6 @@ function toggleAttendance(memberIndex) {
 	}
 
 	closeAttendanceSelectModal();
-	resetLockTimer();
 }
 
 // 현재 날짜로 달력 초기화
