@@ -2976,13 +2976,13 @@
 
 		function toggleAttendance(memberIndex) {
 			const member = members[memberIndex];
-			
+
 			if (!member.attendanceDates) {
 				member.attendanceDates = [];
 			}
 
 			const dateIndex = member.attendanceDates.indexOf(selectedDate);
-			
+
 			if (dateIndex === -1) {
 				// 출석 추가
 				member.attendanceDates.push(selectedDate);
@@ -2994,12 +2994,20 @@
 				if (member.currentCount === targetCount - 1) {
 					showAttendanceAlert(member.name, member.currentCount, targetCount);
 				}
-				// 목표 도달 알림
+				// 목표 도달 시 초기화
 				else if (member.currentCount >= targetCount) {
-					showAttendanceAlert(member.name, member.currentCount, targetCount);
-				}
+					// 목표 도달 메시지
+					showAlert(`${member.name} 회원님 목표 ${targetCount}회를 달성했습니다!`);
+					
+					// 출석 횟수 초기화
+					member.currentCount = 0;
+					member.attendanceDates = [];
 
-				showAlert(`${member.name} 출석 체크 완료! (${member.currentCount}/${targetCount}회)`);
+					// 초기화 알림
+					showAlert(`${member.name} 회원님의 출석 횟수가 초기화되었습니다. (0/${targetCount}회)`);
+				} else {
+					showAlert(`${member.name} 출석 체크 완료! (${member.currentCount}/${targetCount}회)`);
+				}
 			} else {
 				// 출석 취소
 				member.attendanceDates.splice(dateIndex, 1);
