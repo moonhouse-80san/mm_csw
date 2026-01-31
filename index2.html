@@ -1027,169 +1027,6 @@
 				font-size: 12px;
 			}
 		}
-
-		/* ========== 출석 관리 추가 스타일 ========== */
-		.attendance-count {
-			display: inline-flex;
-			align-items: center;
-			gap: 5px;
-			padding: 4px 10px;
-			background: linear-gradient(135deg, #667eea, #764ba2);
-			color: white;
-			border-radius: 12px;
-			font-size: 13px;
-			font-weight: 600;
-		}
-
-		.attendance-count.near-goal {
-			background: linear-gradient(135deg, #FF9800, #F57C00);
-			animation: pulse 1.5s infinite;
-		}
-
-		.attendance-count.reached-goal {
-			background: linear-gradient(135deg, #f44336, #d32f2f);
-			animation: pulse 1s infinite;
-		}
-
-		@keyframes pulse {
-			0%, 100% { transform: scale(1); }
-			50% { transform: scale(1.05); }
-		}
-
-		.calendar-container {
-			background: white;
-			border-radius: 15px;
-			padding: 15px;
-			margin-top: 10px;
-			box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-		}
-
-		.calendar-header {
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-			margin-bottom: 15px;
-		}
-
-		.calendar-header h3 {
-			font-size: 18px;
-			color: #333;
-			margin: 0;
-		}
-
-		.calendar-nav {
-			display: flex;
-			gap: 8px;
-		}
-
-		.calendar-nav-btn {
-			padding: 6px 12px;
-			background: #2196F3;
-			color: white;
-			border: none;
-			border-radius: 6px;
-			cursor: pointer;
-			font-size: 12px;
-			font-weight: 600;
-			transition: all 0.3s;
-		}
-
-		.calendar-nav-btn:hover {
-			background: #1976D2;
-		}
-
-		.calendar-grid {
-			display: grid;
-			grid-template-columns: repeat(7, 1fr);
-			gap: 4px;
-		}
-
-		.calendar-day-header {
-			text-align: center;
-			padding: 8px;
-			font-weight: 600;
-			color: #666;
-			font-size: 12px;
-		}
-
-		.calendar-day {
-			aspect-ratio: 1;
-			border: 2px solid #e0e0e0;
-			border-radius: 6px;
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			justify-content: center;
-			cursor: pointer;
-			transition: all 0.3s;
-			position: relative;
-			padding: 4px;
-		}
-
-		.calendar-day:hover {
-			background: #e3f2fd;
-			border-color: #2196F3;
-		}
-
-		.calendar-day.other-month {
-			opacity: 0.3;
-			cursor: not-allowed;
-		}
-
-		.calendar-day.today {
-			background: #fff3e0;
-			border-color: #FF9800;
-		}
-
-		.calendar-day-number {
-			font-size: 13px;
-			font-weight: 600;
-			color: #333;
-		}
-
-		.calendar-day.has-attendance {
-			background: linear-gradient(135deg, #4CAF50, #45a049);
-			border-color: #4CAF50;
-		}
-
-		.calendar-day.has-attendance .calendar-day-number {
-			color: white;
-		}
-
-		.calendar-attendance-dot {
-			width: 5px;
-			height: 5px;
-			background: #4CAF50;
-			border-radius: 50%;
-			margin-top: 2px;
-		}
-
-		.calendar-day.has-attendance .calendar-attendance-dot {
-			background: white;
-		}
-
-		.attendance-alert-modal .modal-content {
-			text-align: center;
-			max-width: 400px;
-		}
-
-		.attendance-alert-icon {
-			font-size: 60px;
-			margin-bottom: 20px;
-		}
-
-		.attendance-alert-modal h2 {
-			color: #FF9800;
-			font-size: 28px;
-			margin-bottom: 15px;
-		}
-
-		.attendance-alert-modal p {
-			font-size: 18px;
-			color: #666;
-			margin-bottom: 25px;
-			line-height: 1.6;
-		}
 	</style>
 </head>
 <body>
@@ -1250,34 +1087,6 @@
 						<input type="file" id="photoInput" accept="image/*" style="display: none;" onchange="handlePhotoUpload(event)">
 					</div>
 				</div>
-					
-					<!-- 출석 관리 필드 추가 -->
-					<div class="form-group">
-						<label for="targetCount">목표 출석 횟수</label>
-						<input type="number" id="targetCount" placeholder="기본 8회" value="8" min="1">
-					</div>
-					<div class="form-group">
-						<label for="currentCount">현재 출석 횟수</label>
-						<input type="number" id="currentCount" placeholder="0" value="0" min="0" readonly style="background: #f0f0f0;">
-					</div>
-
-					<!-- 달력 -->
-					<div class="form-group full-width">
-						<label>출석 관리</label>
-						<button type="button" class="photo-btn" onclick="toggleCalendar()" style="margin-bottom: 10px;">
-							📅 <span id="calendarToggleText">달력 열기</span>
-						</button>
-						<div class="calendar-container" id="formCalendar" style="display: none;">
-							<div class="calendar-header">
-								<h3 id="formCalendarTitle">2026년 1월</h3>
-								<div class="calendar-nav">
-									<button class="calendar-nav-btn" onclick="previousMonthForm()">◀ 이전</button>
-									<button class="calendar-nav-btn" onclick="nextMonthForm()">다음 ▶</button>
-								</div>
-							</div>
-							<div class="calendar-grid" id="formCalendarGrid"></div>
-						</div>
-					</div>
 
 				<div class="form-group">
 					<label for="registerDate">회원등록일</label>
@@ -1547,11 +1356,6 @@
 		};
 
 		let members = [];
-
-		// 달력 관련 변수
-		let currentYear = 2026;
-		let currentMonth = 0; // 0-11 (1월 = 0)
-		let selectedDate = null;
 		let filteredMembers = [];
 		let currentEditIndex = null;
 		let deleteIndex = null;
@@ -2183,16 +1987,6 @@
 				if (member.day2 && member.startTime2 && member.endTime2) {
 					scheduleBadges += `<span class="schedule-badge">${dayNames[member.day2]} ${member.startTime2}~${member.endTime2}</span>`;
 				}
-				const currentCount = member.currentCount || 0;
-				const targetCount = member.targetCount || 8;
-				let attendanceClass = '';
-				if (currentCount === targetCount - 1) {
-					attendanceClass = 'near-goal';
-				} else if (currentCount >= targetCount) {
-					attendanceClass = 'reached-goal';
-				}
-				const attendanceBadge = `<span class="attendance-count ${attendanceClass}">📊 ${currentCount}/${targetCount}회</span>`;
-				
 				
 				const photoThumb = member.photo ? 
 					`<img src="${member.photo}" class="member-photo" alt="${member.name}">` :
@@ -2381,9 +2175,6 @@
 				photo: currentPhotoData,
 				registerDate: registerDate || new Date().toISOString().split('T')[0],
 				fee: fee ? parseInt(fee) : null,
-				targetCount: parseInt(document.getElementById("targetCount").value) || 8,
-				currentCount: parseInt(document.getElementById("currentCount").value) || 0,
-				attendanceDates: [],
 				day1: day1 || null,
 				startTime1: startTime1 || null,
 				endTime1: endTime1 || null,
@@ -2465,9 +2256,6 @@
 				photo: currentPhotoData !== null ? currentPhotoData : members[currentEditIndex].photo,
 				registerDate: registerDate || members[currentEditIndex].registerDate,
 				fee: fee ? parseInt(fee) : null,
-				targetCount: parseInt(document.getElementById("targetCount").value) || members[currentEditIndex].targetCount || 8,
-				currentCount: parseInt(document.getElementById("currentCount").value) || members[currentEditIndex].currentCount || 0,
-				attendanceDates: members[currentEditIndex].attendanceDates || [],
 				day1: day1 || null,
 				startTime1: startTime1 || null,
 				endTime1: endTime1 || null,
@@ -2501,8 +2289,6 @@
 			document.getElementById('endTime2').value = member.endTime2 || '';
 			document.getElementById('email').value = member.email || '';
 			document.getElementById('address').value = member.address || '';
-			document.getElementById("targetCount").value = member.targetCount || 8;
-			document.getElementById("currentCount").value = member.currentCount || 0;
 			
 			if (member.photo) {
 				currentPhotoData = member.photo;
@@ -2562,8 +2348,6 @@
 			document.getElementById('endTime2').value = '';
 			document.getElementById('email').value = '';
 			document.getElementById('address').value = '';
-			document.getElementById("targetCount").value = "8";
-			document.getElementById("currentCount").value = "0";
 			removePhoto();
 			currentEditIndex = null;
 			resetLockTimer(); // 활동 감지
@@ -2757,271 +2541,6 @@
 		document.addEventListener('click', resetLockTimer);
 		document.addEventListener('keydown', resetLockTimer);
 		document.addEventListener('scroll', resetLockTimer);
-
-		// ========== 출석 관리 함수 ==========
-		
-		function playNotificationSound() {
-			const audio = document.getElementById('notificationSound');
-			audio.play().catch(e => console.log('알림음 재생 실패:', e));
-		}
-
-		function showAttendanceAlert(memberName, currentCount, targetCount) {
-			const message = `<strong>${memberName}</strong> 회원님<br>현재 출석: <strong>${currentCount}회</strong> / 목표: <strong>${targetCount}회</strong><br><br>목표 달성이 임박했습니다!`;
-			document.getElementById('attendanceAlertMessage').innerHTML = message;
-			document.getElementById('attendanceAlertModal').classList.add('active');
-			playNotificationSound();
-		}
-
-		function closeAttendanceAlert() {
-			document.getElementById('attendanceAlertModal').classList.remove('active');
-		}
-
-		// 달력 토글
-		function toggleCalendar() {
-			const calendar = document.getElementById('formCalendar');
-			const toggleText = document.getElementById('calendarToggleText');
-			
-			if (calendar.style.display === 'none') {
-				calendar.style.display = 'block';
-				toggleText.textContent = '달력 닫기';
-				renderFormCalendar();
-			} else {
-				calendar.style.display = 'none';
-				toggleText.textContent = '달력 열기';
-			}
-			resetLockTimer();
-		}
-
-		// 달력 렌더링
-		function renderFormCalendar() {
-			const grid = document.getElementById('formCalendarGrid');
-			grid.innerHTML = '';
-
-			const monthNames = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
-			document.getElementById('formCalendarTitle').textContent = `${currentYear}년 ${monthNames[currentMonth]}`;
-
-			const dayHeaders = ['일', '월', '화', '수', '목', '금', '토'];
-			dayHeaders.forEach(day => {
-				const header = document.createElement('div');
-				header.className = 'calendar-day-header';
-				header.textContent = day;
-				grid.appendChild(header);
-			});
-
-			const firstDay = new Date(currentYear, currentMonth, 1).getDay();
-			const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-			const daysInPrevMonth = new Date(currentYear, currentMonth, 0).getDate();
-
-			const today = new Date();
-			const isCurrentMonth = today.getFullYear() === currentYear && today.getMonth() === currentMonth;
-			const todayDate = today.getDate();
-
-			// 이전 달 날짜
-			for (let i = firstDay - 1; i >= 0; i--) {
-				const day = document.createElement('div');
-				day.className = 'calendar-day other-month';
-				day.innerHTML = `<div class="calendar-day-number">${daysInPrevMonth - i}</div>`;
-				grid.appendChild(day);
-			}
-
-			// 현재 달 날짜
-			for (let date = 1; date <= daysInMonth; date++) {
-				const day = document.createElement('div');
-				day.className = 'calendar-day';
-				
-				if (isCurrentMonth && date === todayDate) {
-					day.classList.add('today');
-				}
-
-				const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
-				
-				// 출석 체크 확인
-				let hasAttendance = false;
-				members.forEach(member => {
-					if (member.attendanceDates && member.attendanceDates.includes(dateStr)) {
-						hasAttendance = true;
-					}
-				});
-
-				if (hasAttendance) {
-					day.classList.add('has-attendance');
-				}
-
-				day.innerHTML = `
-					<div class="calendar-day-number">${date}</div>
-					${hasAttendance ? '<div class="calendar-attendance-dot"></div>' : ''}
-				`;
-
-				day.onclick = () => selectDate(currentYear, currentMonth, date);
-				grid.appendChild(day);
-			}
-
-			// 다음 달 날짜
-			const remainingCells = 42 - (firstDay + daysInMonth);
-			for (let date = 1; date <= remainingCells; date++) {
-				const day = document.createElement('div');
-				day.className = 'calendar-day other-month';
-				day.innerHTML = `<div class="calendar-day-number">${date}</div>`;
-				grid.appendChild(day);
-			}
-		}
-
-		function previousMonthForm() {
-			currentMonth--;
-			if (currentMonth < 0) {
-				currentMonth = 11;
-				currentYear--;
-			}
-			renderFormCalendar();
-		}
-
-		function nextMonthForm() {
-			currentMonth++;
-			if (currentMonth > 11) {
-				currentMonth = 0;
-				currentYear++;
-			}
-			renderFormCalendar();
-		}
-
-		function selectDate(year, month, date) {
-			if (!isUnlocked) {
-				showAlert('먼저 잠금을 해제해주세요!');
-				return;
-			}
-
-			selectedDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
-			showAttendanceSelectModal();
-			resetLockTimer();
-		}
-
-		function showAttendanceSelectModal() {
-			const modal = document.getElementById('attendanceSelectModal');
-			const list = document.getElementById('memberSelectList');
-			list.innerHTML = '';
-
-			if (members.length === 0) {
-				list.innerHTML = '<p style="text-align: center; color: #999;">등록된 회원이 없습니다.</p>';
-			} else {
-				members.forEach((member, index) => {
-					const alreadyChecked = member.attendanceDates && member.attendanceDates.includes(selectedDate);
-					const currentCount = member.currentCount || 0;
-					const targetCount = member.targetCount || 8;
-
-					const item = document.createElement('div');
-					item.style.cssText = 'padding: 15px; border-bottom: 1px solid #e0e0e0; cursor: pointer; transition: background 0.3s;';
-					item.innerHTML = `
-						<div style="display: flex; align-items: center; gap: 10px;">
-							<img src="${member.photo || 'https://via.placeholder.com/50'}" style="width: 50px; height: 50px; border-radius: 8px; object-fit: cover;">
-							<div style="flex: 1;">
-								<div style="font-weight: 600; font-size: 16px;">${member.name}</div>
-								<div style="font-size: 13px; color: #666;">출석: ${currentCount} / ${targetCount}회</div>
-							</div>
-							<div style="color: ${alreadyChecked ? '#4CAF50' : '#999'}; font-size: 24px;">
-								${alreadyChecked ? '✓' : '○'}
-							</div>
-						</div>
-					`;
-					
-					item.onmouseover = () => item.style.background = '#f8f9fa';
-					item.onmouseout = () => item.style.background = 'white';
-					item.onclick = () => toggleAttendance(index);
-					
-					list.appendChild(item);
-				});
-			}
-
-			modal.classList.add('active');
-		}
-
-		function closeAttendanceSelectModal() {
-			document.getElementById('attendanceSelectModal').classList.remove('active');
-			selectedDate = null;
-		}
-
-		function toggleAttendance(memberIndex) {
-			const member = members[memberIndex];
-			
-			if (!member.attendanceDates) {
-				member.attendanceDates = [];
-			}
-
-			const dateIndex = member.attendanceDates.indexOf(selectedDate);
-			
-			if (dateIndex === -1) {
-				// 출석 추가
-				member.attendanceDates.push(selectedDate);
-				member.currentCount = (member.currentCount || 0) + 1;
-				
-				const targetCount = member.targetCount || 8;
-				
-				// 목표 1회 전 알림
-				if (member.currentCount === targetCount - 1) {
-					showAttendanceAlert(member.name, member.currentCount, targetCount);
-				}
-				// 목표 도달 알림
-				else if (member.currentCount >= targetCount) {
-					showAttendanceAlert(member.name, member.currentCount, targetCount);
-				}
-				
-				showAlert(`${member.name} 출석 체크 완료! (${member.currentCount}/${targetCount}회)`);
-			} else {
-				// 출석 취소
-				member.attendanceDates.splice(dateIndex, 1);
-				member.currentCount = Math.max(0, (member.currentCount || 0) - 1);
-				const targetCount = member.targetCount || 8;
-				showAlert(`${member.name} 출석이 취소되었습니다. (${member.currentCount}/${targetCount}회)`);
-			}
-
-			saveToFirebase();
-			renderMembers();
-			
-			// 달력이 열려있으면 다시 렌더링
-			const calendar = document.getElementById('formCalendar');
-			if (calendar.style.display !== 'none') {
-				renderFormCalendar();
-			}
-			
-			closeAttendanceSelectModal();
-			resetLockTimer();
-		}
-
-		// 현재 날짜로 달력 초기화
-		const now = new Date();
-		currentYear = now.getFullYear();
-		currentMonth = now.getMonth();
 	</script>
-
-	<!-- 출석 알림 모달 -->
-	<div id="attendanceAlertModal" class="modal attendance-alert-modal">
-		<div class="modal-content">
-			<div class="attendance-alert-icon">⚠️</div>
-			<h2>출석 알림</h2>
-			<p id="attendanceAlertMessage"></p>
-			<div class="modal-buttons">
-				<button class="btn btn-primary" onclick="closeAttendanceAlert()">확인</button>
-			</div>
-		</div>
-	</div>
-
-	<!-- 출석 선택 모달 -->
-	<div id="attendanceSelectModal" class="modal">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h2>출석 체크</h2>
-			</div>
-			<p>어떤 회원의 출석을 체크하시겠습니까?</p>
-			<div id="memberSelectList" style="max-height: 400px; overflow-y: auto; margin: 20px 0;"></div>
-			<div class="modal-buttons">
-				<button class="btn btn-secondary" onclick="closeAttendanceSelectModal()">취소</button>
-			</div>
-		</div>
-	</div>
-
-	<!-- 알림음 오디오 -->
-	<audio id="notificationSound" preload="auto">
-		<source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTGJ0fPTgjMGHm7A7+OZUQ0PVqvl77RpHwU7k9n0zIIyBSGAxPDdl0MKE160/o1mHAY4kdb0yXwsHGHH8d6SRgsUYLXp6atUGgpJou7ykHI0BSmCzvPbeScAD0Sj5fG0aycGOpPY9NOGLAckg8rx24NLKRNit+3wqV4gCU+r5/S3cCYFMIvW9NSKNgkaf8bx35pFDBZmu+nxrl4XCFG06fCzaiQCNJLY9dCFMwsofcjy14IzBx9qveu0bCEGTqve9NmPPQkaaMHw3pkQAERn3+6wcyYGN5PZ9NKJNAojgsnx2IxADBoRdL3s8K9oJAU/ldv119SDMyAaxfHdn0sLFlqz6/K0byMBO5bZ9NOFMgkdcsXw2olCDBdqt+Pwr2soCkyg4fTWiTQDG2y+7PGubCUFPJLZ9dOIMwsfeMPx2IpBDBpiv+7wtXAjB0Cn4PTYijcAEGO96++tbCcFOJHZ9M+HNQsjfsjx2YpDCyFov+vxtGwjB0Ol4vPWiTYBEmS96++va50AAAA=" type="audio/wav">
-	</audio>
-
 </body>
 </html>
