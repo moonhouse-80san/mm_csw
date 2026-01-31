@@ -1505,7 +1505,7 @@
 			<!-- 추가: 자동 잠금 시간 설정 -->
 			<div class="form-group">
 				<label for="lockTimeoutInput">자동 잠금 시간 (분)</label>
-				<input type="number" id="lockTimeoutInput" min="1" max="60" placeholder="5">
+				<input type="number" id="lockTimeoutInput" min="1" max="120" placeholder="60" value="60">
 				<div style="font-size: 12px; color: #666; margin-top: 5px;">
 					※ 암호 입력 후 자동으로 잠기기까지의 시간입니다. 기본값: 60분
 				</div>
@@ -1609,7 +1609,7 @@
 		// 보안 관련 변수
 		let isUnlocked = false;
 		let lockTimer = null;
-		let remainingTime = 5 * 60; // 5분 (초 단위)
+		let remainingTime = 60 * 60; // 60분 (초 단위)
 		let lockInterval = null;
 
 		// 요일 배열
@@ -2039,6 +2039,7 @@
 					if (data.adminPassword) settings.adminPassword = data.adminPassword;
 					if (data.editPassword) settings.editPassword = data.editPassword;
 					if (data.lockTimeout) settings.lockTimeout = data.lockTimeout;
+					else settings.lockTimeout = 60;
 
 					document.getElementById('clubNameDisplay').textContent = settings.clubName || '구장명을 설정하세요';
 					updateFeePresetButtons();
@@ -2678,7 +2679,7 @@
 
 			// 자동 잠금 시간 저장
 			const lockTimeout = parseInt(document.getElementById('lockTimeoutInput').value);
-			if (lockTimeout && lockTimeout >= 1 && lockTimeout <= 60) {
+			if (lockTimeout && lockTimeout >= 1 && lockTimeout <= 120) {
 				settings.lockTimeout = lockTimeout;
 			} else {
 				settings.lockTimeout = 60;
