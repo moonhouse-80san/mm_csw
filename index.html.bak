@@ -1276,22 +1276,17 @@
 
 				<!-- 출석 관리 필드 추가 -->
 				<div class="form-group">
-					<label for="targetCount">출석 목표 횟수</label>
-					<input type="number" id="targetCount" placeholder="0으로 설정 시 출석 관리 제외" value="0" min="0">
+					<label for="targetCount">출석 횟수</label>
+					<input type="number" id="targetCount" placeholder="설정하지 않음 (출석 관리 제외)" value="0" min="0">
 					<div style="font-size: 12px; color: #666; margin-top: 5px;">
 						※ 0으로 설정하면 출석 관리에서 제외됩니다.
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="currentCount">현재 출석 횟수</label>
-					<div style="display: flex; gap: 10px; align-items: center;">
-						<input type="number" id="currentCount" placeholder="0" value="0" min="0" readonly style="background: #f0f0f0; flex: 1;">
-						<button type="button" class="photo-btn" onclick="resetCurrentAttendance()" style="padding: 8px 12px; font-size: 12px; background: #FF9800;">
-							🔄 초기화
-						</button>
-					</div>
+					<input type="number" id="currentCount" placeholder="0" value="0" min="0" readonly style="background: #f0f0f0;">
 					<div style="font-size: 12px; color: #666; margin-top: 5px;">
-						※ 자동으로 계산됩니다. 수동으로 초기화하려면 버튼을 클릭하세요.
+						※ 자동으로 계산됩니다.
 					</div>
 				</div>
 				<div class="form-group">
@@ -1587,8 +1582,10 @@
 		let members = [];
 
 		// 달력 관련 변수
+
 		let currentYear = 2026;
 		let currentMonth = 0; // 0-11 (1월 = 0)
+
 		let selectedDate = null;
 		let filteredMembers = [];
 		let currentEditIndex = null;
@@ -1813,41 +1810,6 @@
 			resetLockTimer(); // 활동 감지 - 타이머 리셋
 			showDeleteModal(index);
 			return true;
-		}
-
-		// 현재 수정 중인 회원의 출석 초기화
-		function resetCurrentAttendance() {
-			if (!isUnlocked) {
-				showAlert('먼저 잠금을 해제해주세요!');
-				return;
-			}
-
-			if (currentEditIndex === null) {
-				showAlert('먼저 수정할 회원을 선택해주세요!');
-				return;
-			}
-
-			if (confirm('현재 회원의 출석 횟수를 초기화하시겠습니까?')) {
-				const member = members[currentEditIndex];
-				member.currentCount = 0;
-				member.attendanceDates = [];
-				
-				// 현재 출석 횟수 입력창 업데이트
-				document.getElementById('currentCount').value = 0;
-				
-				// 저장 및 화면 업데이트
-				saveToFirebase();
-				renderMembers();
-				
-				// 달력이 열려있으면 다시 렌더링
-				const calendar = document.getElementById('formCalendar');
-				if (calendar.style.display !== 'none') {
-					renderFormCalendar();
-				}
-				
-				showAlert(`${member.name} 회원의 출석이 초기화되었습니다. (0/${member.targetCount || 0}회)`);
-				resetLockTimer();
-			}
 		}
 
 		// 카메라 전환 함수
@@ -2079,13 +2041,13 @@
 					document.getElementById('clubNameDisplay').textContent = settings.clubName || '구장명을 설정하세요';
 					updateFeePresetButtons();
 
-					// 초기 잠금 상태 설정
-					remainingTime = settings.lockTimeout * 60;
-					updateLockStatus();
-				} else {
-					// Firebase에 설정 데이터가 없는 경우 기본값 설정
-					settings.lockTimeout = 60;
-				}
+				// 초기 잠금 상태 설정
+						remainingTime = settings.lockTimeout * 60;
+						updateLockStatus();
+					} else {
+						// Firebase에 설정 데이터가 없는 경우 기본값 설정
+						settings.lockTimeout = 60;
+					}
 			});
 		}
 
@@ -2262,6 +2224,7 @@
 				}
 				const currentCount = member.currentCount || 0;
 				const targetCount = member.targetCount || 0;
+
 
 				// 출석 횟수 표시
 				// 목표 횟수가 0보다 큰 경우에만 출석 횟수 표시
@@ -2458,21 +2421,14 @@
 				}
 			}
 
-			// 출석 관련 필드 처리
-			const targetCountInput = document.getElementById('targetCount').value;
-			const currentCountInput = document.getElementById('currentCount').value;
-			
-			const targetCount = targetCountInput === "" ? 0 : parseInt(targetCountInput) || 0;
-			const currentCount = currentCountInput === "" ? 0 : parseInt(currentCountInput) || 0;
-
 			const member = {
 				name,
 				phone,
 				photo: currentPhotoData,
 				registerDate: registerDate || new Date().toISOString().split('T')[0],
 				fee: fee ? parseInt(fee) : null,
-				targetCount: targetCount,
-				currentCount: currentCount,
+				targetCount: parseInt(document.getElementById("targetCount").value) || 0, // 기본값 0으로 변경
+				currentCount: parseInt(document.getElementById("currentCount").value) || 0,
 				attendanceDates: [],
 				day1: day1 || null,
 				startTime1: startTime1 || null,
@@ -2549,25 +2505,15 @@
 				}
 			}
 
-			// 출석 관련 필드 처리 - 수정 시 빈 값이면 기존 값 유지
-			const targetCountInput = document.getElementById('targetCount').value;
-			const currentCountInput = document.getElementById('currentCount').value;
-			
-			const targetCount = targetCountInput === "" ? 
-							   members[currentEditIndex].targetCount || 0 : 
-							   parseInt(targetCountInput) || 0;
-			const currentCount = currentCountInput === "" ? 
-								members[currentEditIndex].currentCount || 0 : 
-								parseInt(currentCountInput) || 0;
-
 			members[currentEditIndex] = {
 				name,
 				phone,
 				photo: currentPhotoData !== null ? currentPhotoData : members[currentEditIndex].photo,
 				registerDate: registerDate || members[currentEditIndex].registerDate,
 				fee: fee ? parseInt(fee) : null,
-				targetCount: targetCount,
-				currentCount: currentCount,
+				targetCount: parseInt(document.getElementById("targetCount").value) || members[currentEditIndex].targetCount || 0,
+				currentCount: parseInt(document.getElementById("currentCount").value) || members[currentEditIndex].currentCount || 0,
+	
 				attendanceDates: members[currentEditIndex].attendanceDates || [],
 				day1: day1 || null,
 				startTime1: startTime1 || null,
@@ -2851,7 +2797,6 @@
 		document.getElementById('startTime2').value = "13:00";
 		document.getElementById('endTime2').value = "13:20";
 		document.getElementById('targetCount').value = "0";
-		document.getElementById('currentCount').value = "0";
 
 		updateFeePresetButtons();
 		updateLockStatus(); // 초기 잠금 상태 설정
@@ -2860,6 +2805,7 @@
 		document.addEventListener('click', resetLockTimer);
 		document.addEventListener('keydown', resetLockTimer);
 		document.addEventListener('scroll', resetLockTimer);
+
 
 		// ========== 출석 관리 함수 ==========
 
@@ -3093,14 +3039,14 @@
 				member.attendanceDates.push(selectedDate);
 				member.currentCount = (member.currentCount || 0) + 1;
 
-				const targetCount = member.targetCount || 0;
+				const targetCount = member.targetCount || 8;
 
-				// 목표 1회 전 알림 (목표가 0보다 큰 경우에만)
-				if (targetCount > 0 && member.currentCount === targetCount - 1) {
+				// 목표 1회 전 알림
+				if (member.currentCount === targetCount - 1) {
 					showAttendanceAlert(member.name, member.currentCount, targetCount);
 				}
-				// 목표 도달 시 초기화 (목표가 0보다 큰 경우에만)
-				else if (targetCount > 0 && member.currentCount >= targetCount) {
+				// 목표 도달 시 초기화
+				else if (member.currentCount >= targetCount) {
 					// 목표 도달 메시지
 					showAlert(`${member.name} 회원님 목표 ${targetCount}회를 달성했습니다!`);
 					
@@ -3108,29 +3054,17 @@
 					member.currentCount = 0;
 					member.attendanceDates = [];
 
-					// 즉시 저장 및 화면 업데이트
-					saveToFirebase();
-					renderMembers();
-					
 					// 초기화 알림
 					showAlert(`${member.name} 회원님의 출석 횟수가 초기화되었습니다. (0/${targetCount}회)`);
-				} else if (targetCount > 0) {
-					// 목표가 설정된 경우
-					showAlert(`${member.name} 출석 체크 완료! (${member.currentCount}/${targetCount}회)`);
 				} else {
-					// 목표가 0인 경우 (출석 관리 제외)
-					showAlert(`${member.name} 출석 체크 완료!`);
+					showAlert(`${member.name} 출석 체크 완료! (${member.currentCount}/${targetCount}회)`);
 				}
 			} else {
 				// 출석 취소
 				member.attendanceDates.splice(dateIndex, 1);
 				member.currentCount = Math.max(0, (member.currentCount || 0) - 1);
-				const targetCount = member.targetCount || 0;
-				if (targetCount > 0) {
-					showAlert(`${member.name} 출석이 취소되었습니다. (${member.currentCount}/${targetCount}회)`);
-				} else {
-					showAlert(`${member.name} 출석이 취소되었습니다.`);
-				}
+				const targetCount = member.targetCount || 8;
+				showAlert(`${member.name} 출석이 취소되었습니다. (${member.currentCount}/${targetCount}회)`);
 			}
 
 			saveToFirebase();
@@ -3182,5 +3116,7 @@
 	<audio id="notificationSound" preload="auto">
 		<source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTGJ0fPTgjMGHm7A7+OZUQ0PVqvl77RpHwU7k9n0zIIyBSGAxPDdl0MKE160/o1mHAY4kdb0yXwsHGHH8d6SRgsUYLXp6atUGgpJou7ykHI0BSmCzvPbeScAD0Sj5fG0aycGOpPY9NOGLAckg8rx24NLKRNit+3wqV4gCU+r5/S3cCYFMIvW9NSKNgkaf8bx35pFDBZmu+nxrl4XCFG06fCzaiQCNJLY9dCFMwsofcjy14IzBx9qveu0bCEGTqve9NmPPQkaaMHw3pkQAERn3+6wcyYGN5PZ9NKJNAojgsnx2IxADBoRdL3s8K9oJAU/ldv119SDMyAaxfHdn0sLFlqz6/K0byMBO5bZ9NOFMgkdcsXw2olCDBdqt+Pwr2soCkyg4fTWiTQDG2y+7PGubCUFPJLZ9dOIMwsfeMPx2IpBDBpiv+7wtXAjB0Cn4PTYijcAEGO96++tbCcFOJHZ9M+HNQsjfsjx2YpDCyFov+vxtGwjB0Ol4vPWiTYBEmS96++va50AAAA=" type="audio/wav">
 	</audio>
+
+
 </body>
 </html>
