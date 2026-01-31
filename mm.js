@@ -270,7 +270,7 @@ function resetCurrentAttendance() {
 			renderFormCalendar();
 		}
 		
-		showAlert(`${member.name} 회원의 출석이 초기화되었습니다. (0/${member.targetCount || 0}회)`);
+		showAlert(`${member.name} 회원의 출석이 만료되었습니다. (0/${member.targetCount || 0}회)`);
 		resetLockTimer();
 	}
 }
@@ -733,7 +733,6 @@ function renderMembers() {
 		const targetCount = member.targetCount || 0;
 
 		// 출석 횟수 표시
-		// 목표 횟수가 0보다 큰 경우에만 출석 횟수 표시
 		let attendanceCount = '';
 		if (targetCount > 0) {
 			attendanceCount = `
@@ -743,22 +742,16 @@ function renderMembers() {
 			`;
 		}
 
-		const photoThumb = member.photo ? 
-			`<img src="${member.photo}" class="member-photo" alt="${member.name}">` :
-			`<div class="member-photo" style="display: flex; align-items: center; justify-content: center; background: #f0f0f0; color: #999; font-size: 32px;">👤</div>`;
-
 		// 버튼 숨김/표시 처리
 		const editBtnClass = isUnlocked ? 'btn-edit' : 'btn-edit btn-hidden';
 		const deleteBtnClass = isUnlocked ? 'btn-delete' : 'btn-delete btn-hidden';
 
 		return `
 		<div class="member-card">
-			<div class="member-photo-container">
-				${photoThumb}
-			</div>
 			<div class="member-content">
 				<div class="member-header">
-					<div class="member-name">
+					<div class="member-name" style="cursor: pointer; color: #2196F3; text-decoration: underline;" 
+						 onclick="showMemberDetails(${originalIndex})">
 						${member.name}
 						${attendanceCount}
 					</div>
@@ -773,17 +766,150 @@ function renderMembers() {
 				</div>
 				<div class="member-info">
 					${phoneLink}
-					${member.registerDate ? `<div>📅 등록일: ${formatDate(member.registerDate)}</div>` : ''}
-					${member.email ? `<div>📧 ${member.email}</div>` : ''}
-					${member.address ? `<div>📍 ${member.address}</div>` : ''}
-					<div style="margin-top: 8px;">
-						${member.fee ? `<span class="info-badge">💰 ${formatNumber(member.fee)}원</span>` : ''}
-						${scheduleBadges}
-					</div>
+					${scheduleBadges ? `<div style="margin-top: 5px;">${scheduleBadges}</div>` : ''}
 				</div>
 			</div>
 		</div>
 	`}).join('');
+}
+
+// 회원 상세 정보 팝업 표시 함수 추가
+function showMemberDetails(index) {
+	const member = members[index];
+	
+	let detailsHTML = `
+		<div class="member-details-modal">
+			<div class="member-details-header">
+				<h2>${member.name}</h2>
+				<button class="close-btn" onclick="closeMemberDetails()">×</button>
+			</div>
+			
+			<div class="member-details-content">
+	`;
+	
+	// 사진 표시
+	if (member.photo) {
+		detailsHTML += `
+			<div class="member-details-photo">
+				<img src="${member.photo}" alt="${member.name}" style="width: 200px; height: 200px; border-radius: 10px; object-fit: cover; margin-bottom: 20px;">
+			</div>
+		`;
+	}
+	
+	// 기본 정보
+	detailsHTML += `
+		<div class="member-details-section">
+			<h3>기본 정보</h3>
+			<table class="member-details-table">
+	`;
+	
+	if (member.phone) {
+		detailsHTML += `<tr><td>📞 전화번호:</td><td><a href="tel:${member.phone.replace(/-/g, '')}">${member.phone}</a></td></tr>`;
+	}
+	
+	if (member.email) {
+		detailsHTML += `<tr><td>📧 이메일:</td><td>${member.email}</td></tr>`;
+	}
+	
+	if (member.address) {
+		detailsHTML += `<tr><td>📍 주소:</td><td>${member.address}</td></tr>`;
+	}
+	
+	if (member.registerDate) {
+		detailsHTML += `<tr><td>📅 등록일:</td><td>${formatDate(member.registerDate)}</td></tr>`;
+	}
+	
+	if (member.fee) {
+		detailsHTML += `<tr><td>💰 월회비:</td><td>${formatNumber(member.fee)}원</td></tr>`;
+	}
+	
+	// 출석 정보
+	const targetCount = member.targetCount || 0;
+	const currentCount = member.currentCount || 0;
+	if (targetCount > 0) {
+		detailsHTML += `<tr><td>📊 출석:</td><td>${currentCount}/${targetCount}회</td></tr>`;
+	}
+	
+	detailsHTML += `
+			</table>
+		</div>
+	`;
+	
+	// 스케줄 정보
+	if (member.day1 && member.startTime1 && member.endTime1 || 
+		member.day2 && member.startTime2 && member.endTime2) {
+		detailsHTML += `
+			<div class="member-details-section">
+				<h3>스케줄</h3>
+				<table class="member-details-table">
+		`;
+		
+		if (member.day1 && member.startTime1 && member.endTime1) {
+			detailsHTML += `<tr><td>📅 스케줄 1:</td><td>${dayNames[member.day1]} ${member.startTime1}~${member.endTime1}</td></tr>`;
+		}
+		
+		if (member.day2 && member.startTime2 && member.endTime2) {
+			detailsHTML += `<tr><td>📅 스케줄 2:</td><td>${dayNames[member.day2]} ${member.startTime2}~${member.endTime2}</td></tr>`;
+		}
+		
+		detailsHTML += `
+				</table>
+			</div>
+		`;
+	}
+	
+	// 출석 기록
+	if (member.attendanceDates && member.attendanceDates.length > 0) {
+		detailsHTML += `
+			<div class="member-details-section">
+				<h3>출석 기록 (최근 ${Math.min(member.attendanceDates.length, 10)}건)</h3>
+				<div class="attendance-dates">
+		`;
+		
+		const recentDates = [...member.attendanceDates].reverse().slice(0, 10);
+		recentDates.forEach(date => {
+			const formattedDate = formatDate(date);
+			detailsHTML += `<span class="attendance-date-badge">${formattedDate}</span>`;
+		});
+		
+		detailsHTML += `
+				</div>
+			</div>
+		`;
+	}
+	
+	detailsHTML += `
+			</div>
+			<div class="member-details-footer">
+				<button class="btn btn-edit" onclick="editMember(${index}); closeMemberDetails();">수정</button>
+				<button class="btn btn-secondary" onclick="closeMemberDetails()">닫기</button>
+			</div>
+		</div>
+	`;
+	
+	// 모달 생성 및 표시
+	const modal = document.createElement('div');
+	modal.id = 'memberDetailsModal';
+	modal.className = 'modal active';
+	modal.innerHTML = detailsHTML;
+	document.body.appendChild(modal);
+	
+	// 모달 닫기 이벤트
+	modal.addEventListener('click', function(e) {
+		if (e.target === modal) {
+			closeMemberDetails();
+		}
+	});
+	
+	resetLockTimer();
+}
+
+// 회원 상세 정보 팝업 닫기 함수
+function closeMemberDetails() {
+	const modal = document.getElementById('memberDetailsModal');
+	if (modal) {
+		modal.remove();
+	}
 }
 
 function renderSchedule() {
@@ -1338,7 +1464,7 @@ function playNotificationSound() {
 }
 
 function showAttendanceAlert(memberName, currentCount, targetCount) {
-	const message = `<strong>${memberName}</strong> 회원님<br>현재 출석: <strong>${currentCount}회</strong> / 목표: <strong>${targetCount}회</strong><br><br>목표 달성이 임박했습니다!`;
+	const message = `<strong>${memberName}</strong> 회원님<br>현재 출석: <strong>${currentCount}회</strong> / 출석: <strong>${targetCount}회</strong><br><br>회비입금이 임박했습니다!`;
 	document.getElementById('attendanceAlertMessage').innerHTML = message;
 	document.getElementById('attendanceAlertModal').classList.add('active');
 	playNotificationSound();
