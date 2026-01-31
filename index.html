@@ -27,7 +27,25 @@
 		</div>
 
 		<div class="search-section">
-			<div class="search-box">
+			<!-- 달력 -->
+			<div class="form-group full-width" style="margin-top:10px;">
+				<label>출석 관리</label>
+				<button type="button" class="photo-btn" onclick="toggleCalendar()" style="margin-bottom: 10px;">
+					📅 <span id="calendarToggleText">달력 열기</span>
+				</button>
+				<div class="calendar-container" id="formCalendar" style="display: none;">
+					<div class="calendar-header">
+						<h3 id="formCalendarTitle">2026년 1월</h3>
+						<div class="calendar-nav">
+							<button class="calendar-nav-btn" onclick="previousMonthForm()">◀ 이전</button>
+							<button class="calendar-nav-btn" onclick="nextMonthForm()">다음 ▶</button>
+						</div>
+					</div>
+					<div class="calendar-grid" id="formCalendarGrid"></div>
+				</div>
+			</div>
+
+			<div class="search-box" style="margin-top:10px;">
 				<input type="text" id="searchInput" placeholder="🔍 이름, 전화번호로 검색..." onkeyup="searchMembers()">
 			</div>
 			<div class="filter-buttons">
@@ -75,24 +93,6 @@
 					<div id="scheduleContent">
 						<!-- 일주일 스케줄이 여기에 표시됩니다 -->
 					</div>
-				</div>
-			</div>
-
-			<!-- 달력 -->
-			<div class="form-group full-width" style="margin-top:10px;">
-				<label>출석 관리</label>
-				<button type="button" class="photo-btn" onclick="toggleCalendar()" style="margin-bottom: 10px;">
-					📅 <span id="calendarToggleText">달력 열기</span>
-				</button>
-				<div class="calendar-container" id="formCalendar" style="display: none;">
-					<div class="calendar-header">
-						<h3 id="formCalendarTitle">2026년 1월</h3>
-						<div class="calendar-nav">
-							<button class="calendar-nav-btn" onclick="previousMonthForm()">◀ 이전</button>
-							<button class="calendar-nav-btn" onclick="nextMonthForm()">다음 ▶</button>
-						</div>
-					</div>
-					<div class="calendar-grid" id="formCalendarGrid"></div>
 				</div>
 			</div>
 		</div>
