@@ -2216,13 +2216,19 @@
 					scheduleBadges += `<span class="schedule-badge">${dayNames[member.day2]} ${member.startTime2}~${member.endTime2}</span>`;
 				}
 				const currentCount = member.currentCount || 0;
-				const targetCount = member.targetCount || 8;
+				const targetCount = member.targetCount || 0;
+
 
 				// 출석 횟수 표시
-				const attendanceCount = `
-					<span class="attendance-count" style="margin-left: 8px; font-size: 12px; padding: 2px 6px; background: #e3f2fd; border-radius: 10px;">
-						📊 ${currentCount}/${targetCount}회
-</span>`;
+				// 목표 횟수가 0보다 큰 경우에만 출석 횟수 표시
+				let attendanceCount = '';
+				if (targetCount > 0) {
+					attendanceCount = `
+						<span class="attendance-count" style="margin-left: 8px; font-size: 12px; padding: 2px 6px; background: #e3f2fd; border-radius: 10px;">
+							📊 ${currentCount}/${targetCount}회
+						</span>
+					`;
+				}
 
 				const photoThumb = member.photo ? 
 					`<img src="${member.photo}" class="member-photo" alt="${member.name}">` :
@@ -2414,7 +2420,7 @@
 				photo: currentPhotoData,
 				registerDate: registerDate || new Date().toISOString().split('T')[0],
 				fee: fee ? parseInt(fee) : null,
-				targetCount: parseInt(document.getElementById("targetCount").value) || 8,
+				targetCount: parseInt(document.getElementById("targetCount").value) || 0, // 기본값 0으로 변경
 				currentCount: parseInt(document.getElementById("currentCount").value) || 0,
 				attendanceDates: [],
 				day1: day1 || null,
@@ -2498,8 +2504,9 @@
 				photo: currentPhotoData !== null ? currentPhotoData : members[currentEditIndex].photo,
 				registerDate: registerDate || members[currentEditIndex].registerDate,
 				fee: fee ? parseInt(fee) : null,
-				targetCount: parseInt(document.getElementById("targetCount").value) || members[currentEditIndex].targetCount || 8,
+				targetCount: parseInt(document.getElementById("targetCount").value) || members[currentEditIndex].targetCount || 0,
 				currentCount: parseInt(document.getElementById("currentCount").value) || members[currentEditIndex].currentCount || 0,
+	
 				attendanceDates: members[currentEditIndex].attendanceDates || [],
 				day1: day1 || null,
 				startTime1: startTime1 || null,
@@ -2534,7 +2541,7 @@
 			document.getElementById('endTime2').value = member.endTime2 || '';
 			document.getElementById('email').value = member.email || '';
 			document.getElementById('address').value = member.address || '';
-			document.getElementById("targetCount").value = member.targetCount || 8;
+			document.getElementById("targetCount").value = member.targetCount || 0;
 			document.getElementById("currentCount").value = member.currentCount || 0;
 			if (member.photo) {
 				currentPhotoData = member.photo;
@@ -2594,7 +2601,7 @@
 			document.getElementById('endTime2').value = '';
 			document.getElementById('email').value = '';
 			document.getElementById('address').value = '';
-			document.getElementById("targetCount").value = "8";
+			document.getElementById("targetCount").value = "0";
 			document.getElementById("currentCount").value = "0";
 
 			removePhoto();
@@ -2812,9 +2819,25 @@
 
 		// 달력 토글
 		function toggleCalendar() {
+			if (members.length === 0) {
+				showAlert('등록된 회원이 없습니다.');
+				return;
+			}
+			
+			// 목표 횟수가 설정된 회원이 있는지 확인
+			const hasMembersWithTarget = members.some(member => {
+				const targetCount = member.targetCount || 0;
+				return targetCount > 0;
+			});
+			
+			if (!hasMembersWithTarget) {
+				showAlert('목표 출석 횟수가 설정된 회원이 없습니다.\n회원 정보에서 목표 출석 횟수를 설정해주세요.');
+				return;
+			}
+			
 			const calendar = document.getElementById('formCalendar');
 			const toggleText = document.getElementById('calendarToggleText');
-
+			
 			if (calendar.style.display === 'none') {
 				calendar.style.display = 'block';
 				toggleText.textContent = '달력 닫기';
@@ -2924,6 +2947,17 @@
 				return;
 			}
 
+			// 목표 횟수가 설정된 회원이 있는지 확인
+			const hasMembersWithTarget = members.some(member => {
+				const targetCount = member.targetCount || 0;
+				return targetCount > 0;
+			});
+			
+			if (!hasMembersWithTarget) {
+				showAlert('목표 출석 횟수가 설정된 회원이 없습니다.\n회원 정보에서 목표 출석 횟수를 설정해주세요.');
+				return;
+			}
+
 			selectedDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
 			showAttendanceSelectModal();
 			resetLockTimer();
@@ -2934,36 +2968,46 @@
 			const list = document.getElementById('memberSelectList');
 			list.innerHTML = '';
 
-			if (members.length === 0) {
-				list.innerHTML = '<p style="text-align: center; color: #999;">등록된 회원이 없습니다.</p>';
-			} else {
-				members.forEach((member, index) => {
-					const alreadyChecked = member.attendanceDates && member.attendanceDates.includes(selectedDate);
-					const currentCount = member.currentCount || 0;
-					const targetCount = member.targetCount || 8;
+			// 목표 횟수가 설정된 회원만 필터링
+			const validMembers = members.filter(member => {
+				const targetCount = member.targetCount || 0;
+				return targetCount > 0; // 목표 횟수가 0보다 큰 회원만
+			});
 
-					const item = document.createElement('div');
-					item.style.cssText = 'padding: 15px; border-bottom: 1px solid #e0e0e0; cursor: pointer; transition: background 0.3s;';
-					item.innerHTML = `
-						<div style="display: flex; align-items: center; gap: 10px;">
-							<div style="flex: 1;">
-								<div style="font-weight: 600; font-size: 16px;">${member.name}
-									<span style="font-size: 13px; color: #666; margin-left:20px;">출석: ${currentCount} / ${targetCount}회</span>
-								</div>
-							</div>
-							<div style="color: ${alreadyChecked ? '#4CAF50' : '#999'}; font-size: 24px;">
-								${alreadyChecked ? '✓' : '○'}
-							</div>
-						</div>
-					`;
-
-					item.onmouseover = () => item.style.background = '#f8f9fa';
-					item.onmouseout = () => item.style.background = 'white';
-					item.onclick = () => toggleAttendance(index);
-
-					list.appendChild(item);
-				});
+			if (validMembers.length === 0) {
+				list.innerHTML = '<p style="text-align: center; color: #999; padding: 20px;">목표 출석 횟수가 설정된 회원이 없습니다.<br>회원 정보에서 목표 출석 횟수를 설정해주세요.</p>';
+				modal.classList.add('active');
+				return;
 			}
+
+			validMembers.forEach((member, index) => {
+				// 원본 members 배열에서의 인덱스 찾기
+				const originalIndex = members.indexOf(member);
+				const alreadyChecked = member.attendanceDates && member.attendanceDates.includes(selectedDate);
+				const currentCount = member.currentCount || 0;
+				const targetCount = member.targetCount || 8;
+
+				const item = document.createElement('div');
+				item.style.cssText = 'padding: 15px; border-bottom: 1px solid #e0e0e0; cursor: pointer; transition: background 0.3s;';
+				item.innerHTML = `
+					<div style="display: flex; align-items: center; gap: 10px;">
+						<img src="${member.photo || 'https://via.placeholder.com/50'}" style="width: 50px; height: 50px; border-radius: 8px; object-fit: cover;">
+						<div style="flex: 1;">
+							<div style="font-weight: 600; font-size: 16px;">${member.name}</div>
+							<div style="font-size: 13px; color: #666;">출석: ${currentCount} / ${targetCount}회</div>
+						</div>
+						<div style="color: ${alreadyChecked ? '#4CAF50' : '#999'}; font-size: 24px;">
+							${alreadyChecked ? '✓' : '○'}
+						</div>
+					</div>
+				`;
+				
+				item.onmouseover = () => item.style.background = '#f8f9fa';
+				item.onmouseout = () => item.style.background = 'white';
+				item.onclick = () => toggleAttendance(originalIndex); // 원본 인덱스 사용
+				
+				list.appendChild(item);
+			});
 
 			modal.classList.add('active');
 		}
