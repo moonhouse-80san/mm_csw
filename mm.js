@@ -484,10 +484,26 @@ function loadFromFirebase() {
 	firebaseDb.ref('members').once('value', (snapshot) => {
 		const data = snapshot.val();
 		if (data) {
-			members = Object.values(data);
+			// undefined 값 정리
+			members = Object.values(data).map(member => {
+				const cleaned = {};
+				for (const key in member) {
+					if (member[key] !== undefined) {
+						cleaned[key] = member[key];
+					}
+				}
+				// photo가 없으면 빈 문자열로 설정
+				if (!cleaned.photo) {
+					cleaned.photo = '';
+				}
+				return cleaned;
+			});
 			filteredMembers = [...members];
 			renderMembers();
 			renderSchedule();
+			
+			// 정리된 데이터를 다시 저장 (한 번만 실행)
+			saveToFirebase();
 		}
 	});
 
@@ -518,7 +534,20 @@ function listenToFirebaseChanges() {
 	firebaseDb.ref('members').on('value', (snapshot) => {
 		const data = snapshot.val();
 		if (data) {
-			members = Object.values(data);
+			// undefined 값 정리
+			members = Object.values(data).map(member => {
+				const cleaned = {};
+				for (const key in member) {
+					if (member[key] !== undefined) {
+						cleaned[key] = member[key];
+					}
+				}
+				// photo가 없으면 빈 문자열로 설정
+				if (!cleaned.photo) {
+					cleaned.photo = '';
+				}
+				return cleaned;
+			});
 			filteredMembers = [...members];
 			renderMembers();
 			renderSchedule();
