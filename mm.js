@@ -71,8 +71,7 @@ function updateLockStatus() {
 		lockStatusEl.classList.remove('locked');
 		lockStatusEl.classList.add('unlocked');
 
-		// 수정 버튼 표시 및 활성화
-		updateBtn.classList.remove('btn-hidden');
+		// 수정 버튼 활성화
 		updateBtn.classList.remove('btn-disabled');
 		updateBtn.classList.add('btn-update');
 		updateBtn.textContent = '수정';
@@ -84,10 +83,9 @@ function updateLockStatus() {
 		lockStatusEl.classList.remove('unlocked');
 		lockStatusEl.classList.add('locked');
 
-		// 수정 버튼 숨김
-		updateBtn.classList.add('btn-hidden');
+		// 수정 버튼 비활성화
 		updateBtn.classList.remove('btn-update');
-
+		updateBtn.classList.add('btn-disabled');
 		updateBtn.textContent = '수정';
 
 		// 회원 목록의 수정/삭제 버튼 숨기기
@@ -941,7 +939,7 @@ function renderSchedule() {
 
 	let scheduleHTML = '';
 	
-	daysOfWeek.forEach(day) {
+	daysOfWeek.forEach(day => {
 		const dayMembers = scheduleByDay[day];
 
 		const timeSlots = {};
@@ -1441,6 +1439,25 @@ function importData(event) {
 	reader.readAsText(file);
 }
 
+// 초기화
+document.getElementById('registerDate').valueAsDate = new Date();
+document.getElementById('startTime1').value = "13:00";
+document.getElementById('endTime1').value = "13:20";
+document.getElementById('startTime2').value = "13:00";
+document.getElementById('endTime2').value = "13:20";
+document.getElementById('targetCount').value = "0";
+document.getElementById('currentCount').value = "0";
+
+updateFeePresetButtons();
+updateLockStatus(); // 초기 잠금 상태 설정
+
+// 활동 감지 이벤트 리스너 추가
+document.addEventListener('click', resetLockTimer);
+document.addEventListener('keydown', resetLockTimer);
+document.addEventListener('scroll', resetLockTimer);
+
+// ========== 출석 관리 함수 ==========
+
 function playNotificationSound() {
 	const audio = document.getElementById('notificationSound');
 	audio.play().catch(e => console.log('알림음 재생 실패:', e));
@@ -1757,23 +1774,6 @@ function toggleAttendance(memberIndex) {
 
 	closeAttendanceSelectModal();
 }
-
-// 초기화
-document.getElementById('registerDate').valueAsDate = new Date();
-document.getElementById('startTime1').value = "13:00";
-document.getElementById('endTime1').value = "13:20";
-document.getElementById('startTime2').value = "13:00";
-document.getElementById('endTime2').value = "13:20";
-document.getElementById('targetCount').value = "0";
-document.getElementById('currentCount').value = "0";
-
-updateFeePresetButtons();
-updateLockStatus(); // 초기 잠금 상태 설정
-
-// 활동 감지 이벤트 리스너 추가
-document.addEventListener('click', resetLockTimer);
-document.addEventListener('keydown', resetLockTimer);
-document.addEventListener('scroll', resetLockTimer);
 
 // 현재 날짜로 달력 초기화
 const now = new Date();
