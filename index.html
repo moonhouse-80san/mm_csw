@@ -3053,10 +3053,10 @@
 				item.style.cssText = 'padding: 15px; border-bottom: 1px solid #e0e0e0; cursor: pointer; transition: background 0.3s;';
 				item.innerHTML = `
 					<div style="display: flex; align-items: center; gap: 10px;">
-						<img src="${member.photo || 'https://via.placeholder.com/50'}" style="width: 50px; height: 50px; border-radius: 8px; object-fit: cover;">
 						<div style="flex: 1;">
-							<div style="font-weight: 600; font-size: 16px;">${member.name}</div>
-							<div style="font-size: 13px; color: #666;">출석: ${currentCount} / ${targetCount}회</div>
+							<div style="font-weight: 600; font-size: 16px;">${member.name}
+								<span style="font-size: 13px; color: #666; margin-left:15px;">출석: ${currentCount} / ${targetCount}회</span>
+							</div>
 						</div>
 						<div style="color: ${alreadyChecked ? '#4CAF50' : '#999'}; font-size: 24px;">
 							${alreadyChecked ? '✓' : '○'}
