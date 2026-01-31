@@ -527,13 +527,31 @@ function listenToFirebaseChanges() {
 }
 
 function saveToFirebase() {
+	// undefined 값을 제거하는 헬퍼 함수
+	function cleanObject(obj) {
+		const cleaned = {};
+		for (const key in obj) {
+			if (obj[key] !== undefined) {
+				if (obj[key] === null) {
+					cleaned[key] = null;
+				} else if (typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
+					cleaned[key] = cleanObject(obj[key]);
+				} else {
+					cleaned[key] = obj[key];
+				}
+			}
+		}
+		return cleaned;
+	}
+
 	const membersObj = {};
 	members.forEach((member, index) => {
-		membersObj[index] = member;
+		// 각 회원 데이터에서 undefined 제거
+		membersObj[index] = cleanObject(member);
 	});
 
 	firebaseDb.ref('members').set(membersObj);
-	firebaseDb.ref('settings').set(settings);
+	firebaseDb.ref('settings').set(cleanObject(settings));
 }
 
 function checkTimeConflict(day1, startTime1, endTime1, day2, startTime2, endTime2, excludeIndex = null) {
@@ -893,7 +911,7 @@ function addMember() {
 	const member = {
 		name,
 		phone,
-		photo: currentPhotoData,
+		photo: currentPhotoData || '',
 		registerDate: registerDate || new Date().toISOString().split('T')[0],
 		fee: fee ? parseInt(fee) : null,
 		targetCount: targetCount,
@@ -988,7 +1006,7 @@ function updateMember() {
 	members[currentEditIndex] = {
 		name,
 		phone,
-		photo: currentPhotoData !== null ? currentPhotoData : members[currentEditIndex].photo,
+		photo: currentPhotoData !== null ? currentPhotoData : (members[currentEditIndex].photo || ''),
 		registerDate: registerDate || members[currentEditIndex].registerDate,
 		fee: fee ? parseInt(fee) : null,
 		targetCount: targetCount,
