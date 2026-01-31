@@ -1450,53 +1450,128 @@ function selectDate(year, month, date) {
 	resetLockTimer();
 }
 
+// 출석 선택 모달에서 회원 검색 필터링
+function filterAttendanceMembers() {
+    const searchTerm = document.getElementById('attendanceSearchInput').value.toLowerCase();
+    const list = document.getElementById('memberSelectList');
+    
+    // 목표 횟수가 설정된 회원만 필터링
+    const validMembers = members.filter(member => {
+        const targetCount = member.targetCount || 0;
+        return targetCount > 0;
+    });
+    
+    if (searchTerm === '') {
+        // 검색어가 없으면 전체 목록 표시
+        renderAttendanceMemberList(validMembers);
+        return;
+    }
+    
+    // 검색어로 필터링
+    const filteredMembers = validMembers.filter(member => {
+        return member.name.toLowerCase().includes(searchTerm) ||
+               (member.phone && member.phone.includes(searchTerm));
+    });
+    
+    renderAttendanceMemberList(filteredMembers);
+}
+
+// 출석 회원 목록 렌더링 함수 (재사용 가능하게 분리)
+function renderAttendanceMemberList(memberList) {
+    const list = document.getElementById('memberSelectList');
+    
+    if (memberList.length === 0) {
+        list.innerHTML = '<p style="text-align: center; color: #999; padding: 20px;">검색 결과가 없습니다.<br>다른 검색어를 입력해보세요.</p>';
+        return;
+    }
+    
+    let html = '';
+    memberList.forEach((member, index) => {
+        // 원본 members 배열에서의 인덱스 찾기
+        const originalIndex = members.indexOf(member);
+        const alreadyChecked = member.attendanceDates && member.attendanceDates.includes(selectedDate);
+        const currentCount = member.currentCount || 0;
+        const targetCount = member.targetCount || 8;
+        
+        // 출석 진행 상태 표시 (막대 그래프)
+        const progressPercent = targetCount > 0 ? Math.min(100, (currentCount / targetCount) * 100) : 0;
+        let progressColor = '#4CAF50'; // 기본: 초록색
+        if (progressPercent >= 100) {
+            progressColor = '#f44336'; // 목표 도달: 빨간색
+        } else if (progressPercent >= 80) {
+            progressColor = '#FF9800'; // 80% 이상: 주황색
+        }
+        
+        html += `
+        <div class="attendance-member-item" onclick="toggleAttendance(${originalIndex})" 
+             style="padding: 12px 15px; border-bottom: 1px solid #e0e0e0; cursor: pointer; transition: background 0.3s;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="flex: 1; min-width: 0;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                        <div style="font-weight: 600; font-size: 16px; color: #333;">
+                            ${member.name}
+                            <span style="font-size: 13px; color: ${alreadyChecked ? '#4CAF50' : '#666'}; margin-left: 8px;">
+                                ${alreadyChecked ? '✓ 출석 완료' : '○ 미출석'}
+                            </span>
+                        </div>
+                        <div style="font-size: 14px; color: #666; font-weight: 500;">
+                            ${currentCount} / ${targetCount}회
+                        </div>
+                    </div>
+                    
+                    <!-- 진행 상태 막대 -->
+                    <div style="height: 6px; background: #f0f0f0; border-radius: 3px; overflow: hidden; margin: 5px 0;">
+                        <div style="height: 100%; width: ${progressPercent}%; background: ${progressColor}; border-radius: 3px;"></div>
+                    </div>
+                    
+                    ${member.phone ? `<div style="font-size: 13px; color: #666; margin-top: 3px;">📞 ${member.phone}</div>` : ''}
+                </div>
+                
+                <div style="width: 24px; height: 24px; border: 2px solid ${alreadyChecked ? '#4CAF50' : '#ccc'}; 
+                     border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    ${alreadyChecked ? '✓' : ''}
+                </div>
+            </div>
+        </div>
+        `;
+    });
+    
+    list.innerHTML = html;
+    
+    // 마우스 오버 효과 추가
+    document.querySelectorAll('.attendance-member-item').forEach(item => {
+        item.onmouseover = () => item.style.background = '#f8f9fa';
+        item.onmouseout = () => item.style.background = 'white';
+    });
+}
+
+// 기존 showAttendanceSelectModal 함수를 수정
 function showAttendanceSelectModal() {
-	const modal = document.getElementById('attendanceSelectModal');
-	const list = document.getElementById('memberSelectList');
-	list.innerHTML = '';
-
-	// 목표 횟수가 설정된 회원만 필터링
-	const validMembers = members.filter(member => {
-		const targetCount = member.targetCount || 0;
-		return targetCount > 0; // 목표 횟수가 0보다 큰 회원만
-	});
-
-	if (validMembers.length === 0) {
-		list.innerHTML = '<p style="text-align: center; color: #999; padding: 20px;">목표 출석 횟수가 설정된 회원이 없습니다.<br>회원 정보에서 목표 출석 횟수를 설정해주세요.</p>';
-		modal.classList.add('active');
-		return;
-	}
-
-	validMembers.forEach((member, index) => {
-		// 원본 members 배열에서의 인덱스 찾기
-		const originalIndex = members.indexOf(member);
-		const alreadyChecked = member.attendanceDates && member.attendanceDates.includes(selectedDate);
-		const currentCount = member.currentCount || 0;
-		const targetCount = member.targetCount || 8;
-
-		const item = document.createElement('div');
-		item.style.cssText = 'padding: 15px; border-bottom: 1px solid #e0e0e0; cursor: pointer; transition: background 0.3s;';
-		item.innerHTML = `
-			<div style="display: flex; align-items: center; gap: 10px;">
-				<div style="flex: 1;">
-					<div style="font-weight: 600; font-size: 16px;">${member.name}
-						<span style="font-size: 13px; color: #666; margin-left:15px;">출석: ${currentCount} / ${targetCount}회</span>
-					</div>
-				</div>
-				<div style="color: ${alreadyChecked ? '#4CAF50' : '#999'}; font-size: 24px;">
-					${alreadyChecked ? '✓' : '○'}
-				</div>
-			</div>
-		`;
-		
-		item.onmouseover = () => item.style.background = '#f8f9fa';
-		item.onmouseout = () => item.style.background = 'white';
-		item.onclick = () => toggleAttendance(originalIndex); // 원본 인덱스 사용
-		
-		list.appendChild(item);
-	});
-
-	modal.classList.add('active');
+    const modal = document.getElementById('attendanceSelectModal');
+    const list = document.getElementById('memberSelectList');
+    
+    // 검색어 초기화
+    document.getElementById('attendanceSearchInput').value = '';
+    
+    // 목표 횟수가 설정된 회원만 필터링
+    const validMembers = members.filter(member => {
+        const targetCount = member.targetCount || 0;
+        return targetCount > 0;
+    });
+    
+    if (validMembers.length === 0) {
+        list.innerHTML = '<p style="text-align: center; color: #999; padding: 20px;">목표 출석 횟수가 설정된 회원이 없습니다.<br>회원 정보에서 목표 출석 횟수를 설정해주세요.</p>';
+        modal.classList.add('active');
+        return;
+    }
+    
+    renderAttendanceMemberList(validMembers);
+    modal.classList.add('active');
+    
+    // 검색창에 포커스
+    setTimeout(() => {
+        document.getElementById('attendanceSearchInput').focus();
+    }, 300);
 }
 
 function closeAttendanceSelectModal() {

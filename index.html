@@ -384,6 +384,16 @@
 				<h2>출석 체크</h2>
 			</div>
 			<p>어떤 회원의 출석을 체크하시겠습니까?</p>
+			
+			<!-- 검색 기능 추가 -->
+			<div class="search-box" style="margin: 15px 0;">
+				<input type="text" 
+					   id="attendanceSearchInput" 
+					   placeholder="🔍 회원 이름 또는 전화번호 검색..." 
+					   onkeyup="filterAttendanceMembers()"
+					   style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px;">
+			</div>
+			
 			<div id="memberSelectList" style="max-height: 400px; overflow-y: auto; margin: 20px 0;"></div>
 			<div class="modal-buttons">
 				<button class="btn btn-secondary" onclick="closeAttendanceSelectModal()">취소</button>
