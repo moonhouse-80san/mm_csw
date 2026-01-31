@@ -1279,12 +1279,18 @@
 
 				<!-- 출석 관리 필드 추가 -->
 				<div class="form-group">
-					<label for="targetCount">목표 출석 횟수</label>
-					<input type="number" id="targetCount" placeholder="기본 8회" value="" min="1">
+					<label for="targetCount">출석 횟수</label>
+					<input type="number" id="targetCount" placeholder="설정하지 않음 (출석 관리 제외)" value="0" min="0">
+					<div style="font-size: 12px; color: #666; margin-top: 5px;">
+						※ 0으로 설정하면 출석 관리에서 제외됩니다.
+					</div>
 				</div>
 				<div class="form-group">
 					<label for="currentCount">현재 출석 횟수</label>
 					<input type="number" id="currentCount" placeholder="0" value="0" min="0" readonly style="background: #f0f0f0;">
+					<div style="font-size: 12px; color: #666; margin-top: 5px;">
+						※ 자동으로 계산됩니다.
+					</div>
 				</div>
 				<div class="form-group">
 					<label for="registerDate">회원등록일</label>
