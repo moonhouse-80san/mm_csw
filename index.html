@@ -1028,6 +1028,7 @@
 			}
 		}
 
+
 		/* ========== 출석 관리 추가 스타일 ========== */
 		.attendance-count {
 			display: inline-flex;
@@ -1190,7 +1191,7 @@
 			margin-bottom: 25px;
 			line-height: 1.6;
 		}
-	</style>
+		</style>
 </head>
 <body>
 	<div class="container">
@@ -2758,6 +2759,7 @@
 		document.addEventListener('keydown', resetLockTimer);
 		document.addEventListener('scroll', resetLockTimer);
 
+
 		// ========== 출석 관리 함수 ==========
 		
 		function playNotificationSound() {
@@ -2992,36 +2994,37 @@
 		currentMonth = now.getMonth();
 	</script>
 
-	<!-- 출석 알림 모달 -->
-	<div id="attendanceAlertModal" class="modal attendance-alert-modal">
-		<div class="modal-content">
-			<div class="attendance-alert-icon">⚠️</div>
-			<h2>출석 알림</h2>
-			<p id="attendanceAlertMessage"></p>
-			<div class="modal-buttons">
-				<button class="btn btn-primary" onclick="closeAttendanceAlert()">확인</button>
+		<!-- 출석 알림 모달 -->
+		<div id="attendanceAlertModal" class="modal attendance-alert-modal">
+			<div class="modal-content">
+				<div class="attendance-alert-icon">⚠️</div>
+				<h2>출석 알림</h2>
+				<p id="attendanceAlertMessage"></p>
+				<div class="modal-buttons">
+					<button class="btn btn-primary" onclick="closeAttendanceAlert()">확인</button>
+				</div>
 			</div>
 		</div>
-	</div>
 
-	<!-- 출석 선택 모달 -->
-	<div id="attendanceSelectModal" class="modal">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h2>출석 체크</h2>
-			</div>
-			<p>어떤 회원의 출석을 체크하시겠습니까?</p>
-			<div id="memberSelectList" style="max-height: 400px; overflow-y: auto; margin: 20px 0;"></div>
-			<div class="modal-buttons">
-				<button class="btn btn-secondary" onclick="closeAttendanceSelectModal()">취소</button>
+		<!-- 출석 선택 모달 -->
+		<div id="attendanceSelectModal" class="modal">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h2>출석 체크</h2>
+				</div>
+				<p>어떤 회원의 출석을 체크하시겠습니까?</p>
+				<div id="memberSelectList" style="max-height: 400px; overflow-y: auto; margin: 20px 0;"></div>
+				<div class="modal-buttons">
+					<button class="btn btn-secondary" onclick="closeAttendanceSelectModal()">취소</button>
+				</div>
 			</div>
 		</div>
-	</div>
 
-	<!-- 알림음 오디오 -->
-	<audio id="notificationSound" preload="auto">
-		<source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTGJ0fPTgjMGHm7A7+OZUQ0PVqvl77RpHwU7k9n0zIIyBSGAxPDdl0MKE160/o1mHAY4kdb0yXwsHGHH8d6SRgsUYLXp6atUGgpJou7ykHI0BSmCzvPbeScAD0Sj5fG0aycGOpPY9NOGLAckg8rx24NLKRNit+3wqV4gCU+r5/S3cCYFMIvW9NSKNgkaf8bx35pFDBZmu+nxrl4XCFG06fCzaiQCNJLY9dCFMwsofcjy14IzBx9qveu0bCEGTqve9NmPPQkaaMHw3pkQAERn3+6wcyYGN5PZ9NKJNAojgsnx2IxADBoRdL3s8K9oJAU/ldv119SDMyAaxfHdn0sLFlqz6/K0byMBO5bZ9NOFMgkdcsXw2olCDBdqt+Pwr2soCkyg4fTWiTQDG2y+7PGubCUFPJLZ9dOIMwsfeMPx2IpBDBpiv+7wtXAjB0Cn4PTYijcAEGO96++tbCcFOJHZ9M+HNQsjfsjx2YpDCyFov+vxtGwjB0Ol4vPWiTYBEmS96++va50AAAA=" type="audio/wav">
-	</audio>
+		<!-- 알림음 오디오 -->
+		<audio id="notificationSound" preload="auto">
+			<source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTGJ0fPTgjMGHm7A7+OZUQ0PVqvl77RpHwU7k9n0zIIyBSGAxPDdl0MKE160/o1mHAY4kdb0yXwsHGHH8d6SRgsUYLXp6atUGgpJou7ykHI0BSmCzvPbeScAD0Sj5fG0aycGOpPY9NOGLAckg8rx24NLKRNit+3wqV4gCU+r5/S3cCYFMIvW9NSKNgkaf8bx35pFDBZmu+nxrl4XCFG06fCzaiQCNJLY9dCFMwsofcjy14IzBx9qveu0bCEGTqve9NmPPQkaaMHw3pkQAERn3+6wcyYGN5PZ9NKJNAojgsnx2IxADBoRdL3s8K9oJAU/ldv119SDMyAaxfHdn0sLFlqz6/K0byMBO5bZ9NOFMgkdcsXw2olCDBdqt+Pwr2soCkyg4fTWiTQDG2y+7PGubCUFPJLZ9dOIMwsfeMPx2IpBDBpiv+7wtXAjB0Cn4PTYijcAEGO96++tbCcFOJHZ9M+HNQsjfsjx2YpDCyFov+vxtGwjB0Ol4vPWiTYBEmS96++va50AAAA=" type="audio/wav">
+		</audio>
+
 
 </body>
 </html>
