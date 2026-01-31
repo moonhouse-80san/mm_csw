@@ -518,6 +518,20 @@
 			font-size: 18px;
 			font-weight: 600;
 			color: #333;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			flex-wrap: wrap;
+		}
+
+		.member-name .attendance-count {
+			font-size: 12px;
+			font-weight: 500;
+			padding: 3px 8px;
+			background: #e3f2fd;
+			color: #1976d2;
+			border-radius: 12px;
+			white-space: nowrap;
 		}
 
 		.member-actions {
@@ -893,142 +907,6 @@
 			color: rgba(255,255,255,0.8);
 		}
 
-		@media (max-width: 600px) {
-			.form-grid {
-				grid-template-columns: 1fr;
-			}
-
-			/* 수정: 추가/수정/초기화 버튼을 모바일에서 한 줄로 유지 */
-			.button-group {
-				grid-template-columns: repeat(3, 1fr);
-				gap: 8px;
-			}
-
-			.button-group .btn {
-				padding: 10px;
-				font-size: 14px;
-			}
-
-			.filter-buttons {
-				font-size: 11px;
-			}
-
-			.time-group {
-				grid-template-columns: 1fr;
-				grid-template-rows: auto auto auto;
-			}
-
-			.time-group span {
-				order: 2;
-			}
-
-			.member-card {
-				display: flex;
-				gap: 14px;
-				align-items: flex-start;
-			}
-
-			/* 사진 영역 */
-			.member-photo-container {
-				width: 90px;
-				height: 90px;
-				object-fit: cover;
-				border-radius: 8px;
-				margin-right: 5px;
-			}
-
-			/* 오른쪽 전체 정보 영역 */
-			.member-info-container {
-				flex: 1;
-			}
-
-			/* 상단: 이름 + 수정/삭제 버튼 (같은 줄) */
-			.member-header {
-				display: flex;
-				justify-content: space-between;
-				align-items: center;
-				margin-bottom: 6px;
-			}
-
-			/* 이름 강조 */
-			.member-name {
-				font-weight: bold;
-				font-size: 17px;
-			}
-
-			/* 버튼 그룹 */
-			.member-actions {
-				display: flex;
-				gap: 6px;
-			}
-
-			/* 하단: 전화번호 + 기타 정보 (이름 아래) */
-			.member-info {
-				font-size: 14px;
-				color: #555;
-				line-height: 1.5;
-			}
-
-			.photo-preview {
-				width: 300px;
-				height: 300px;
-			}
-
-			#cameraModal .modal-content {
-				padding: 15px;
-				margin: 10px;
-			}
-
-			.camera-controls {
-				flex-direction: column;
-			}
-
-			.camera-btn {
-				width: 100%;
-			}
-
-			/* 암호 입력 섹션 모바일 최적화 */
-			.password-input-group {
-				flex-direction: column;
-			}
-
-			.password-input {
-				width: 100%;
-			}
-
-			.unlock-btn {
-				width: 100%;
-			}
-
-			.password-section {
-				padding: 8px 12px;
-			}
-			
-			.unlock-btn {
-				padding: 8px 12px;
-				font-size: 13px;
-			}
-		}
-
-		@media (max-width: 400px) {
-			.photo-preview {
-				width: 250px;
-				height: 250px;
-			}
-			
-			/* 작은 화면에서 버튼 텍스트 줄이기 */
-			.button-group .btn {
-				font-size: 12px;
-				padding: 8px 5px;
-			}
-			
-			.btn-edit, .btn-delete {
-				padding: 6px 10px;
-				font-size: 12px;
-			}
-		}
-
-
 		/* ========== 출석 관리 추가 스타일 ========== */
 		.attendance-count {
 			display: inline-flex;
@@ -1191,7 +1069,156 @@
 			margin-bottom: 25px;
 			line-height: 1.6;
 		}
-		</style>
+
+		@media (max-width: 600px) {
+			.form-grid {
+				grid-template-columns: 1fr;
+			}
+
+			/* 수정: 추가/수정/초기화 버튼을 모바일에서 한 줄로 유지 */
+			.button-group {
+				grid-template-columns: repeat(3, 1fr);
+				gap: 8px;
+			}
+
+			.button-group .btn {
+				padding: 10px;
+				font-size: 14px;
+			}
+
+			.filter-buttons {
+				font-size: 11px;
+			}
+
+			.time-group {
+				grid-template-columns: 1fr;
+				grid-template-rows: auto auto auto;
+			}
+
+			.time-group span {
+				order: 2;
+			}
+
+			.member-card {
+				display: flex;
+				gap: 14px;
+				align-items: flex-start;
+			}
+
+			/* 사진 영역 */
+			.member-photo-container {
+				width: 90px;
+				height: 90px;
+				object-fit: cover;
+				border-radius: 8px;
+				margin-right: 5px;
+			}
+
+			/* 오른쪽 전체 정보 영역 */
+			.member-info-container {
+				flex: 1;
+			}
+
+			/* 상단: 이름 + 수정/삭제 버튼 (같은 줄) */
+			.member-header {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin-bottom: 6px;
+			}
+
+			/* 이름 강조 */
+			.member-name {
+				font-weight: bold;
+				font-size: 17px;
+			}
+
+			.member-name .attendance-count {
+				font-size: 11px;
+				padding: 2px 6px;
+			}
+
+			/* 버튼 그룹 */
+			.member-actions {
+				display: flex;
+				gap: 6px;
+			}
+
+			/* 하단: 전화번호 + 기타 정보 (이름 아래) */
+			.member-info {
+				font-size: 14px;
+				color: #555;
+				line-height: 1.5;
+			}
+
+			.photo-preview {
+				width: 300px;
+				height: 300px;
+			}
+
+			#cameraModal .modal-content {
+				padding: 15px;
+				margin: 10px;
+			}
+
+			.camera-controls {
+				flex-direction: column;
+			}
+
+			.camera-btn {
+				width: 100%;
+			}
+
+			/* 암호 입력 섹션 모바일 최적화 */
+			.password-input-group {
+				flex-direction: column;
+			}
+
+			.password-input {
+				width: 100%;
+			}
+
+			.unlock-btn {
+				width: 100%;
+			}
+
+			.password-section {
+				padding: 8px 12px;
+			}
+			
+			.unlock-btn {
+				padding: 8px 12px;
+				font-size: 13px;
+			}
+		}
+
+		@media (max-width: 400px) {
+			.photo-preview {
+				width: 250px;
+				height: 250px;
+			}
+			
+			/* 작은 화면에서 버튼 텍스트 줄이기 */
+			.button-group .btn {
+				font-size: 12px;
+				padding: 8px 5px;
+			}
+			
+			.btn-edit, .btn-delete {
+				padding: 6px 10px;
+				font-size: 12px;
+			}
+
+			.member-name {
+				font-size: 16px;
+			}
+
+			.member-name .attendance-count {
+				font-size: 10px;
+				padding: 1px 4px;
+			}
+		}
+	</style>
 </head>
 <body>
 	<div class="container">
@@ -1247,15 +1274,15 @@
 					<input type="tel" id="phone" placeholder="010-1234-5678">
 				</div>
 
-				<!-- 출석 관리 필드 추가 -->
-				<div class="form-group">
-					<label for="targetCount">목표 출석 횟수</label>
-					<input type="number" id="targetCount" placeholder="기본 8회" value="8" min="1">
-				</div>
-				<div class="form-group">
-					<label for="currentCount">현재 출석 횟수</label>
-					<input type="number" id="currentCount" placeholder="0" value="0" min="0" readonly style="background: #f0f0f0;">
-				</div>
+					<!-- 출석 관리 필드 추가 -->
+					<div class="form-group">
+						<label for="targetCount">목표 출석 횟수</label>
+						<input type="number" id="targetCount" placeholder="기본 8회" value="8" min="1">
+					</div>
+					<div class="form-group">
+						<label for="currentCount">현재 출석 횟수</label>
+						<input type="number" id="currentCount" placeholder="0" value="0" min="0" readonly style="background: #f0f0f0;">
+					</div>
 				<div class="form-group">
 					<label for="registerDate">회원등록일</label>
 					<input type="date" id="registerDate">
@@ -1267,7 +1294,7 @@
 						<!-- 회비 기본값 버튼들이 여기에 생성됩니다 -->
 					</div>
 				</div>
-
+				
 				<!-- 첫 번째 스케줄 -->
 				<div class="form-group full-width">
 					<div class="schedule-section-header">📅 스케줄 1</div>
@@ -1294,7 +1321,7 @@
 						</div>
 					</div>
 				</div>
-
+				
 				<!-- 두 번째 스케줄 -->
 				<div class="form-group full-width">
 					<div class="schedule-section-header">📅 스케줄 2</div>
@@ -1321,7 +1348,7 @@
 						</div>
 					</div>
 				</div>
-
+				
 				<div class="form-group">
 					<label for="email">이메일</label>
 					<input type="email" id="email" placeholder="example@email.com">
@@ -1423,14 +1450,14 @@
 						📷 후면 카메라
 					</button>
 				</div>
-
+				
 				<video id="cameraVideo" autoplay playsinline></video>
-
+				
 				<!-- 사진 찍기 버튼 -->
 				<div class="capture-btn" onclick="capturePhoto()">
 					<div class="capture-inner"></div>
 				</div>
-
+				
 				<div style="text-align: center; color: #666; font-size: 14px;">
 					사진을 찍으려면 원형 버튼을 누르세요
 				</div>
@@ -1465,7 +1492,7 @@
 				<label for="clubNameInput">구장명</label>
 				<input type="text" id="clubNameInput" placeholder="예: OO탁구장">
 			</div>
-
+			
 			<!-- 추가: 자동 잠금 시간 설정 -->
 			<div class="form-group">
 				<label for="lockTimeoutInput">자동 잠금 시간 (분)</label>
@@ -1474,7 +1501,7 @@
 					※ 암호 입력 후 자동으로 잠기기까지의 시간입니다. 기본값: 5분
 				</div>
 			</div>
-
+			
 			<div class="form-group">
 				<label>월회비 기본값 설정</label>
 				<div class="fee-presets" style="margin-top: 10px;">
@@ -1549,10 +1576,8 @@
 		let members = [];
 
 		// 달력 관련 변수
-
 		let currentYear = 2026;
 		let currentMonth = 0; // 0-11 (1월 = 0)
-
 		let selectedDate = null;
 		let filteredMembers = [];
 		let currentEditIndex = null;
@@ -1599,34 +1624,34 @@
 		}
 
 		// ========== 개선된 보안 기능 ==========
-
+		
 		// 잠금 상태 업데이트
 		function updateLockStatus() {
 			const lockStatusEl = document.getElementById('lockStatus');
 			const updateBtn = document.getElementById('updateBtn');
-
+			
 			if (isUnlocked) {
 				lockStatusEl.innerHTML = `🔓 잠금 해제됨 - ${formatTime(remainingTime)} 후 자동 잠금 <span class="lock-timer" id="lockTimer"></span>`;
 				lockStatusEl.classList.remove('locked');
 				lockStatusEl.classList.add('unlocked');
-
+				
 				// 수정 버튼 활성화
 				updateBtn.classList.remove('btn-disabled');
 				updateBtn.classList.add('btn-update');
 				updateBtn.textContent = '수정';
-
+				
 				// 회원 목록의 수정/삭제 버튼 표시
 				showMemberButtons();
 			} else {
 				lockStatusEl.innerHTML = `🔒 잠김 상태 - 수정/삭제 버튼 숨김 <span class="lock-timer" id="lockTimer"></span>`;
 				lockStatusEl.classList.remove('unlocked');
 				lockStatusEl.classList.add('locked');
-
+				
 				// 수정 버튼 비활성화
 				updateBtn.classList.remove('btn-update');
 				updateBtn.classList.add('btn-disabled');
 				updateBtn.textContent = '수정';
-
+				
 				// 회원 목록의 수정/삭제 버튼 숨기기
 				hideMemberButtons();
 			}
@@ -1635,50 +1660,50 @@
 		// 잠금 해제
 		function unlockEditButtons() {
 			const password = document.getElementById('lockPassword').value;
-
+			
 			if (!password) {
 				showAlert('암호를 입력해주세요!');
 				return;
 			}
-
+			
 			// 이미 잠금 해제된 상태에서 올바른 암호를 입력하면 즉시 잠금
 			if (isUnlocked && password === settings.editPassword) {
 				isUnlocked = false;
 				remainingTime = settings.lockTimeout * 60;
-
+				
 				// 자동 잠금 타이머 중지
 				if (lockInterval) {
 					clearInterval(lockInterval);
 					lockInterval = null;
 				}
-
+				
 				// 암호 입력칸 초기화
 				document.getElementById('lockPassword').value = '';
-
+				
 				// 상태 업데이트
 				updateLockStatus();
-
+				
 				// 알림 메시지
 				showAlert('앱이 잠겼습니다!');
 				return;
 			}
-
+			
 			if (password === settings.editPassword) {
 				isUnlocked = true;
 				remainingTime = settings.lockTimeout * 60; // 설정된 시간으로 리셋
-
+				
 				// 자동 잠금 타이머 시작
 				startAutoLockTimer();
-
+				
 				// 암호 입력칸 초기화
 				document.getElementById('lockPassword').value = '';
-
+				
 				// 상태 업데이트
 				updateLockStatus();
-
+				
 				// 알림 메시지
 				showAlert(`잠금이 해제되었습니다! ${settings.lockTimeout}분 후 자동으로 잠깁니다.`);
-
+				
 				// 활동 타이머 리셋 함수 연결
 				resetLockTimer();
 			} else {
@@ -1691,13 +1716,13 @@
 			if (lockInterval) {
 				clearInterval(lockInterval);
 			}
-
+			
 			lockInterval = setInterval(() => {
 				remainingTime--;
-
+				
 				// 타이머 업데이트
 				updateTimerDisplay();
-
+				
 				if (remainingTime <= 0) {
 					lockEditButtons();
 				}
@@ -1723,12 +1748,12 @@
 		// 잠금
 		function lockEditButtons() {
 			isUnlocked = false;
-
+			
 			if (lockInterval) {
 				clearInterval(lockInterval);
 				lockInterval = null;
 			}
-
+			
 			updateLockStatus();
 			showAlert('자동 잠금되었습니다. 다시 암호를 입력해주세요.');
 		}
@@ -1782,10 +1807,10 @@
 		// 카메라 전환 함수
 		function switchCamera(cameraType) {
 			currentCameraType = cameraType;
-
+			
 			document.getElementById('frontCameraBtn').classList.toggle('active', cameraType === 'user');
 			document.getElementById('rearCameraBtn').classList.toggle('active', cameraType === 'environment');
-
+			
 			restartCamera();
 		}
 
@@ -1794,7 +1819,7 @@
 			if (cameraStream) {
 				cameraStream.getTracks().forEach(track => track.stop());
 			}
-
+			
 			try {
 				const constraints = {
 					video: {
@@ -1804,11 +1829,11 @@
 					},
 					audio: false
 				};
-
+				
 				cameraStream = await navigator.mediaDevices.getUserMedia(constraints);
 				const video = document.getElementById('cameraVideo');
 				video.srcObject = cameraStream;
-
+				
 				if (currentCameraType === 'user') {
 					video.style.transform = 'scaleX(-1)';
 				} else {
@@ -1832,17 +1857,17 @@
 					},
 					audio: false
 				};
-
+				
 				cameraStream = await navigator.mediaDevices.getUserMedia(constraints);
 				const video = document.getElementById('cameraVideo');
 				video.srcObject = cameraStream;
-
+				
 				if (currentCameraType === 'user') {
 					video.style.transform = 'scaleX(-1)';
 				}
-
+				
 				document.getElementById('cameraModal').classList.add('active');
-
+				
 			} catch (error) {
 				console.error('카메라 접근 실패:', error);
 				showAlert('카메라에 접근할 수 없습니다. 갤러리에서 사진을 선택해주세요.');
@@ -1856,7 +1881,7 @@
 				cameraStream.getTracks().forEach(track => track.stop());
 				cameraStream = null;
 			}
-
+			
 			const video = document.getElementById('cameraVideo');
 			video.srcObject = null;
 			video.style.transform = '';
@@ -1868,15 +1893,15 @@
 			const video = document.getElementById('cameraVideo');
 			const canvas = document.createElement('canvas');
 			const context = canvas.getContext('2d');
-
+			
 			canvas.width = 400;
 			canvas.height = 400;
-
+			
 			const videoAspect = video.videoWidth / video.videoHeight;
 			const canvasAspect = 1;
-
+			
 			let drawWidth, drawHeight, offsetX, offsetY;
-
+			
 			if (videoAspect > canvasAspect) {
 				drawHeight = video.videoHeight;
 				drawWidth = video.videoHeight * canvasAspect;
@@ -1888,27 +1913,27 @@
 				offsetX = 0;
 				offsetY = (video.videoHeight - drawHeight) / 2;
 			}
-
+			
 			context.drawImage(
 				video, 
 				offsetX, offsetY, drawWidth, drawHeight,
 				0, 0, canvas.width, canvas.height
 			);
-
+			
 			if (currentCameraType === 'user') {
 				const tempCanvas = document.createElement('canvas');
 				const tempContext = tempCanvas.getContext('2d');
 				tempCanvas.width = canvas.width;
 				tempCanvas.height = canvas.height;
-
+				
 				tempContext.translate(canvas.width, 0);
 				tempContext.scale(-1, 1);
 				tempContext.drawImage(canvas, 0, 0);
-
+				
 				context.clearRect(0, 0, canvas.width, canvas.height);
 				context.drawImage(tempCanvas, 0, 0);
 			}
-
+			
 			canvas.toBlob((blob) => {
 				if (blob) {
 					const reader = new FileReader();
@@ -1939,22 +1964,22 @@
 				img.onload = function() {
 					const canvas = document.createElement('canvas');
 					const ctx = canvas.getContext('2d');
-
+					
 					canvas.width = 400;
 					canvas.height = 400;
-
+					
 					const scale = Math.max(
 						400 / img.width,
 						400 / img.height
 					);
-
+					
 					const newWidth = img.width * scale;
 					const newHeight = img.height * scale;
 					const x = (400 - newWidth) / 2;
 					const y = (400 - newHeight) / 2;
-
+					
 					ctx.drawImage(img, x, y, newWidth, newHeight);
-
+					
 					currentPhotoData = canvas.toDataURL('image/jpeg', 0.8);
 					displayPhotoPreview();
 					showAlert('사진이 업로드되었습니다!');
@@ -1968,7 +1993,7 @@
 		function displayPhotoPreview() {
 			const container = document.getElementById('photoPreviewContainer');
 			const preview = document.getElementById('photoPreview');
-
+			
 			if (currentPhotoData) {
 				preview.src = currentPhotoData;
 				container.style.display = 'block';
@@ -2003,10 +2028,10 @@
 					if (data.adminPassword) settings.adminPassword = data.adminPassword;
 					if (data.editPassword) settings.editPassword = data.editPassword;
 					if (data.lockTimeout) settings.lockTimeout = data.lockTimeout;
-
+					
 					document.getElementById('clubNameDisplay').textContent = settings.clubName || '구장명을 설정하세요';
 					updateFeePresetButtons();
-
+					
 					// 초기 잠금 상태 설정
 					remainingTime = settings.lockTimeout * 60;
 					updateLockStatus();
@@ -2031,7 +2056,7 @@
 			members.forEach((member, index) => {
 				membersObj[index] = member;
 			});
-
+			
 			firebaseDb.ref('members').set(membersObj);
 			firebaseDb.ref('settings').set(settings);
 		}
@@ -2039,9 +2064,9 @@
 		function checkTimeConflict(day1, startTime1, endTime1, day2, startTime2, endTime2, excludeIndex = null) {
 			for (let i = 0; i < members.length; i++) {
 				if (excludeIndex !== null && i === excludeIndex) continue;
-
+				
 				const member = members[i];
-
+				
 				if (member.day1 === day1 && member.startTime1 && member.endTime1) {
 					if ((startTime1 >= member.startTime1 && startTime1 < member.endTime1) ||
 						(endTime1 > member.startTime1 && endTime1 <= member.endTime1) ||
@@ -2053,7 +2078,7 @@
 						};
 					}
 				}
-
+				
 				if (member.day2 === day1 && member.startTime2 && member.endTime2) {
 					if ((startTime1 >= member.startTime2 && startTime1 < member.endTime2) ||
 						(endTime1 > member.startTime2 && endTime1 <= member.endTime2) ||
@@ -2065,7 +2090,7 @@
 						};
 					}
 				}
-
+				
 				if (day2) {
 					if (member.day1 === day2 && member.startTime1 && member.endTime1) {
 						if ((startTime2 >= member.startTime1 && startTime2 < member.endTime1) ||
@@ -2078,7 +2103,7 @@
 							};
 						}
 					}
-
+					
 					if (member.day2 === day2 && member.startTime2 && member.endTime2) {
 						if ((startTime2 >= member.startTime2 && startTime2 < member.endTime2) ||
 							(endTime2 > member.startTime2 && endTime2 <= member.endTime2) ||
@@ -2098,7 +2123,7 @@
 		function updateFeePresetButtons() {
 			const feePresetsEl = document.getElementById('feePresets');
 			feePresetsEl.innerHTML = '';
-
+			
 			settings.feePresets.forEach((fee, index) => {
 				if (fee) {
 					const button = document.createElement('button');
@@ -2115,7 +2140,7 @@
 
 		function searchMembers() {
 			const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-
+			
 			if (searchTerm === '') {
 				filteredMembers = [...members];
 			} else {
@@ -2124,18 +2149,18 @@
 						   (member.phone && member.phone.includes(searchTerm));
 				});
 			}
-
+			
 			sortMembers(currentSort);
 		}
 
 		function sortMembers(sortBy) {
 			currentSort = sortBy;
-
+			
 			document.querySelectorAll('.filter-btn').forEach(btn => {
 				btn.classList.remove('active');
 			});
 			event.target.classList.add('active');
-
+			
 			switch(sortBy) {
 				case 'name':
 					filteredMembers.sort((a, b) => a.name.localeCompare(b.name));
@@ -2151,14 +2176,14 @@
 					filteredMembers.sort((a, b) => (b.fee || 0) - (a.fee || 0));
 					break;
 			}
-
+			
 			renderMembers();
 		}
 
 		function renderMembers() {
 			const listEl = document.getElementById('listSection');
 			const countEl = document.getElementById('memberCount');
-
+			
 			countEl.textContent = members.length;
 
 			if (filteredMembers.length === 0) {
@@ -2177,7 +2202,7 @@
 				const originalIndex = members.indexOf(member);
 				const phoneLink = member.phone ? 
 					`<div><a href="tel:${member.phone.replace(/-/g, '')}" class="phone-link">📞 ${member.phone}</a></div>` : '';
-
+				
 				let scheduleBadges = '';
 				if (member.day1 && member.startTime1 && member.endTime1) {
 					scheduleBadges += `<span class="schedule-badge">${dayNames[member.day1]} ${member.startTime1}~${member.endTime1}</span>`;
@@ -2187,22 +2212,22 @@
 				}
 				const currentCount = member.currentCount || 0;
 				const targetCount = member.targetCount || 8;
-
-				let attendanceClass = '';
-				if (currentCount === targetCount - 1) { attendanceClass = 'near-goal'; } 
-				else if (currentCount >= targetCount) {
- attendanceClass = 'reached-goal';
- }
-
-				const attendanceBadge = `<span class="attendance-count ${attendanceClass}">📊 ${currentCount}/${targetCount}회</span>`; 
+				
+				// 출석 횟수 표시
+				const attendanceCount = `
+					<span class="attendance-count" style="margin-left: 8px; font-size: 12px; padding: 2px 6px; background: #e3f2fd; border-radius: 10px;">
+						📊 ${currentCount}/${targetCount}회
+					</span>
+				`;
+				
 				const photoThumb = member.photo ? 
 					`<img src="${member.photo}" class="member-photo" alt="${member.name}">` :
 					`<div class="member-photo" style="display: flex; align-items: center; justify-content: center; background: #f0f0f0; color: #999; font-size: 32px;">👤</div>`;
-
+				
 				// 버튼 숨김/표시 처리
 				const editBtnClass = isUnlocked ? 'btn-edit' : 'btn-edit btn-hidden';
 				const deleteBtnClass = isUnlocked ? 'btn-delete' : 'btn-delete btn-hidden';
-
+				
 				return `
 				<div class="member-card">
 					<div class="member-photo-container">
@@ -2210,12 +2235,15 @@
 					</div>
 					<div class="member-content">
 						<div class="member-header">
-							<div class="member-name">${member.name}</div>
+							<div class="member-name">
+								${member.name}
+								${attendanceCount}
+							</div>
 							<div class="member-actions">
 								<button class="${editBtnClass}" data-index="${originalIndex}" onclick="editMember(${originalIndex}); resetLockTimer();">
 									수정
 								</button>
-								<button class="${deleteBtnClass}" data-index="${originalIndex}" onclick="showDeleteModal(${originalIndex}); resetLockTimer();">
+								<button class="${deleteBtnClass}" data-index="${originalIndex}" onclick="checkLockBeforeDelete(${originalIndex});">
 									삭제
 								</button>
 							</div>
@@ -2237,12 +2265,12 @@
 
 		function renderSchedule() {
 			const scheduleEl = document.getElementById('scheduleContent');
-
+			
 			const scheduleByDay = {};
 			daysOfWeek.forEach(day => {
 				scheduleByDay[day] = [];
 			});
-
+			
 			members.forEach(member => {
 				if (member.day1 && member.startTime1 && member.endTime1) {
 					scheduleByDay[member.day1].push({
@@ -2259,12 +2287,12 @@
 					});
 				}
 			});
-
+			
 			let scheduleHTML = '';
 			
 			daysOfWeek.forEach(day => {
 				const dayMembers = scheduleByDay[day];
-
+				
 				const timeSlots = {};
 				dayMembers.forEach(member => {
 					const timeKey = `${member.startTime}-${member.endTime}`;
@@ -2277,11 +2305,11 @@
 					}
 					timeSlots[timeKey].members.push(member.name);
 				});
-
+				
 				const sortedTimeSlots = Object.values(timeSlots).sort((a, b) => {
 					return a.startTime.localeCompare(b.startTime);
 				});
-
+				
 				scheduleHTML += `
 					<div class="day-schedule">
 						<div class="day-header">
@@ -2291,7 +2319,7 @@
 							</div>
 						</div>
 				`;
-
+				
 				if (sortedTimeSlots.length === 0) {
 					scheduleHTML += `
 						<div class="no-schedule">
@@ -2310,7 +2338,7 @@
 						`;
 					});
 				}
-
+				
 				scheduleHTML += `</div>`;
 			});
 			
@@ -2354,7 +2382,7 @@
 				}
 				schedules.push({ day: day1, startTime: startTime1, endTime: endTime1 });
 			}
-
+			
 			if (day2 && startTime2 && endTime2) {
 				if (startTime2 >= endTime2) {
 					showAlert('두 번째 스케줄의 종료시간은 시작시간보다 커야 합니다!');
@@ -2362,7 +2390,7 @@
 				}
 				schedules.push({ day: day2, startTime: startTime2, endTime: endTime2 });
 			}
-
+			
 			for (const schedule of schedules) {
 				const conflict = checkTimeConflict(
 					schedule.day, 
@@ -2429,7 +2457,7 @@
 			}
 
 			const schedules = [];
-
+			
 			if (day1 && startTime1 && endTime1) {
 				if (startTime1 >= endTime1) {
 					showAlert('첫 번째 스케줄의 종료시간은 시작시간보다 커야 합니다!');
@@ -2437,7 +2465,7 @@
 				}
 				schedules.push({ day: day1, startTime: startTime1, endTime: endTime1 });
 			}
-
+			
 			if (day2 && startTime2 && endTime2) {
 				if (startTime2 >= endTime2) {
 					showAlert('두 번째 스케줄의 종료시간은 시작시간보다 커야 합니다!');
@@ -2445,7 +2473,7 @@
 				}
 				schedules.push({ day: day2, startTime: startTime2, endTime: endTime2 });
 			}
-
+			
 			for (const schedule of schedules) {
 				const conflict = checkTimeConflict(
 					schedule.day, 
@@ -2504,13 +2532,14 @@
 			document.getElementById('address').value = member.address || '';
 			document.getElementById("targetCount").value = member.targetCount || 8;
 			document.getElementById("currentCount").value = member.currentCount || 0;
+			
 			if (member.photo) {
 				currentPhotoData = member.photo;
 				displayPhotoPreview();
 			} else {
 				removePhoto();
 			}
-
+			
 			currentEditIndex = index;
 			window.scrollTo({ top: 0, behavior: 'smooth' });
 			resetLockTimer(); // 활동 감지
@@ -2564,7 +2593,6 @@
 			document.getElementById('address').value = '';
 			document.getElementById("targetCount").value = "8";
 			document.getElementById("currentCount").value = "0";
-
 			removePhoto();
 			currentEditIndex = null;
 			resetLockTimer(); // 활동 감지
@@ -2574,11 +2602,11 @@
 			document.querySelectorAll('.tab-btn').forEach(btn => {
 				btn.classList.remove('active');
 			});
-
+			
 			document.querySelectorAll('.schedule-section').forEach(section => {
 				section.classList.remove('active');
 			});
-
+			
 			if (tabName === 'list') {
 				document.querySelector('.tab-btn:nth-child(1)').classList.add('active');
 				document.getElementById('listSection').style.display = 'block';
@@ -2630,7 +2658,7 @@
 
 		function saveSettings() {
 			settings.clubName = document.getElementById('clubNameInput').value.trim();
-
+			
 			// 자동 잠금 시간 저장
 			const lockTimeout = parseInt(document.getElementById('lockTimeoutInput').value);
 			if (lockTimeout && lockTimeout >= 1 && lockTimeout <= 60) {
@@ -2638,7 +2666,7 @@
 			} else {
 				settings.lockTimeout = 5;
 			}
-
+			
 			settings.feePresets = [
 				parseInt(document.getElementById('feePreset1').value) || 0,
 				parseInt(document.getElementById('feePreset2').value) || 0,
@@ -2646,17 +2674,17 @@
 				parseInt(document.getElementById('feePreset4').value) || 0,
 				parseInt(document.getElementById('feePreset5').value) || 0
 			];
-
+			
 			const newEditPassword = document.getElementById('editPassword').value;
 			if (newEditPassword) {
 				settings.editPassword = newEditPassword;
 			}
-
+			
 			const newPassword = document.getElementById('adminPassword').value;
 			if (newPassword) {
 				settings.adminPassword = newPassword;
 			}
-
+			
 			saveToFirebase();
 			if (settings.clubName) {
 				document.getElementById('clubNameDisplay').textContent = settings.clubName;
@@ -2664,7 +2692,7 @@
 			updateFeePresetButtons();
 			closeSettings();
 			showAlert('설정이 저장되었습니다!');
-
+			
 			// 암호 변경 시 현재 잠금 상태 초기화
 			if (newEditPassword || lockTimeout) {
 				isUnlocked = false;
@@ -2679,7 +2707,7 @@
 				settings: settings,
 				exportDate: new Date().toISOString()
 			};
-
+			
 			const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
 			const url = URL.createObjectURL(blob);
 			const a = document.createElement('a');
@@ -2695,7 +2723,7 @@
 		function importData(event) {
 			const file = event.target.files[0];
 			if (!file) return;
-
+			
 			const reader = new FileReader();
 			reader.onload = function(e) {
 				try {
@@ -2706,7 +2734,7 @@
 						filteredMembers = [...members];
 						saveToFirebase();
 					}
-
+					
 					if (data.settings) {
 						if (data.settings.clubName) {
 							settings.clubName = data.settings.clubName;
@@ -2726,17 +2754,17 @@
 						}
 						updateFeePresetButtons();
 					}
-
+					
 					renderMembers();
 					renderSchedule();
 					closeSettings();
 					showAlert('데이터를 성공적으로 가져왔습니다!');
-
+					
 					// 데이터 가져오기 시 잠금 상태 초기화
 					isUnlocked = false;
 					remainingTime = settings.lockTimeout * 60;
 					updateLockStatus();
-
+					
 				} catch (error) {
 					showAlert('잘못된 파일 형식입니다!');
 				}
@@ -2750,15 +2778,14 @@
 		document.getElementById('endTime1').value = "21:00";
 		document.getElementById('startTime2').value = "19:00";
 		document.getElementById('endTime2').value = "21:00";
-
+		
 		updateFeePresetButtons();
 		updateLockStatus(); // 초기 잠금 상태 설정
-
+		
 		// 활동 감지 이벤트 리스너 추가
 		document.addEventListener('click', resetLockTimer);
 		document.addEventListener('keydown', resetLockTimer);
 		document.addEventListener('scroll', resetLockTimer);
-
 
 		// ========== 출석 관리 함수 ==========
 		
@@ -2782,7 +2809,7 @@
 		function toggleCalendar() {
 			const calendar = document.getElementById('formCalendar');
 			const toggleText = document.getElementById('calendarToggleText');
-
+			
 			if (calendar.style.display === 'none') {
 				calendar.style.display = 'block';
 				toggleText.textContent = '달력 닫기';
@@ -2836,7 +2863,7 @@
 				}
 
 				const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
-
+				
 				// 출석 체크 확인
 				let hasAttendance = false;
 				members.forEach(member => {
@@ -2924,11 +2951,11 @@
 							</div>
 						</div>
 					`;
-
+					
 					item.onmouseover = () => item.style.background = '#f8f9fa';
 					item.onmouseout = () => item.style.background = 'white';
 					item.onclick = () => toggleAttendance(index);
-
+					
 					list.appendChild(item);
 				});
 			}
@@ -2954,9 +2981,9 @@
 				// 출석 추가
 				member.attendanceDates.push(selectedDate);
 				member.currentCount = (member.currentCount || 0) + 1;
-
+				
 				const targetCount = member.targetCount || 8;
-
+				
 				// 목표 1회 전 알림
 				if (member.currentCount === targetCount - 1) {
 					showAttendanceAlert(member.name, member.currentCount, targetCount);
@@ -2965,7 +2992,7 @@
 				else if (member.currentCount >= targetCount) {
 					showAttendanceAlert(member.name, member.currentCount, targetCount);
 				}
-
+				
 				showAlert(`${member.name} 출석 체크 완료! (${member.currentCount}/${targetCount}회)`);
 			} else {
 				// 출석 취소
@@ -2977,13 +3004,13 @@
 
 			saveToFirebase();
 			renderMembers();
-
+			
 			// 달력이 열려있으면 다시 렌더링
 			const calendar = document.getElementById('formCalendar');
 			if (calendar.style.display !== 'none') {
 				renderFormCalendar();
 			}
-
+			
 			closeAttendanceSelectModal();
 			resetLockTimer();
 		}
@@ -2994,37 +3021,36 @@
 		currentMonth = now.getMonth();
 	</script>
 
-	<!-- 출석 알림 모달 -->
-	<div id="attendanceAlertModal" class="modal attendance-alert-modal">
-		<div class="modal-content">
-			<div class="attendance-alert-icon">⚠️</div>
-			<h2>출석 알림</h2>
-			<p id="attendanceAlertMessage"></p>
-			<div class="modal-buttons">
-				<button class="btn btn-primary" onclick="closeAttendanceAlert()">확인</button>
+		<!-- 출석 알림 모달 -->
+		<div id="attendanceAlertModal" class="modal attendance-alert-modal">
+			<div class="modal-content">
+				<div class="attendance-alert-icon">⚠️</div>
+				<h2>출석 알림</h2>
+				<p id="attendanceAlertMessage"></p>
+				<div class="modal-buttons">
+					<button class="btn btn-primary" onclick="closeAttendanceAlert()">확인</button>
+				</div>
 			</div>
 		</div>
-	</div>
 
-	<!-- 출석 선택 모달 -->
-	<div id="attendanceSelectModal" class="modal">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h2>출석 체크</h2>
-			</div>
-			<p>어떤 회원의 출석을 체크하시겠습니까?</p>
-			<div id="memberSelectList" style="max-height: 400px; overflow-y: auto; margin: 20px 0;"></div>
-			<div class="modal-buttons">
-				<button class="btn btn-secondary" onclick="closeAttendanceSelectModal()">취소</button>
+		<!-- 출석 선택 모달 -->
+		<div id="attendanceSelectModal" class="modal">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h2>출석 체크</h2>
+				</div>
+				<p>어떤 회원의 출석을 체크하시겠습니까?</p>
+				<div id="memberSelectList" style="max-height: 400px; overflow-y: auto; margin: 20px 0;"></div>
+				<div class="modal-buttons">
+					<button class="btn btn-secondary" onclick="closeAttendanceSelectModal()">취소</button>
+				</div>
 			</div>
 		</div>
-	</div>
 
-	<!-- 알림음 오디오 -->
-	<audio id="notificationSound" preload="auto">
-		<source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTGJ0fPTgjMGHm7A7+OZUQ0PVqvl77RpHwU7k9n0zIIyBSGAxPDdl0MKE160/o1mHAY4kdb0yXwsHGHH8d6SRgsUYLXp6atUGgpJou7ykHI0BSmCzvPbeScAD0Sj5fG0aycGOpPY9NOGLAckg8rx24NLKRNit+3wqV4gCU+r5/S3cCYFMIvW9NSKNgkaf8bx35pFDBZmu+nxrl4XCFG06fCzaiQCNJLY9dCFMwsofcjy14IzBx9qveu0bCEGTqve9NmPPQkaaMHw3pkQAERn3+6wcyYGN5PZ9NKJNAojgsnx2IxADBoRdL3s8K9oJAU/ldv119SDMyAaxfHdn0sLFlqz6/K0byMBO5bZ9NOFMgkdcsXw2olCDBdqt+Pwr2soCkyg4fTWiTQDG2y+7PGubCUFPJLZ9dOIMwsfeMPx2IpBDBpiv+7wtXAjB0Cn4PTYijcAEGO96++tbCcFOJHZ9M+HNQsjfsjx2YpDCyFov+vxtGwjB0Ol4vPWiTYBEmS96++va50AAAA=" type="audio/wav">
-	</audio>
-
+		<!-- 알림음 오디오 -->
+		<audio id="notificationSound" preload="auto">
+			<source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTGJ0fPTgjMGHm7A7+OZUQ0PVqvl77RpHwU7k9n0zIIyBSGAxPDdl0MKE160/o1mHAY4kdb0yXwsHGHH8d6SRgsUYLXp6atUGgpJou7ykHI0BSmCzvPbeScAD0Sj5fG0aycGOpPY9NOGLAckg8rx24NLKRNit+3wqV4gCU+r5/S3cCYFMIvW9NSKNgkaf8bx35pFDBZmu+nxrl4XCFG06fCzaiQCNJLY9dCFMwsofcjy14IzBx9qveu0bCEGTqve9NmPPQkaaMHw3pkQAERn3+6wcyYGN5PZ9NKJNAojgsnx2IxADBoRdL3s8K9oJAU/ldv119SDMyAaxfHdn0sLFlqz6/K0byMBO5bZ9NOFMgkdcsXw2olCDBdqt+Pwr2soCkyg4fTWiTQDG2y+7PGubCUFPJLZ9dOIMwsfeMPx2IpBDBpiv+7wtXAjB0Cn4PTYijcAEGO96++tbCcFOJHZ9M+HNQsjfsjx2YpDCyFov+vxtGwjB0Ol4vPWiTYBEmS96++va50AAAA=" type="audio/wav">
+		</audio>
 
 </body>
 </html>
