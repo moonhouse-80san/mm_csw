@@ -501,21 +501,18 @@ function loadFromFirebase() {
 			filteredMembers = [...members];
 			renderMembers();
 			renderSchedule();
-			
-			// 정리된 데이터를 다시 저장 (한 번만 실행)
-			saveToFirebase();
 		}
 	});
 
 	firebaseDb.ref('settings').once('value', (snapshot) => {
 		const data = snapshot.val();
 		if (data) {
-			if (data.clubName) settings.clubName = data.clubName;
-			if (data.feePresets) settings.feePresets = data.feePresets;
-			if (data.adminPassword) settings.adminPassword = data.adminPassword;
-			if (data.editPassword) settings.editPassword = data.editPassword;
-			if (data.lockTimeout) settings.lockTimeout = data.lockTimeout;
-			else settings.lockTimeout = 60;
+			// settings를 완전히 덮어쓰기
+			settings.clubName = data.clubName !== undefined ? data.clubName : settings.clubName;
+			settings.feePresets = data.feePresets !== undefined ? data.feePresets : settings.feePresets;
+			settings.adminPassword = data.adminPassword !== undefined ? data.adminPassword : settings.adminPassword;
+			settings.editPassword = data.editPassword !== undefined ? data.editPassword : settings.editPassword;
+			settings.lockTimeout = data.lockTimeout !== undefined ? data.lockTimeout : 60;
 
 			document.getElementById('clubNameDisplay').textContent = settings.clubName || '구장명을 설정하세요';
 			updateFeePresetButtons();
