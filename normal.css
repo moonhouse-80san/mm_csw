@@ -1230,6 +1230,28 @@ body {
 		height: 4px;
 		margin-top: 1px;
 	}
+
+	.tab-section {
+		width: 100%;
+		padding: 0;
+	}
+
+	.tabs {
+		display: flex;
+		gap: 0;
+		width: 100%;
+	}
+
+	.tab-btn {
+		flex: 1;
+		padding: 10px 5px;
+		font-size: 14px;
+	}
+
+	.content-section {
+		width: 100%;
+		padding: 15px;
+	}
 }
 
 @media (max-width: 400px) {
