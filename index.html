@@ -1501,7 +1501,7 @@
 				<label for="lockTimeoutInput">자동 잠금 시간 (분)</label>
 				<input type="number" id="lockTimeoutInput" min="1" max="60" placeholder="5">
 				<div style="font-size: 12px; color: #666; margin-top: 5px;">
-					※ 암호 입력 후 자동으로 잠기기까지의 시간입니다. 기본값: 5분
+					※ 암호 입력 후 자동으로 잠기기까지의 시간입니다. 기본값: 60분
 				</div>
 			</div>
 
@@ -1593,7 +1593,7 @@
 			feePresets: [40000, 70000, 100000, 200000, 300000],
 			adminPassword: '0000',
 			editPassword: '0000', // 수정/삭제용 암호 추가
-			lockTimeout: 5 // 자동 잠금 시간 (분)
+			lockTimeout: 60 // 자동 잠금 시간 (분)
 		};
 		let firebaseDb = null;
 		let currentPhotoData = null;
@@ -2669,7 +2669,7 @@
 			if (lockTimeout && lockTimeout >= 1 && lockTimeout <= 60) {
 				settings.lockTimeout = lockTimeout;
 			} else {
-				settings.lockTimeout = 5;
+				settings.lockTimeout = 60;
 			}
 
 			settings.feePresets = [
