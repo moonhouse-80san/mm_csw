@@ -1280,7 +1280,7 @@
 				<!-- 출석 관리 필드 추가 -->
 				<div class="form-group">
 					<label for="targetCount">목표 출석 횟수</label>
-					<input type="number" id="targetCount" placeholder="기본 8회" value="8" min="1">
+					<input type="number" id="targetCount" placeholder="기본 8회" value="" min="1">
 				</div>
 				<div class="form-group">
 					<label for="currentCount">현재 출석 횟수</label>
@@ -2217,14 +2217,13 @@
 				}
 				const currentCount = member.currentCount || 0;
 				const targetCount = member.targetCount || 8;
-				
+
 				// 출석 횟수 표시
 				const attendanceCount = `
 					<span class="attendance-count" style="margin-left: 8px; font-size: 12px; padding: 2px 6px; background: #e3f2fd; border-radius: 10px;">
 						📊 ${currentCount}/${targetCount}회
-					</span>
-				`;
-				
+</span>`;
+
 				const photoThumb = member.photo ? 
 					`<img src="${member.photo}" class="member-photo" alt="${member.name}">` :
 					`<div class="member-photo" style="display: flex; align-items: center; justify-content: center; background: #f0f0f0; color: #999; font-size: 32px;">👤</div>`;
