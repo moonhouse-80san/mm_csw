@@ -1453,13 +1453,6 @@ function selectDate(year, month, date) {
 function showAttendanceSelectModal() {
 	const modal = document.getElementById('attendanceSelectModal');
 	const list = document.getElementById('memberSelectList');
-	const searchInput = document.getElementById('attendanceSearchInput');
-	
-	// 검색창 초기화
-	if (searchInput) {
-		searchInput.value = '';
-	}
-	
 	list.innerHTML = '';
 
 	// 목표 횟수가 설정된 회원만 필터링
@@ -1474,21 +1467,7 @@ function showAttendanceSelectModal() {
 		return;
 	}
 
-	renderAttendanceMemberList(validMembers);
-	modal.classList.add('active');
-}
-
-// 출석 회원 목록 렌더링 함수 (재사용)
-function renderAttendanceMemberList(membersToShow) {
-	const list = document.getElementById('memberSelectList');
-	list.innerHTML = '';
-	
-	if (membersToShow.length === 0) {
-		list.innerHTML = '<p style="text-align: center; color: #999; padding: 20px;">검색 결과가 없습니다.</p>';
-		return;
-	}
-
-	membersToShow.forEach((member, index) => {
+	validMembers.forEach((member, index) => {
 		// 원본 members 배열에서의 인덱스 찾기
 		const originalIndex = members.indexOf(member);
 		const alreadyChecked = member.attendanceDates && member.attendanceDates.includes(selectedDate);
@@ -1516,29 +1495,9 @@ function renderAttendanceMemberList(membersToShow) {
 		
 		list.appendChild(item);
 	});
-}
 
-// 출석 회원 검색 필터링 함수
-function filterAttendanceMembers() {
-	const searchInput = document.getElementById('attendanceSearchInput');
-	const searchTerm = searchInput.value.toLowerCase().trim();
-	
-	// 목표 횟수가 설정된 회원만 필터링
-	let validMembers = members.filter(member => {
-		const targetCount = member.targetCount || 0;
-		return targetCount > 0;
-	});
-	
-	// 검색어가 있으면 이름으로 필터링
-	if (searchTerm) {
-		validMembers = validMembers.filter(member => 
-			member.name.toLowerCase().includes(searchTerm)
-		);
-	}
-	
-	renderAttendanceMemberList(validMembers);
+	modal.classList.add('active');
 }
-
 
 function closeAttendanceSelectModal() {
 	document.getElementById('attendanceSelectModal').classList.remove('active');
