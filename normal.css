@@ -1176,6 +1176,60 @@ body {
 		padding: 8px 12px;
 		font-size: 13px;
 	}
+
+	/* 모바일 달력 최적화 */
+	.calendar-container {
+		padding: 10px;
+		margin-top: 10px;
+	}
+
+	.calendar-header {
+		flex-direction: column;
+		gap: 10px;
+		margin-bottom: 10px;
+	}
+
+	.calendar-header h3 {
+		font-size: 16px;
+		text-align: center;
+	}
+
+	.calendar-nav {
+		width: 100%;
+		justify-content: center;
+	}
+
+	.calendar-nav-btn {
+		flex: 1;
+		max-width: 120px;
+		padding: 8px 10px;
+		font-size: 13px;
+	}
+
+	.calendar-grid {
+		gap: 2px;
+	}
+
+	.calendar-day-header {
+		padding: 6px 2px;
+		font-size: 11px;
+	}
+
+	.calendar-day {
+		border-width: 1px;
+		padding: 2px;
+		min-height: 40px;
+	}
+
+	.calendar-day-number {
+		font-size: 12px;
+	}
+
+	.calendar-attendance-dot {
+		width: 4px;
+		height: 4px;
+		margin-top: 1px;
+	}
 }
 
 @media (max-width: 400px) {
