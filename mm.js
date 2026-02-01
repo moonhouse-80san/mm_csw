@@ -868,7 +868,7 @@ function renderMembers() {
 		let attendanceCount = '';
 		if (targetCount > 0) {
 			attendanceCount = `
-				<span class="attendance-count" style="margin-left: 8px; font-size: 12px; padding: 2px 6px; background: #e3f2fd; border-radius: 10px;">
+				<span class="attendance-count" style="margin-left: 8px;">
 					📊 ${currentCount}/${targetCount}회
 				</span>
 			`;
@@ -1976,7 +1976,7 @@ function renderAttendanceMemberList(membersToShow) {
 			<div style="display: flex; align-items: center; gap: 10px;">
 				<div style="flex: 1;">
 					<div style="font-weight: 600; font-size: 16px;">${member.name}
-						<span class="attendance-count" style="margin-left: 8px; font-size: 12px; padding: 2px 6px; background: #444444; border-radius: 10px;">
+						<span class="attendance-count" style="margin-left: 8px;">
 					     📊 ${currentCount}/${targetCount}회
 				        </span>
 					</div>

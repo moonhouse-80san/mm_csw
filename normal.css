@@ -1120,6 +1120,18 @@ body {
 	padding: 8px 0;
 }
 
+/* 코치 배지 */
+.coach-badge {
+	display: inline-block;
+	padding: 3px 8px;
+	background: linear-gradient(135deg, #667eea, #764ba2);
+	color: white;
+	border-radius: 12px;
+	font-size: 12px;
+	font-weight: 600;
+	white-space: nowrap;
+}
+
 .coach-btn {
 	padding: 5px 12px;
 	border: 2px solid #e0e0e0;
