@@ -1965,7 +1965,7 @@ function renderAttendanceMemberList(membersToShow) {
 					     📊 ${currentCount}/${targetCount}회
 				        </span>
 					</div>
-					${member.coach ? `<div class="coach-badge">${member.coach}</div>` : ''}
+					${member.coach ? `<div class="coach-badge">🏋️${member.coach}</div>` : ''}
 				</div>
 				<div style="color: ${alreadyChecked ? '#4CAF50' : '#999'}; font-size: 24px;">
 					${alreadyChecked ? '✓' : '○'}
