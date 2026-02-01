@@ -1,10 +1,5 @@
 [추가 1]
-<div class="form-group">
-<label for="phone">전화번호</label>
-<input type="tel" id="phone" placeholder="">
-</div>
-
-아래에 코치 선택을 radio 형식으로 출력 되게 하고
+코치 선택을 radio 형식으로 출력 되게 하고
 코치의 이름은 관리자 설정에서 4명 정도 작성할 수 있게 설정하고 코치 이름은 저장
 회원 목록 카드에 담당 코치 이름을 표시하고
 스케줄 중복은 허용하데 각 코치별로는 중복되면 안됨
