@@ -97,6 +97,11 @@ body {
 	white-space: nowrap;
 }
 
+.lock-tooltip.visible span {
+	/* 해제 상태일 때 초록색 테matica로 변경 — JS에서 클래스 제어 대신 텍스트 내용으로 구분 */
+}
+
+/* 잠금 해제 상태 툴팁 스타일 (텍스트가 🔓로 시작하면) — 순수 CSS로 구분 불가하여 JS에서 클래스 추가로 처리 */
 .lock-tooltip.unlocked-style {
 	background: #e8f5e9;
 	border-left-color: #4CAF50;
@@ -484,10 +489,22 @@ body {
 	box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
+.member-photo-container {
+	display: none;
+}
+
 /* 회원 이름 호버 효과 */
 .member-name:hover {
 	color: #0d47a1 !important;
 	text-decoration: underline !important;
+}
+
+.member-photo {
+	width: 100%;
+	height: 100%;
+	border-radius: 8px;
+	object-fit: cover;
+	border: 2px solid #e0e0e0;
 }
 
 .member-content {
@@ -615,6 +632,17 @@ body {
 	font-size: 12px;
 	font-weight: 600;
 	white-space: nowrap;
+}
+
+.info-badge {
+	display: inline-block;
+	padding: 3px 8px;
+	background: #e3f2fd;
+	color: #1976d2;
+	border-radius: 4px;
+	font-size: 12px;
+	margin-right: 5px;
+	margin-top: 5px;
 }
 
 /* 가로 정렬 행 (전화번호 + 회비) */
@@ -826,7 +854,7 @@ body {
 }
 
 .password-input {
-	margin-bottom: 15px;
+	margin-bottom: 5px;
 }
 
 .password-input input {
@@ -941,6 +969,13 @@ body {
 	animation: slideIn 0.3s ease;
 }
 
+/* 자동 잠금 타이머 표시 */
+.lock-timer {
+	font-size: 11px;
+	margin-left: 5px;
+	color: rgba(255,255,255,0.8);
+}
+
 /* ========== 출석 관리 스타일 ========== */
 .attendance-count {
 	display: inline-flex;
@@ -952,6 +987,21 @@ body {
 	border-radius: 12px;
 	font-size: 13px;
 	font-weight: 600;
+}
+
+.attendance-count.near-goal {
+	background: linear-gradient(135deg, #FF9800, #F57C00);
+	animation: pulse 1.5s infinite;
+}
+
+.attendance-count.reached-goal {
+	background: linear-gradient(135deg, #f44336, #d32f2f);
+	animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+	0%, 100% { transform: scale(1); }
+	50% { transform: scale(1.05); }
 }
 
 /* ========== 달력 ========== */
@@ -1381,7 +1431,7 @@ body {
 }
 
 /* ========== 코치 버튼 ========== */
-.coach-btn-group {
+.coach-radio-group {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 6px;
@@ -1393,12 +1443,12 @@ body {
 	border: 2px solid #e0e0e0;
 	border-radius: 16px;
 	background: white;
-	font-size: 14px;
+	font-size: 16px;
 	color: #333;
 	cursor: pointer;
 	transition: all 0.2s;
 	font-weight: 500;
-	line-height: 1.2;
+	line-height: 1.4;
 }
 
 .coach-btn:hover {
@@ -1486,6 +1536,18 @@ body {
 		align-items: flex-start;
 	}
 
+	.member-photo-container {
+		width: 90px;
+		height: 90px;
+		object-fit: cover;
+		border-radius: 8px;
+		margin-right: 5px;
+	}
+
+	.member-info-container {
+		flex: 1;
+	}
+
 	.member-header {
 		display: flex;
 		justify-content: space-between;
@@ -1552,7 +1614,7 @@ body {
 	}
 
 	/* 코치 버튼 모바일 최적화 */
-	.coach-btn-group {
+	.coach-radio-group {
 		gap: 5px;
 	}
 
