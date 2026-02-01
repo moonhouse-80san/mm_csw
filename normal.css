@@ -72,6 +72,27 @@ body {
 	transform: translateY(-2px);
 }
 
+.lock-status {
+	font-size: 12px;
+	color: white;
+	font-weight: 500;
+	padding: 3px 8px;
+	background: rgba(0,0,0,0.2);
+	border-radius: 12px;
+	margin-top: 3px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 5px;
+}
+
+.lock-status.locked {
+	color: #FFEB3B;
+}
+
+.lock-status.unlocked {
+	color: #4CAF50;
+}
 
 .header {
 	background: linear-gradient(135deg, #2196F3, #1976D2);
@@ -447,10 +468,22 @@ body {
 	box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
+.member-photo-container {
+	display: none; /* 이미지 영역 숨김 */
+}
+
 /* 회원 이름 호버 효과 */
 .member-name:hover {
 	color: #0d47a1 !important;
 	text-decoration: underline !important;
+}
+
+.member-photo {
+	width: 100%;
+	height: 100%;
+	border-radius: 8px;
+	object-fit: cover;
+	border: 2px solid #e0e0e0;
 }
 
 .member-content {
@@ -559,6 +592,16 @@ body {
 	margin-bottom: 3px;
 }
 
+.info-badge {
+	display: inline-block;
+	padding: 3px 8px;
+	background: #e3f2fd;
+	color: #1976d2;
+	border-radius: 4px;
+	font-size: 12px;
+	margin-right: 5px;
+	margin-top: 5px;
+}
 
 .schedule-badge {
 	display: inline-block;
@@ -844,6 +887,13 @@ body {
 	animation: slideIn 0.3s ease;
 }
 
+/* 자동 잠금 타이머 표시 */
+.lock-timer {
+	font-size: 11px;
+	margin-left: 5px;
+	color: rgba(255,255,255,0.8);
+}
+
 /* ========== 출석 관리 추가 스타일 ========== */
 .attendance-count {
 	display: inline-flex;
@@ -857,6 +907,20 @@ body {
 	font-weight: 600;
 }
 
+.attendance-count.near-goal {
+	background: linear-gradient(135deg, #FF9800, #F57C00);
+	animation: pulse 1.5s infinite;
+}
+
+.attendance-count.reached-goal {
+	background: linear-gradient(135deg, #f44336, #d32f2f);
+	animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+	0%, 100% { transform: scale(1); }
+	50% { transform: scale(1.05); }
+}
 
 .calendar-container {
 	background: white;
@@ -1111,91 +1175,6 @@ body {
 	cursor: pointer;
 }
 
-
-/* ========== 코치 버튼 ========== */
-.coach-radio-group {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 6px;
-	padding: 8px 0;
-}
-
-/* 코치 배지 */
-.coach-badge {
-	display: inline-block;
-	padding: 3px 8px;
-	background: linear-gradient(135deg, #667eea, #764ba2);
-	color: white;
-	border-radius: 12px;
-	font-size: 12px;
-	font-weight: 600;
-	white-space: nowrap;
-}
-
-.coach-btn {
-	padding: 5px 12px;
-	border: 2px solid #e0e0e0;
-	border-radius: 16px;
-	background: white;
-	font-size: 16px;
-	color: #333;
-	cursor: pointer;
-	transition: all 0.2s;
-	font-weight: 500;
-	line-height: 1.4;
-	margin-right:10px;
-}
-
-.coach-btn:hover {
-	border-color: #2196F3;
-	background: #e3f2fd;
-	color: #1976d2;
-}
-
-.coach-btn.active {
-	background: #2196F3;
-	color: white;
-	border-color: #2196F3;
-	font-weight: 600;
-}
-
-/* ========== 설정 모달 코치 설정 ========== */
-.coach-settings-grid {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: 10px;
-	margin-top: 8px;
-}
-
-.coach-setting-item {
-	display: flex;
-	flex-direction: column;
-	gap: 4px;
-}
-
-.coach-setting-label {
-	font-size: 12px;
-	color: #888;
-	font-weight: 600;
-}
-
-.coach-setting-item input {
-	padding: 8px 10px;
-	border: 2px solid #e0e0e0;
-	border-radius: 8px;
-	font-size: 14px;
-	transition: border-color 0.3s;
-}
-
-.coach-setting-item input:focus {
-	outline: none;
-	border-color: #2196F3;
-}
-
-.coach-setting-item input::placeholder {
-	color: #bbb;
-}
-
 @media (max-width: 600px) {
 	.form-grid {
 		grid-template-columns: 1fr;
@@ -1229,6 +1208,15 @@ body {
 		display: flex;
 		gap: 14px;
 		align-items: flex-start;
+	}
+
+	/* 사진 영역 */
+	.member-photo-container {
+		width: 90px;
+		height: 90px;
+		object-fit: cover;
+		border-radius: 8px;
+		margin-right: 5px;
 	}
 
 	/* 오른쪽 전체 정보 영역 */
@@ -1306,22 +1294,6 @@ body {
 	.unlock-btn {
 		padding: 8px 12px;
 		font-size: 13px;
-	}
-
-    /* 코치 버튼 모바일 최적화 */
-	.coach-radio-group {
-		gap: 5px;
-	}
-
-	.coach-btn {
-		padding: 5px 10px;
-		font-size: 13px;
-	}
-
-	/* 코치 설정 모바일 최적화 */
-	.coach-settings-grid {
-		grid-template-columns: 1fr 1fr;
-		gap: 8px;
 	}
 
 	/* 모바일 달력 최적화 */
@@ -1426,23 +1398,6 @@ body {
 		font-size: 10px;
 		padding: 1px 4px;
 	}
-	
-	/* 코치 버튼 초소형 최적화 */
-	.coach-btn {
-		padding: 4px 8px;
-		font-size: 12px;
-	}
-
-	/* 코치 설정 초소형 */
-	.coach-settings-grid {
-		grid-template-columns: 1fr 1fr;
-		gap: 6px;
-	}
-
-	.coach-setting-item input {
-		padding: 6px 8px;
-		font-size: 13px;
-	}	
 }
 
 .schedule-container {

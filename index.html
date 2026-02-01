@@ -49,9 +49,9 @@
 				<input type="text" id="searchInput" placeholder="🔍 이름, 전화번호로 검색..." onkeyup="searchMembers()">
 			</div>
 			<div class="filter-buttons">
-				<button class="filter-btn active" data-sort="name" onclick="sortMembers('name')">이름순 ▲</button>
-				<button class="filter-btn" data-sort="registerDate" onclick="sortMembers('registerDate')">등록일순</button>
-				<button class="filter-btn" data-sort="coach" onclick="sortMembers('coach')">코치순</button>
+				<button class="filter-btn active" onclick="sortMembers('name')">이름순</button>
+				<button class="filter-btn" onclick="sortMembers('registerDate')">등록일순</button>
+				<button class="filter-btn" onclick="sortMembers('fee')">회비순</button>
 			</div>
 
 			<div class="tab-section" style="margin-top:10px">
@@ -89,12 +89,12 @@
 					   onkeyup="if(event.key === 'Enter') unlockEditButtons()">
 				<button class="unlock-btn" onclick="unlockEditButtons()">
 					🔓 잠금 해제
+					<div class="lock-status locked" id="lockStatus">
+						🔒 잠김 상태 - 수정/삭제 버튼 숨김
+						<span class="lock-timer" id="lockTimer"></span>
+					</div>
 				</button>
 			</div>
-		</div>
-		<!-- 잠금 상태 알림 (폼 입력 클릭 시 표시, 잠금 해제/타이머 만료 시 숨김) -->
-		<div class="lock-tooltip" id="lockTooltip">
-			<span id="lockTooltipText">🔒 잠김 상태 - 수정/삭제 암호를 입력해주세요</span>
 		</div>
 
 		<div class="form-section">
@@ -107,14 +107,6 @@
 				<div class="form-group">
 					<label for="phone">전화번호</label>
 					<input type="tel" id="phone" placeholder="">
-				</div>
-
-				<!-- 코치 선택 (pill 버튼) -->
-				<div class="form-group full-width">
-					<label>담당 코치</label>
-					<div class="coach-btn-group" id="coachBtnGroup">
-						<!-- JS에서 코치 목록을 동적으로 렌더링 -->
-					</div>
 				</div>
 
 				<!-- 출석 관리 필드 추가 -->
@@ -142,25 +134,6 @@
 					<input type="number" id="fee" placeholder="회비 입력">
 					<div class="fee-presets" id="feePresets">
 						<!-- 회비 기본값 버튼들이 여기에 생성됩니다 -->
-					</div>
-				</div>
-
-				<!-- 회비 입금 내역 (수정시에만 표시) -->
-				<div class="form-group full-width payment-section-wrap" id="paymentSection" style="display: none;">
-					<div class="schedule-section-header">💳 회비 입금 내역</div>
-					<div class="payment-input-row">
-						<div class="payment-input-item">
-							<label for="paymentDate">입금날</label>
-							<input type="date" id="paymentDate">
-						</div>
-						<div class="payment-input-item">
-							<label for="paymentAmount">입금금액 (원)</label>
-							<input type="number" id="paymentAmount" placeholder="금액 입력">
-						</div>
-						<button type="button" class="payment-add-btn" onclick="addPaymentEntry()">+ 추가</button>
-					</div>
-					<div class="payment-list" id="paymentList">
-						<!-- JS에서 동적 렌더링 -->
 					</div>
 				</div>
 
@@ -228,10 +201,10 @@
 					<div style="display: flex; flex-direction: column; gap: 10px;">
 						<div style="display: flex; gap: 10px;">
 							<button type="button" class="photo-btn" onclick="openCamera()" style="flex: 1;">
-								📷 카메라
+								📷 카메라로 찍기
 							</button>
 							<button type="button" class="photo-btn" onclick="document.getElementById('photoInput').click()" style="flex: 1;">
-								🖼️ 갤러리
+								📁 갤러리 선택
 							</button>
 						</div>
 
@@ -335,32 +308,6 @@
 				</div>
 			</div>
 
-			<!-- 코치 이름 설정 (4명) -->
-			<div class="form-group">
-				<label>코치 이름 설정 (최대 4명)</label>
-				<div class="coach-settings-grid">
-					<div class="coach-setting-item">
-						<span class="coach-setting-label">코치 1</span>
-						<input type="text" id="coachName1" placeholder="코치 이름">
-					</div>
-					<div class="coach-setting-item">
-						<span class="coach-setting-label">코치 2</span>
-						<input type="text" id="coachName2" placeholder="코치 이름">
-					</div>
-					<div class="coach-setting-item">
-						<span class="coach-setting-label">코치 3</span>
-						<input type="text" id="coachName3" placeholder="코치 이름">
-					</div>
-					<div class="coach-setting-item">
-						<span class="coach-setting-label">코치 4</span>
-						<input type="text" id="coachName4" placeholder="코치 이름">
-					</div>
-				</div>
-				<div style="font-size: 12px; color: #666; margin-top: 8px;">
-					※ 비어있는 코치는 회원 폼에서 표시되지 않습니다.
-				</div>
-			</div>
-
 			<div class="form-group">
 				<label>월회비 기본값 설정</label>
 				<div class="fee-presets" style="margin-top: 10px;">
@@ -391,9 +338,9 @@
 				<button style="background: #9E9E9E;" onclick="closeSettings()">취소</button>
 			</div>
 			<div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #e0e0e0;">
-				<button style="width: 100%; padding: 12px; background: #f44336; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;" onclick="exportData()">📤 데이터 내보내기</button>
-				<button style="width: 100%; padding: 12px; background: #4CAF50; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; margin-top: 10px;" onclick="document.getElementById('importFile').click()">📥 데이터 가져오기</button>
-				<input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(event)">
+				<button style="width: 100%; padding: 12px; background: #f44336; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;" onclick="exportData()">📤 엑셀로 내보내기</button>
+				<button style="width: 100%; padding: 12px; background: #4CAF50; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; margin-top: 10px;" onclick="document.getElementById('importFile').click()">📥 엑셀에서 가져오기</button>
+				<input type="file" id="importFile" accept=".xlsx" style="display: none;" onchange="importData(event)">
 			</div>
 		</div>
 	</div>
@@ -404,17 +351,6 @@
 			<div class="modal-buttons">
 				<button style="background: #f44336;" onclick="confirmDelete()">삭제</button>
 				<button style="background: #9E9E9E;" onclick="closeModal()">취소</button>
-			</div>
-		</div>
-	</div>
-
-	<!-- 출석 초기화 확인 모달 -->
-	<div id="confirmModal" class="modal">
-		<div class="modal-content">
-			<p>현재 회원의 출석 횟수를 초기화하시겠습니까?<br><small style="color:#999;">(출석 기록은 유지됩니다)</small></p>
-			<div class="modal-buttons">
-				<button style="background: #FF9800;" onclick="confirmResetAttendance()">초기화</button>
-				<button style="background: #9E9E9E;" onclick="closeConfirmModal()">취소</button>
 			</div>
 		</div>
 	</div>
@@ -430,6 +366,7 @@
 
 	<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.20.5/xlsx.full.min.js"></script>
 	<script src="mm.js"></script>
 
 	<!-- 출석 알림 모달 -->
