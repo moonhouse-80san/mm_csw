@@ -262,38 +262,49 @@ function resetCurrentAttendance() {
 		return;
 	}
 
-	if (confirm('현재 회원의 출석 횟수를 초기화하시겠습니까?\n(출석 기록은 유지됩니다)')) {
-		const member = members[currentEditIndex];
+	// 커스텀 확인 모달 표시
+	document.getElementById('confirmModal').classList.add('active');
+}
 
-		// 현재 출석 날짜를 기록(history)에 저장
-		if (!member.attendanceHistory) {
-			member.attendanceHistory = [];
-		}
-		if (member.attendanceDates && member.attendanceDates.length > 0) {
-			member.attendanceDates.forEach(date => {
-				if (!member.attendanceHistory.includes(date)) {
-					member.attendanceHistory.push(date);
-				}
-			});
-		}
+// 출석 초기화 실행
+function confirmResetAttendance() {
+	document.getElementById('confirmModal').classList.remove('active');
 
-		// 현재 회차 초기화
-		member.currentCount = 0;
-		member.attendanceDates = [];
-		
-		document.getElementById('currentCount').value = 0;
-		
-		saveToFirebase();
-		renderMembers();
-		
-		const calendar = document.getElementById('formCalendar');
-		if (calendar.style.display !== 'none') {
-			renderFormCalendar();
-		}
-		
-		showAlert(`${member.name} 회원의 출석이 초기화되었습니다. (0/${member.targetCount || 0}회)\n출석 기록은 유지됩니다.`);
-		resetLockTimer();
+	const member = members[currentEditIndex];
+
+	// 현재 출석 날짜를 기록(history)에 저장
+	if (!member.attendanceHistory) {
+		member.attendanceHistory = [];
 	}
+	if (member.attendanceDates && member.attendanceDates.length > 0) {
+		member.attendanceDates.forEach(date => {
+			if (!member.attendanceHistory.includes(date)) {
+				member.attendanceHistory.push(date);
+			}
+		});
+	}
+
+	// 현재 회차 초기화
+	member.currentCount = 0;
+	member.attendanceDates = [];
+	
+	document.getElementById('currentCount').value = 0;
+	
+	saveToFirebase();
+	renderMembers();
+	
+	const calendar = document.getElementById('formCalendar');
+	if (calendar.style.display !== 'none') {
+		renderFormCalendar();
+	}
+	
+	showAlert(`${member.name} 회원의 출석이 초기화되었습니다. (0/${member.targetCount || 0}회)\n출석 기록은 유지됩니다.`);
+	resetLockTimer();
+}
+
+// 출석 초기화 모달 닫기
+function closeConfirmModal() {
+	document.getElementById('confirmModal').classList.remove('active');
 }
 
 // ========== 카메라 기능 ==========
@@ -491,25 +502,29 @@ function removePhoto() {
 	document.getElementById('photoInput').value = '';
 }
 
+// ========== 회원 정규화 헬퍼 ==========
+
+function normalizeMember(member) {
+	const cleaned = {};
+	for (const key in member) {
+		if (member[key] !== undefined) {
+			cleaned[key] = member[key];
+		}
+	}
+	if (!cleaned.photo) cleaned.photo = '';
+	if (!cleaned.attendanceHistory) cleaned.attendanceHistory = [];
+	if (!cleaned.coach) cleaned.coach = '';
+	if (!cleaned.paymentHistory) cleaned.paymentHistory = [];
+	return cleaned;
+}
+
 // ========== Firebase 통신 ==========
 
 function loadFromFirebase() {
 	firebaseDb.ref('members').once('value', (snapshot) => {
 		const data = snapshot.val();
 		if (data) {
-			members = Object.values(data).map(member => {
-				const cleaned = {};
-				for (const key in member) {
-					if (member[key] !== undefined) {
-						cleaned[key] = member[key];
-					}
-				}
-				if (!cleaned.photo) cleaned.photo = '';
-				if (!cleaned.attendanceHistory) cleaned.attendanceHistory = [];
-				if (!cleaned.coach) cleaned.coach = '';
-				if (!cleaned.paymentHistory) cleaned.paymentHistory = [];
-				return cleaned;
-			});
+			members = Object.values(data).map(normalizeMember);
 			filteredMembers = [...members];
 			renderMembers();
 			renderSchedule();
@@ -528,7 +543,7 @@ function loadFromFirebase() {
 
 			document.getElementById('clubNameDisplay').textContent = settings.clubName || '구장명을 설정하세요';
 			updateFeePresetButtons();
-			renderCoachRadioButtons();
+			renderCoachButtons();
 
 			remainingTime = settings.lockTimeout * 60;
 			updateLockStatus();
@@ -543,21 +558,20 @@ function listenToFirebaseChanges() {
 	firebaseDb.ref('members').on('value', (snapshot) => {
 		const data = snapshot.val();
 		if (data) {
-			members = Object.values(data).map(member => {
-				const cleaned = {};
-				for (const key in member) {
-					if (member[key] !== undefined) {
-						cleaned[key] = member[key];
-					}
-				}
-				if (!cleaned.photo) cleaned.photo = '';
-				if (!cleaned.attendanceHistory) cleaned.attendanceHistory = [];
-				if (!cleaned.coach) cleaned.coach = '';
-				if (!cleaned.paymentHistory) cleaned.paymentHistory = [];
-				return cleaned;
-			});
-			filteredMembers = [...members];
-			renderMembers();
+			members = Object.values(data).map(normalizeMember);
+
+			// 현재 검색/정렬 상태 보존
+			const currentSearch = document.getElementById('searchInput').value;
+			if (currentSearch) {
+				filteredMembers = members.filter(member => {
+					return member.name.toLowerCase().includes(currentSearch.toLowerCase()) ||
+						   (member.phone && member.phone.includes(currentSearch));
+				});
+			} else {
+				filteredMembers = [...members];
+			}
+
+			sortMembers(currentSort, true);
 			renderSchedule();
 		}
 	});
@@ -657,9 +671,9 @@ function timesOverlap(s1, e1, s2, e2) {
 
 // ========== 코치 관련 기능 ==========
 
-// 코치 radio 버튼 렌더링
-function renderCoachRadioButtons() {
-	const container = document.getElementById('coachRadioGroup');
+// 코치 pill 버튼 렌더링
+function renderCoachButtons() {
+	const container = document.getElementById('coachBtnGroup');
 	container.innerHTML = '';
 
 	const activeCoaches = settings.coaches.filter(name => name && name.trim() !== '');
@@ -1172,8 +1186,8 @@ function renderSchedule() {
 // ========== 유틸리티 ==========
 
 function formatDate(dateString) {
-	const date = new Date(dateString);
-	return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
+	const [y, m, d] = dateString.split('-');
+	return `${y}.${m}.${d}`;
 }
 
 function formatNumber(num) {
@@ -1303,7 +1317,8 @@ function addMember() {
 		targetCount: targetCount,
 		currentCount: 0,
 		attendanceDates: [],
-		attendanceHistory: [], // 출석 기록 (초기화 후에도 유지)
+		attendanceHistory: [],
+		paymentHistory: [],
 		day1: day1 || null,
 		startTime1: startTime1 || null,
 		endTime1: endTime1 || null,
@@ -1442,7 +1457,7 @@ function editMember(index) {
 	document.getElementById("targetCount").value = member.targetCount || 0;
 	document.getElementById("currentCount").value = member.currentCount || 0;
 
-	// 코치 radio 설정
+	// 코치 pill 버튼 설정
 	setSelectedCoach(member.coach || '');
 
 	// 회비 입금 내역 표시 (수정시에만)
@@ -1645,14 +1660,18 @@ function saveSettings() {
 		document.getElementById('clubNameDisplay').textContent = settings.clubName;
 	}
 	updateFeePresetButtons();
-	renderCoachRadioButtons(); // 코치 radio 다시 렌더링
+	renderCoachButtons(); // 코치 pill 버튼 다시 렌더링
 	closeSettings();
 	showAlert('설정이 저장되었습니다!');
 
-	// 암호 변경 시 현재 잠금 상태 초기화
-	if (newEditPassword || lockTimeout) {
+	// 수정/삭제 암호가 실제로 변경된 경우에만 잠금 상태 초기화
+	if (newEditPassword) {
 		isUnlocked = false;
 		remainingTime = settings.lockTimeout * 60;
+		if (lockInterval) {
+			clearInterval(lockInterval);
+			lockInterval = null;
+		}
 		updateLockStatus();
 	}
 }
@@ -1688,11 +1707,7 @@ function importData(event) {
 			const data = JSON.parse(e.target.result);
 			
 			if (data.members) {
-				members = data.members.map(m => {
-					if (!m.attendanceHistory) m.attendanceHistory = [];
-					if (!m.coach) m.coach = '';
-					return m;
-				});
+				members = data.members.map(normalizeMember);
 				filteredMembers = [...members];
 				saveToFirebase();
 			}
@@ -1718,7 +1733,7 @@ function importData(event) {
 					settings.coaches = data.settings.coaches;
 				}
 				updateFeePresetButtons();
-				renderCoachRadioButtons();
+				renderCoachButtons();
 			}
 
 			renderMembers();
@@ -1748,7 +1763,7 @@ document.getElementById('targetCount').value = "0";
 document.getElementById('currentCount').value = "0";
 
 updateFeePresetButtons();
-renderCoachRadioButtons();
+renderCoachButtons();
 updateLockStatus();
 
 // 활동 감지 이벤트 리스너 추가

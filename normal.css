@@ -21,7 +21,7 @@ body {
 	overflow: hidden;
 }
 
-/* 암호 입력 섹션 */
+/* 수정: 암호 입력 섹션을 좀 더 작게 */
 .password-section {
 	background: linear-gradient(135deg, #FF9800, #F57C00);
 	padding: 10px 15px;
@@ -72,46 +72,7 @@ body {
 	transform: translateY(-2px);
 }
 
-.lock-tooltip {
-	max-height: 0;
-	overflow: hidden;
-	transition: max-height 0.3s ease, opacity 0.3s ease;
-	opacity: 0;
-	background: #fff3e0;
-	border-left: 4px solid #FF9800;
-	margin: 0 10px;
-	border-radius: 0 6px 6px 0;
-}
 
-.lock-tooltip.visible {
-	max-height: 40px;
-	opacity: 1;
-}
-
-.lock-tooltip span {
-	display: block;
-	padding: 8px 12px;
-	font-size: 13px;
-	font-weight: 600;
-	color: #e65100;
-	white-space: nowrap;
-}
-
-.lock-tooltip.visible span {
-	/* 해제 상태일 때 초록색 테matica로 변경 — JS에서 클래스 제어 대신 텍스트 내용으로 구분 */
-}
-
-/* 잠금 해제 상태 툴팁 스타일 (텍스트가 🔓로 시작하면) — 순수 CSS로 구분 불가하여 JS에서 클래스 추가로 처리 */
-.lock-tooltip.unlocked-style {
-	background: #e8f5e9;
-	border-left-color: #4CAF50;
-}
-
-.lock-tooltip.unlocked-style span {
-	color: #2e7d32;
-}
-
-/* 헤더 */
 .header {
 	background: linear-gradient(135deg, #2196F3, #1976D2);
 	color: white;
@@ -172,7 +133,6 @@ body {
 	fill: white;
 }
 
-/* 검색 섹션 */
 .search-section {
 	padding: 15px 20px;
 	background: #f8f9fa;
@@ -220,7 +180,6 @@ body {
 	border-color: #2196F3;
 }
 
-/* 폼 섹션 */
 .form-section {
 	padding: 20px;
 	background: #f8f9fa;
@@ -379,7 +338,7 @@ body {
 	text-decoration: underline;
 }
 
-/* 추가/수정/초기화 버튼 */
+/* 수정: 추가/수정/초기화 버튼을 모바일에서 한 줄로 */
 .button-group {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
@@ -414,7 +373,7 @@ body {
 	background: linear-gradient(135deg, #FF9800, #F57C00);
 }
 
-/* 잠금 상태 비활성화 버튼 */
+/* 잠금 상태에서 비활성화된 버튼 */
 .btn-disabled {
 	background: linear-gradient(135deg, #9E9E9E, #757575) !important;
 	cursor: not-allowed;
@@ -444,7 +403,6 @@ body {
 	opacity: 1;
 }
 
-/* 탭 섹션 */
 .tab-section {
 	padding: 0 20px;
 	background: #f8f9fa;
@@ -479,7 +437,7 @@ body {
 	padding: 20px;
 }
 
-/* ========== 회원 카드 ========== */
+/* 수정: 회원 카드 레이아웃 - 사진 우측에 이름과 버튼 */
 .member-card {
 	background: white;
 	border: 2px solid #e0e0e0;
@@ -489,22 +447,10 @@ body {
 	box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-.member-photo-container {
-	display: none;
-}
-
 /* 회원 이름 호버 효과 */
 .member-name:hover {
 	color: #0d47a1 !important;
 	text-decoration: underline !important;
-}
-
-.member-photo {
-	width: 100%;
-	height: 100%;
-	border-radius: 8px;
-	object-fit: cover;
-	border: 2px solid #e0e0e0;
 }
 
 .member-content {
@@ -566,7 +512,7 @@ body {
 	background: #f44336;
 }
 
-/* 잠금 상태 비활성화 수정/삭제 버튼 */
+/* 잠금 상태에서 비활성화된 수정/삭제 버튼 */
 .btn-edit-disabled, .btn-delete-disabled {
 	background: #9E9E9E !important;
 	cursor: not-allowed;
@@ -598,7 +544,7 @@ body {
 	opacity: 1;
 }
 
-/* 잠금 상태 버튼 숨김 */
+/* 추가: 잠금 상태에서 버튼 숨김 */
 .btn-hidden {
 	display: none !important;
 }
@@ -613,72 +559,19 @@ body {
 	margin-bottom: 3px;
 }
 
-/* 회원 카드 메타 행 (코치 배지 + 스케줄 배지) */
-.member-meta-row {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	gap: 6px;
-	margin-top: 4px;
-}
-
-/* 코치 배지 */
-.coach-badge {
-	display: inline-block;
-	padding: 3px 8px;
-	background: linear-gradient(135deg, #667eea, #764ba2);
-	color: white;
-	border-radius: 12px;
-	font-size: 12px;
-	font-weight: 600;
-	white-space: nowrap;
-}
-
-.info-badge {
-	display: inline-block;
-	padding: 3px 8px;
-	background: #e3f2fd;
-	color: #1976d2;
-	border-radius: 4px;
-	font-size: 12px;
-	margin-right: 5px;
-	margin-top: 5px;
-}
-
-/* 가로 정렬 행 (전화번호 + 회비) */
-.phone-fee-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-/* 회비 스타일 */
-.member-fee {
-	font-size: 0.85em;
-    color: #666;
-    font-weight: normal;
-}
-
-/* 스케줄 배지 컨테이너 */
-.schedule-container {
-	display: flex;
-	flex-wrap: nowrap;
-	gap: 5px;
-	overflow-x: auto;
-}
 
 .schedule-badge {
 	display: inline-block;
-	padding: 3px;
+	padding: 3px 8px;
 	background: #f0f4ff;
 	color: #4a6bff;
 	border-radius: 4px;
 	font-size: 12px;
+	margin-right: 5px;
+	margin-top: 5px;
 	border-left: 3px solid #4a6bff;
-	white-space: nowrap;
 }
 
-/* 빈 상태 */
 .empty-state {
 	text-align: center;
 	padding: 40px 20px;
@@ -692,7 +585,6 @@ body {
 	opacity: 0.3;
 }
 
-/* ========== 스케줄 섹션 ========== */
 .schedule-section {
 	display: none;
 }
@@ -758,20 +650,6 @@ body {
 	padding: 4px 8px;
 	border-radius: 4px;
 	font-size: 12px;
-	display: flex;
-	align-items: center;
-	gap: 4px;
-}
-
-/* 스케줄 내 코치 태그 */
-.time-member-coach {
-	display: inline-block;
-	font-size: 10px;
-	background: linear-gradient(135deg, #667eea, #764ba2);
-	color: white;
-	padding: 1px 5px;
-	border-radius: 8px;
-	margin-left: 2px;
 }
 
 .no-schedule {
@@ -783,7 +661,6 @@ body {
 	border-radius: 8px;
 }
 
-/* ========== 모달 ========== */
 .modal {
 	display: none;
 	position: fixed;
@@ -854,7 +731,7 @@ body {
 }
 
 .password-input {
-	margin-bottom: 5px;
+	margin-bottom: 15px;
 }
 
 .password-input input {
@@ -865,7 +742,7 @@ body {
 	font-size: 14px;
 }
 
-/* ========== 카메라 모달 ========== */
+/* 카메라 모달 전용 스타일 */
 #cameraModal .modal-content {
 	max-width: 500px !important;
 	width: 95%;
@@ -935,7 +812,6 @@ body {
 	border: 2px solid white;
 }
 
-/* 스크롤바 */
 .content-section::-webkit-scrollbar {
 	width: 8px;
 }
@@ -949,7 +825,6 @@ body {
 	border-radius: 4px;
 }
 
-/* ========== 아니메이션 ========== */
 @keyframes slideIn {
 	from {
 		opacity: 0;
@@ -969,14 +844,7 @@ body {
 	animation: slideIn 0.3s ease;
 }
 
-/* 자동 잠금 타이머 표시 */
-.lock-timer {
-	font-size: 11px;
-	margin-left: 5px;
-	color: rgba(255,255,255,0.8);
-}
-
-/* ========== 출석 관리 스타일 ========== */
+/* ========== 출석 관리 추가 스타일 ========== */
 .attendance-count {
 	display: inline-flex;
 	align-items: center;
@@ -989,22 +857,7 @@ body {
 	font-weight: 600;
 }
 
-.attendance-count.near-goal {
-	background: linear-gradient(135deg, #FF9800, #F57C00);
-	animation: pulse 1.5s infinite;
-}
 
-.attendance-count.reached-goal {
-	background: linear-gradient(135deg, #f44336, #d32f2f);
-	animation: pulse 1s infinite;
-}
-
-@keyframes pulse {
-	0%, 100% { transform: scale(1); }
-	50% { transform: scale(1.05); }
-}
-
-/* ========== 달력 ========== */
 .calendar-container {
 	background: white;
 	border-radius: 15px;
@@ -1117,7 +970,6 @@ body {
 	background: white;
 }
 
-/* 출석 알림 모달 */
 .attendance-alert-modal .modal-content {
 	text-align: center;
 	max-width: 400px;
@@ -1141,7 +993,7 @@ body {
 	line-height: 1.6;
 }
 
-/* ========== 회원 상세 정보 팝업 ========== */
+/* 회원 상세 정보 팝업 스타일 */
 .member-details-modal {
 	background: white;
 	border-radius: 15px;
@@ -1259,254 +1111,12 @@ body {
 	cursor: pointer;
 }
 
-/* ========== 회비 입금 내역 섹션 ========== */
-.payment-section-wrap {
-	margin-top: 5px;
-}
-
-.payment-input-row {
-	display: flex;
-	gap: 8px;
-	align-items: flex-end;
-	flex-wrap: wrap;
-	margin-bottom: 12px;
-}
-
-.payment-input-item {
-	flex: 1;
-	min-width: 120px;
-}
-
-.payment-input-item label {
-	display: block;
-	font-size: 12px;
-	color: #666;
-	margin-bottom: 4px;
-	font-weight: 600;
-}
-
-.payment-input-item input {
-	width: 100%;
-	padding: 9px 10px;
-	border: 2px solid #e0e0e0;
-	border-radius: 8px;
-	font-size: 14px;
-	transition: border-color 0.3s;
-}
-
-.payment-input-item input:focus {
-	outline: none;
-	border-color: #2196F3;
-}
-
-.payment-add-btn {
-	padding: 9px 16px;
-	background: linear-gradient(135deg, #43a047, #2e7d32);
-	color: white;
-	border: none;
-	border-radius: 8px;
-	font-size: 14px;
-	font-weight: 600;
-	cursor: pointer;
-	white-space: nowrap;
-	transition: all 0.2s;
-	align-self: flex-end;
-}
-
-.payment-add-btn:hover {
-	background: linear-gradient(135deg, #66bb6a, #388e3c);
-	transform: translateY(-1px);
-}
-
-.payment-list {
-	display: flex;
-	flex-direction: column;
-	gap: 6px;
-	margin-top: 4px;
-	max-height: 200px;
-	overflow-y: auto;
-}
-
-.payment-list-item {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	padding: 8px 12px;
-	background: #f0f7ff;
-	border: 1px solid #bbdefb;
-	border-radius: 8px;
-	font-size: 14px;
-	gap: 8px;
-}
-
-.payment-list-item .payment-info {
-	display: flex;
-	gap: 14px;
-	align-items: center;
-	flex: 1;
-}
-
-.payment-list-item .payment-date {
-	color: #555;
-	font-weight: 600;
-	font-size: 13px;
-	white-space: nowrap;
-}
-
-.payment-list-item .payment-amount {
-	color: #1976d2;
-	font-weight: 700;
-	font-size: 14px;
-}
-
-.payment-list-item .payment-delete-btn {
-	background: #ef5350;
-	color: white;
-	border: none;
-	border-radius: 5px;
-	width: 24px;
-	height: 24px;
-	font-size: 14px;
-	cursor: pointer;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	flex-shrink: 0;
-	transition: background 0.2s;
-}
-
-.payment-list-item .payment-delete-btn:hover {
-	background: #c62828;
-}
-
-/* 회원 상세 팝업 내 입금 내역 테이블 */
-.payment-history-table {
-	width: 100%;
-	border-collapse: collapse;
-	margin-top: 4px;
-}
-
-.payment-history-table thead th {
-	text-align: center;
-	padding: 8px 4px;
-	font-size: 13px;
-	color: #888;
-	font-weight: 600;
-	border-bottom: 2px solid #e0e0e0;
-	background: #fafafa;
-}
-
-.payment-history-table tbody tr {
-	border-bottom: 1px solid #f0f0f0;
-}
-
-.payment-history-table tbody td {
-	text-align: center;
-	padding: 9px 4px;
-	font-size: 14px;
-	color: #444;
-}
-
-.payment-history-table tbody td:last-child {
-	color: #1976d2;
-	font-weight: 700;
-}
-
-.payment-history-total {
-	display: flex;
-	justify-content: flex-end;
-	align-items: center;
-	gap: 8px;
-	margin-top: 10px;
-	padding-top: 8px;
-	border-top: 2px solid #e0e0e0;
-	font-size: 15px;
-	font-weight: 700;
-	color: #1976d2;
-}
-
-.payment-history-total .total-label {
-	color: #555;
-	font-weight: 600;
-}
-
-/* ========== 코치 버튼 ========== */
-.coach-radio-group {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 6px;
-	padding: 8px 0;
-}
-
-.coach-btn {
-	padding: 5px 12px;
-	border: 2px solid #e0e0e0;
-	border-radius: 16px;
-	background: white;
-	font-size: 16px;
-	color: #333;
-	cursor: pointer;
-	transition: all 0.2s;
-	font-weight: 500;
-	line-height: 1.4;
-}
-
-.coach-btn:hover {
-	border-color: #2196F3;
-	background: #e3f2fd;
-	color: #1976d2;
-}
-
-.coach-btn.active {
-	background: #2196F3;
-	color: white;
-	border-color: #2196F3;
-	font-weight: 600;
-}
-
-/* ========== 설정 모달 코치 설정 ========== */
-.coach-settings-grid {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: 10px;
-	margin-top: 8px;
-}
-
-.coach-setting-item {
-	display: flex;
-	flex-direction: column;
-	gap: 4px;
-}
-
-.coach-setting-label {
-	font-size: 12px;
-	color: #888;
-	font-weight: 600;
-}
-
-.coach-setting-item input {
-	padding: 8px 10px;
-	border: 2px solid #e0e0e0;
-	border-radius: 8px;
-	font-size: 14px;
-	transition: border-color 0.3s;
-}
-
-.coach-setting-item input:focus {
-	outline: none;
-	border-color: #2196F3;
-}
-
-.coach-setting-item input::placeholder {
-	color: #bbb;
-}
-
-/* ========== 반응형 (모바일) ========== */
 @media (max-width: 600px) {
 	.form-grid {
 		grid-template-columns: 1fr;
 	}
 
+	/* 수정: 추가/수정/초기화 버튼을 모바일에서 한 줄로 유지 */
 	.button-group {
 		grid-template-columns: repeat(3, 1fr);
 		gap: 8px;
@@ -1536,18 +1146,12 @@ body {
 		align-items: flex-start;
 	}
 
-	.member-photo-container {
-		width: 90px;
-		height: 90px;
-		object-fit: cover;
-		border-radius: 8px;
-		margin-right: 5px;
-	}
-
+	/* 오른쪽 전체 정보 영역 */
 	.member-info-container {
 		flex: 1;
 	}
 
+	/* 상단: 이름 + 수정/삭제 버튼 (같은 줄) */
 	.member-header {
 		display: flex;
 		justify-content: space-between;
@@ -1555,6 +1159,7 @@ body {
 		margin-bottom: 6px;
 	}
 
+	/* 이름 강조 */
 	.member-name {
 		font-weight: bold;
 		font-size: 17px;
@@ -1565,11 +1170,13 @@ body {
 		padding: 2px 6px;
 	}
 
+	/* 버튼 그룹 */
 	.member-actions {
 		display: flex;
 		gap: 6px;
 	}
 
+	/* 하단: 전화번호 + 기타 정보 (이름 아래) */
 	.member-info {
 		font-size: 14px;
 		color: #555;
@@ -1594,7 +1201,7 @@ body {
 		width: 100%;
 	}
 
-	/* 암호 입력 모바일 최적화 */
+	/* 암호 입력 섹션 모바일 최적화 */
 	.password-input-group {
 		flex-direction: column;
 	}
@@ -1605,28 +1212,15 @@ body {
 
 	.unlock-btn {
 		width: 100%;
-		padding: 8px 12px;
-		font-size: 13px;
 	}
 
 	.password-section {
 		padding: 8px 12px;
 	}
-
-	/* 코치 버튼 모바일 최적화 */
-	.coach-radio-group {
-		gap: 5px;
-	}
-
-	.coach-btn {
-		padding: 5px 10px;
+	
+	.unlock-btn {
+		padding: 8px 12px;
 		font-size: 13px;
-	}
-
-	/* 코치 설정 모바일 최적화 */
-	.coach-settings-grid {
-		grid-template-columns: 1fr 1fr;
-		gap: 8px;
 	}
 
 	/* 모바일 달력 최적화 */
@@ -1712,6 +1306,7 @@ body {
 		height: 250px;
 	}
 	
+	/* 작은 화면에서 버튼 텍스트 줄이기 */
 	.button-group .btn {
 		font-size: 12px;
 		padding: 8px 5px;
@@ -1730,21 +1325,39 @@ body {
 		font-size: 10px;
 		padding: 1px 4px;
 	}
+}
 
-	/* 코치 버튼 초소형 최적화 */
-	.coach-btn {
-		padding: 4px 8px;
-		font-size: 12px;
-	}
+.schedule-container {
+	display: flex;         /* 가로로 나열 */
+	flex-wrap: nowrap;     /* 줄 바꿈 방지 (공간이 부족해도 한 줄 유지) */
+	gap: 5px;              /* 배지 사이 간격 */
+	margin-top: 5px;
+	overflow-x: auto;      /* 혹시 화면보다 길어질 경우 가로 스크롤 허용 */
+}
 
-	/* 코치 설정 초소형 */
-	.coach-settings-grid {
-		grid-template-columns: 1fr 1fr;
-		gap: 6px;
-	}
+.schedule-badge {
+	display: inline-block;
+	padding: 3px;
+	background: #f0f4ff;
+	color: #4a6bff;
+	border-radius: 4px;
+	font-size: 12px;
+	border-left: 3px solid #4a6bff;
+	white-space: nowrap;   /* 배지 안의 텍스트가 줄 바꿈되지 않도록 설정 */
+	margin-right: 0;       /* gap을 사용하므로 기존 margin 제거 가능 */
+	margin-top: 0;         /* 컨테이너에서 제어하므로 제거 */
+}
 
-	.coach-setting-item input {
-		padding: 6px 8px;
-		font-size: 13px;
-	}
+/* 가로 정렬을 위한 컨테이너 */
+.phone-fee-row {
+    display: flex;
+    align-items: center; /* 세로 중앙 정렬 */
+    gap: 8px;            /* 전화번호와 금액 사이 간격 */
+}
+
+/* 금액 스타일 (작게 표시) */
+.member-fee {
+	font-size: 0.85em;    /* 기존보다 작게 */
+    color: #666;          /* 약간 흐리게 처리하여 전화번호와 구분 */
+    font-weight: normal;
 }
