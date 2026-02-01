@@ -1961,7 +1961,9 @@ function renderAttendanceMemberList(membersToShow) {
 			<div style="display: flex; align-items: center; gap: 10px;">
 				<div style="flex: 1;">
 					<div style="font-weight: 600; font-size: 16px;">${member.name}
-						<span style="font-size: 13px; color: #666; margin-left:15px;">출석: ${currentCount} / ${targetCount}회</span>
+						<span class="attendance-count" style="margin-left: 8px; font-size: 12px; padding: 2px 6px; background: #e3f2fd; border-radius: 10px;">
+					     📊 ${currentCount}/${targetCount}회
+				        </span>
 					</div>
 					${member.coach ? `<div class="coach-badge">${member.coach}</div>` : ''}
 				</div>
