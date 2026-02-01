@@ -1963,7 +1963,7 @@ function renderAttendanceMemberList(membersToShow) {
 					<div style="font-weight: 600; font-size: 16px;">${member.name}
 						<span style="font-size: 13px; color: #666; margin-left:15px;">출석: ${currentCount} / ${targetCount}회</span>
 					</div>
-					${member.coach ? `<div style="font-size: 12px; color: #888; margin-top: 3px;">🏋️ ${member.coach}</div>` : ''}
+					${member.coach ? `<div style="font-size: 13px; margin-top: 3px; background-color:#444; color:#fff;">코치:${member.coach}</div>` : ''}
 				</div>
 				<div style="color: ${alreadyChecked ? '#4CAF50' : '#999'}; font-size: 24px;">
 					${alreadyChecked ? '✓' : '○'}
