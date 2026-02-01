@@ -54,24 +54,6 @@
 				<button class="filter-btn" onclick="sortMembers('fee')">회비순</button>
 			</div>
 
-			<!-- 수정: 암호 입력 섹션을 더 작게 -->
-			<div class="password-section" style="margin:10px 0; border-radius:10px">
-				<div class="password-input-group">
-					<input type="password" 
-						   id="lockPassword" 
-						   class="password-input" 
-						   placeholder="수정/삭제 암호 입력"
-						   onkeyup="if(event.key === 'Enter') unlockEditButtons()">
-					<button class="unlock-btn" onclick="unlockEditButtons()">
-						🔓 잠금 해제
-						<div class="lock-status locked" id="lockStatus">
-							🔒 잠김 상태 - 수정/삭제 버튼 숨김
-							<span class="lock-timer" id="lockTimer"></span>
-						</div>
-					</button>
-				</div>
-			</div>
-
 			<div class="tab-section" style="margin-top:10px">
 				<div class="tabs">
 					<button class="tab-btn active" onclick="switchTab('list')">회원 목록</button>
@@ -94,6 +76,24 @@
 						<!-- 일주일 스케줄이 여기에 표시됩니다 -->
 					</div>
 				</div>
+			</div>
+		</div>
+
+		<!-- 수정: 암호 입력 섹션을 더 작게 -->
+		<div class="password-section" style="margin:10px 0; border-radius:10px">
+			<div class="password-input-group">
+				<input type="password" 
+					   id="lockPassword" 
+					   class="password-input" 
+					   placeholder="수정/삭제 암호 입력"
+					   onkeyup="if(event.key === 'Enter') unlockEditButtons()">
+				<button class="unlock-btn" onclick="unlockEditButtons()">
+					🔓 잠금 해제
+					<div class="lock-status locked" id="lockStatus">
+						🔒 잠김 상태 - 수정/삭제 버튼 숨김
+						<span class="lock-timer" id="lockTimer"></span>
+					</div>
+				</button>
 			</div>
 		</div>
 
