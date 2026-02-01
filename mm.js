@@ -654,7 +654,7 @@ function renderCoachRadioButtons() {
 		label.className = 'coach-radio-label';
 		label.innerHTML = `
 			<input type="radio" name="coach" class="coach-radio" value="${name}">
-			<span class="coach-radio-text">🏋️ ${name}</span>
+			<span class="coach-radio-text">${name}</span>
 		`;
 		container.appendChild(label);
 	});
