@@ -31,6 +31,7 @@ let firebaseDb = null;
 let currentPhotoData = null;
 let cameraStream = null;
 let currentCameraType = 'user';
+let currentPaymentList = []; // 회비 입금 내역 (수정 중 임시 저장)
 
 // 보안 관련 변수
 let isUnlocked = false;
@@ -477,6 +478,7 @@ function loadFromFirebase() {
 				if (!cleaned.photo) cleaned.photo = '';
 				if (!cleaned.attendanceHistory) cleaned.attendanceHistory = [];
 				if (!cleaned.coach) cleaned.coach = '';
+				if (!cleaned.paymentHistory) cleaned.paymentHistory = [];
 				return cleaned;
 			});
 			filteredMembers = [...members];
@@ -522,6 +524,7 @@ function listenToFirebaseChanges() {
 				if (!cleaned.photo) cleaned.photo = '';
 				if (!cleaned.attendanceHistory) cleaned.attendanceHistory = [];
 				if (!cleaned.coach) cleaned.coach = '';
+				if (!cleaned.paymentHistory) cleaned.paymentHistory = [];
 				return cleaned;
 			});
 			filteredMembers = [...members];
@@ -893,6 +896,38 @@ function showMemberDetails(index) {
 			</table>
 		</div>
 	`;
+
+	// 회비 입금 내역
+	const payments = member.paymentHistory || [];
+	if (payments.length > 0) {
+		const sortedPayments = [...payments].sort((a, b) => b.date.localeCompare(a.date));
+		const totalAmount = payments.reduce((sum, p) => sum + (p.amount || 0), 0);
+
+		detailsHTML += `
+			<div class="member-details-section">
+				<h3>💳 회비 입금 내역</h3>
+				<table class="payment-history-table">
+					<thead>
+						<tr>
+							<th>입금날</th>
+							<th>입금금액</th>
+						</tr>
+					</thead>
+					<tbody>
+		`;
+		sortedPayments.forEach(p => {
+			detailsHTML += `<tr><td>${formatDate(p.date)}</td><td>${formatNumber(p.amount)}원</td></tr>`;
+		});
+		detailsHTML += `
+					</tbody>
+				</table>
+				<div class="payment-history-total">
+					<span class="total-label">합계:</span>
+					<span>${formatNumber(totalAmount)}원</span>
+				</div>
+			</div>
+		`;
+	}
 	
 	// 스케줄 정보
 	if ((member.day1 && member.startTime1 && member.endTime1) || 
@@ -1076,6 +1111,63 @@ function formatNumber(num) {
 	return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
+// ========== 회비 입금 내역 관리 ==========
+
+// 입금 항목 추가
+function addPaymentEntry() {
+	const dateInput = document.getElementById('paymentDate');
+	const amountInput = document.getElementById('paymentAmount');
+	const date = dateInput.value;
+	const amount = amountInput.value ? parseInt(amountInput.value) : null;
+
+	if (!date) {
+		showAlert('입금날을 입력해주세요!');
+		return;
+	}
+	if (!amount || amount <= 0) {
+		showAlert('입금금액을 올바르게 입력해주세요!');
+		return;
+	}
+
+	currentPaymentList.push({ date: date, amount: amount });
+	renderPaymentList(currentPaymentList);
+
+	// 입력 필드 초기화
+	dateInput.value = '';
+	amountInput.value = '';
+}
+
+// 입금 항목 삭제
+function deletePaymentEntry(index) {
+	currentPaymentList.splice(index, 1);
+	renderPaymentList(currentPaymentList);
+}
+
+// 입금 목록 렌더링
+function renderPaymentList(list) {
+	currentPaymentList = list;
+	const container = document.getElementById('paymentList');
+
+	if (!list || list.length === 0) {
+		container.innerHTML = '<div style="font-size:13px; color:#999; padding:8px 0; text-align:center;">입금 내역이 없습니다</div>';
+		return;
+	}
+
+	// 날짜 내림차순 정렬 (표시용)
+	const sorted = list.map((item, idx) => ({ ...item, originalIndex: idx }))
+		.sort((a, b) => b.date.localeCompare(a.date));
+
+	container.innerHTML = sorted.map(item => `
+		<div class="payment-list-item">
+			<div class="payment-info">
+				<span class="payment-date">${formatDate(item.date)}</span>
+				<span class="payment-amount">${formatNumber(item.amount)}원</span>
+			</div>
+			<button class="payment-delete-btn" onclick="deletePaymentEntry(${item.originalIndex})">×</button>
+		</div>
+	`).join('');
+}
+
 // ========== 회원 추가 ==========
 
 function addMember() {
@@ -1227,6 +1319,9 @@ function updateMember() {
 	// 기존 attendanceHistory 유지
 	const existingHistory = members[currentEditIndex].attendanceHistory || [];
 
+	// 회비 입금 내역 읽기
+	const paymentHistory = currentPaymentList || [];
+
 	members[currentEditIndex] = {
 		name,
 		phone,
@@ -1238,6 +1333,7 @@ function updateMember() {
 		currentCount: members[currentEditIndex].currentCount || 0,
 		attendanceDates: members[currentEditIndex].attendanceDates || [],
 		attendanceHistory: existingHistory, // 기록 유지
+		paymentHistory: paymentHistory, // 회비 입금 내역
 		day1: day1 || null,
 		startTime1: startTime1 || null,
 		endTime1: endTime1 || null,
@@ -1278,6 +1374,10 @@ function editMember(index) {
 
 	// 코치 radio 설정
 	setSelectedCoach(member.coach || '');
+
+	// 회비 입금 내역 표시 (수정시에만)
+	document.getElementById('paymentSection').style.display = 'block';
+	renderPaymentList(member.paymentHistory || []);
 
 	if (member.photo) {
 		currentPhotoData = member.photo;
@@ -1348,6 +1448,13 @@ function clearForm() {
 
 	// 코치 미선택으로 리셋
 	setSelectedCoach('');
+
+	// 회비 입금 내역 숨기기 및 초기화
+	document.getElementById('paymentSection').style.display = 'none';
+	document.getElementById('paymentDate').value = '';
+	document.getElementById('paymentAmount').value = '';
+	currentPaymentList = [];
+	document.getElementById('paymentList').innerHTML = '';
 
 	removePhoto();
 	currentEditIndex = null;

@@ -145,6 +145,25 @@
 					</div>
 				</div>
 
+				<!-- 회비 입금 내역 (수정시에만 표시) -->
+				<div class="form-group full-width payment-section-wrap" id="paymentSection" style="display: none;">
+					<div class="schedule-section-header">💳 회비 입금 내역</div>
+					<div class="payment-input-row">
+						<div class="payment-input-item">
+							<label for="paymentDate">입금날</label>
+							<input type="date" id="paymentDate">
+						</div>
+						<div class="payment-input-item">
+							<label for="paymentAmount">입금금액 (원)</label>
+							<input type="number" id="paymentAmount" placeholder="금액 입력">
+						</div>
+						<button type="button" class="payment-add-btn" onclick="addPaymentEntry()">+ 추가</button>
+					</div>
+					<div class="payment-list" id="paymentList">
+						<!-- JS에서 동적 렌더링 -->
+					</div>
+				</div>
+
 				<!-- 첫 번째 스케줄 -->
 				<div class="form-group full-width">
 					<div class="schedule-section-header">📅 스케줄 1</div>
