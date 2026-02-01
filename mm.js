@@ -23,8 +23,9 @@ let settings = {
 	clubName: '',
 	feePresets: [40000, 70000, 100000, 200000, 300000],
 	adminPassword: '0000',
-	editPassword: '0000', // 수정/삭제용 암호 추가
-	lockTimeout: 60 // 자동 잠금 시간 (분)
+	editPassword: '0000',
+	lockTimeout: 60,
+	coaches: ['', '', '', ''] // 코치 이름 4명
 };
 let firebaseDb = null;
 let currentPhotoData = null;
@@ -71,24 +72,20 @@ function updateLockStatus() {
 		lockStatusEl.classList.remove('locked');
 		lockStatusEl.classList.add('unlocked');
 
-		// 수정 버튼 활성화
 		updateBtn.classList.remove('btn-disabled');
 		updateBtn.classList.add('btn-update');
 		updateBtn.textContent = '수정';
 
-		// 회원 목록의 수정/삭제 버튼 표시
 		showMemberButtons();
 	} else {
 		lockStatusEl.innerHTML = `🔒 잠김 상태 - 수정/삭제 버튼 숨김 <span class="lock-timer" id="lockTimer"></span>`;
 		lockStatusEl.classList.remove('unlocked');
 		lockStatusEl.classList.add('locked');
 
-		// 수정 버튼 비활성화
 		updateBtn.classList.remove('btn-update');
 		updateBtn.classList.add('btn-disabled');
 		updateBtn.textContent = '수정';
 
-		// 회원 목록의 수정/삭제 버튼 숨기기
 		hideMemberButtons();
 	}
 }
@@ -107,40 +104,25 @@ function unlockEditButtons() {
 		isUnlocked = false;
 		remainingTime = settings.lockTimeout * 60;
 
-		// 자동 잠금 타이머 중지
 		if (lockInterval) {
 			clearInterval(lockInterval);
 			lockInterval = null;
 		}
 
-		// 암호 입력칸 초기화
 		document.getElementById('lockPassword').value = '';
-
-		// 상태 업데이트
 		updateLockStatus();
-
-		// 알림 메시지
 		showAlert('앱이 잠겼습니다!');
 		return;
 	}
 
 	if (password === settings.editPassword) {
 		isUnlocked = true;
-		remainingTime = settings.lockTimeout * 60; // 설정된 시간으로 리셋
+		remainingTime = settings.lockTimeout * 60;
 
-		// 자동 잠금 타이머 시작
 		startAutoLockTimer();
-
-		// 암호 입력칸 초기화
 		document.getElementById('lockPassword').value = '';
-
-		// 상태 업데이트
 		updateLockStatus();
-
-		// 알림 메시지
 		showAlert(`잠금이 해제되었습니다! ${settings.lockTimeout}분 후 자동으로 잠깁니다.`);
-
-		// 활동 타이머 리셋 함수 연결
 		resetLockTimer();
 	} else {
 		showAlert('암호가 틀렸습니다!');
@@ -155,8 +137,6 @@ function startAutoLockTimer() {
 
 	lockInterval = setInterval(() => {
 		remainingTime--;
-
-		// 타이머 업데이트
 		updateTimerDisplay();
 
 		if (remainingTime <= 0) {
@@ -197,7 +177,7 @@ function lockEditButtons() {
 // 타이머 리셋 (활동 감지)
 function resetLockTimer() {
 	if (isUnlocked) {
-		remainingTime = settings.lockTimeout * 60; // 설정된 시간으로 리셋
+		remainingTime = settings.lockTimeout * 60;
 		updateTimerDisplay();
 	}
 }
@@ -223,7 +203,7 @@ function checkLockBeforeUpdate() {
 		document.getElementById('lockPassword').focus();
 		return false;
 	}
-	resetLockTimer(); // 활동 감지 - 타이머 리셋
+	resetLockTimer();
 	updateMember();
 	return true;
 }
@@ -235,12 +215,12 @@ function checkLockBeforeDelete(index) {
 		document.getElementById('lockPassword').focus();
 		return false;
 	}
-	resetLockTimer(); // 활동 감지 - 타이머 리셋
+	resetLockTimer();
 	showDeleteModal(index);
 	return true;
 }
 
-// 현재 수정 중인 회원의 출석 초기화
+// 현재 수정 중인 회원의 출석 초기화 (기록은 유지)
 function resetCurrentAttendance() {
 	if (!isUnlocked) {
 		showAlert('먼저 잠금을 해제해주세요!');
@@ -252,30 +232,42 @@ function resetCurrentAttendance() {
 		return;
 	}
 
-	if (confirm('현재 회원의 출석 횟수를 초기화하시겠습니까?')) {
+	if (confirm('현재 회원의 출석 횟수를 초기화하시겠습니까?\n(출석 기록은 유지됩니다)')) {
 		const member = members[currentEditIndex];
+
+		// 현재 출석 날짜를 기록(history)에 저장
+		if (!member.attendanceHistory) {
+			member.attendanceHistory = [];
+		}
+		if (member.attendanceDates && member.attendanceDates.length > 0) {
+			member.attendanceDates.forEach(date => {
+				if (!member.attendanceHistory.includes(date)) {
+					member.attendanceHistory.push(date);
+				}
+			});
+		}
+
+		// 현재 회차 초기화
 		member.currentCount = 0;
 		member.attendanceDates = [];
 		
-		// 현재 출석 횟수 입력창 업데이트
 		document.getElementById('currentCount').value = 0;
 		
-		// 저장 및 화면 업데이트
 		saveToFirebase();
 		renderMembers();
 		
-		// 달력이 열려있으면 다시 렌더링
 		const calendar = document.getElementById('formCalendar');
 		if (calendar.style.display !== 'none') {
 			renderFormCalendar();
 		}
 		
-		showAlert(`${member.name} 회원의 출석이 만료되었습니다. (0/${member.targetCount || 0}회)`);
+		showAlert(`${member.name} 회원의 출석이 초기화되었습니다. (0/${member.targetCount || 0}회)\n출석 기록은 유지됩니다.`);
 		resetLockTimer();
 	}
 }
 
-// 카메라 전환 함수
+// ========== 카메라 기능 ==========
+
 function switchCamera(cameraType) {
 	currentCameraType = cameraType;
 
@@ -285,7 +277,6 @@ function switchCamera(cameraType) {
 	restartCamera();
 }
 
-// 카메라 재시작
 async function restartCamera() {
 	if (cameraStream) {
 		cameraStream.getTracks().forEach(track => track.stop());
@@ -317,7 +308,6 @@ async function restartCamera() {
 	}
 }
 
-// 카메라 열기
 async function openCamera() {
 	try {
 		const constraints = {
@@ -346,7 +336,6 @@ async function openCamera() {
 	}
 }
 
-// 카메라 닫기
 function closeCamera() {
 	if (cameraStream) {
 		cameraStream.getTracks().forEach(track => track.stop());
@@ -359,7 +348,6 @@ function closeCamera() {
 	document.getElementById('cameraModal').classList.remove('active');
 }
 
-// 사진 찍기
 function capturePhoto() {
 	const video = document.getElementById('cameraVideo');
 	const canvas = document.createElement('canvas');
@@ -419,7 +407,6 @@ function capturePhoto() {
 	}, 'image/jpeg', 0.8);
 }
 
-// 사진 업로드 처리
 function handlePhotoUpload(event) {
 	const file = event.target.files[0];
 	if (!file) return;
@@ -439,11 +426,7 @@ function handlePhotoUpload(event) {
 			canvas.width = 400;
 			canvas.height = 400;
 
-			const scale = Math.max(
-				400 / img.width,
-				400 / img.height
-			);
-
+			const scale = Math.max(400 / img.width, 400 / img.height);
 			const newWidth = img.width * scale;
 			const newHeight = img.height * scale;
 			const x = (400 - newWidth) / 2;
@@ -460,7 +443,6 @@ function handlePhotoUpload(event) {
 	reader.readAsDataURL(file);
 }
 
-// 사진 미리보기 표시
 function displayPhotoPreview() {
 	const container = document.getElementById('photoPreviewContainer');
 	const preview = document.getElementById('photoPreview');
@@ -473,18 +455,18 @@ function displayPhotoPreview() {
 	}
 }
 
-// 사진 삭제
 function removePhoto() {
 	currentPhotoData = null;
 	displayPhotoPreview();
 	document.getElementById('photoInput').value = '';
 }
 
+// ========== Firebase 통신 ==========
+
 function loadFromFirebase() {
 	firebaseDb.ref('members').once('value', (snapshot) => {
 		const data = snapshot.val();
 		if (data) {
-			// undefined 값 정리
 			members = Object.values(data).map(member => {
 				const cleaned = {};
 				for (const key in member) {
@@ -492,10 +474,9 @@ function loadFromFirebase() {
 						cleaned[key] = member[key];
 					}
 				}
-				// photo가 없으면 빈 문자열로 설정
-				if (!cleaned.photo) {
-					cleaned.photo = '';
-				}
+				if (!cleaned.photo) cleaned.photo = '';
+				if (!cleaned.attendanceHistory) cleaned.attendanceHistory = [];
+				if (!cleaned.coach) cleaned.coach = '';
 				return cleaned;
 			});
 			filteredMembers = [...members];
@@ -507,22 +488,22 @@ function loadFromFirebase() {
 	firebaseDb.ref('settings').once('value', (snapshot) => {
 		const data = snapshot.val();
 		if (data) {
-			// settings를 완전히 덮어쓰기
 			settings.clubName = data.clubName !== undefined ? data.clubName : settings.clubName;
 			settings.feePresets = data.feePresets !== undefined ? data.feePresets : settings.feePresets;
 			settings.adminPassword = data.adminPassword !== undefined ? data.adminPassword : settings.adminPassword;
 			settings.editPassword = data.editPassword !== undefined ? data.editPassword : settings.editPassword;
 			settings.lockTimeout = data.lockTimeout !== undefined ? data.lockTimeout : 60;
+			settings.coaches = data.coaches !== undefined ? data.coaches : ['', '', '', ''];
 
 			document.getElementById('clubNameDisplay').textContent = settings.clubName || '구장명을 설정하세요';
 			updateFeePresetButtons();
+			renderCoachRadioButtons();
 
-			// 초기 잠금 상태 설정
 			remainingTime = settings.lockTimeout * 60;
 			updateLockStatus();
 		} else {
-			// Firebase에 설정 데이터가 없는 경우 기본값 설정
 			settings.lockTimeout = 60;
+			settings.coaches = ['', '', '', ''];
 		}
 	});
 }
@@ -531,7 +512,6 @@ function listenToFirebaseChanges() {
 	firebaseDb.ref('members').on('value', (snapshot) => {
 		const data = snapshot.val();
 		if (data) {
-			// undefined 값 정리
 			members = Object.values(data).map(member => {
 				const cleaned = {};
 				for (const key in member) {
@@ -539,10 +519,9 @@ function listenToFirebaseChanges() {
 						cleaned[key] = member[key];
 					}
 				}
-				// photo가 없으면 빈 문자열로 설정
-				if (!cleaned.photo) {
-					cleaned.photo = '';
-				}
+				if (!cleaned.photo) cleaned.photo = '';
+				if (!cleaned.attendanceHistory) cleaned.attendanceHistory = [];
+				if (!cleaned.coach) cleaned.coach = '';
 				return cleaned;
 			});
 			filteredMembers = [...members];
@@ -553,7 +532,6 @@ function listenToFirebaseChanges() {
 }
 
 function saveToFirebase() {
-	// undefined 값을 제거하는 헬퍼 함수
 	function cleanObject(obj) {
 		const cleaned = {};
 		for (const key in obj) {
@@ -572,7 +550,6 @@ function saveToFirebase() {
 
 	const membersObj = {};
 	members.forEach((member, index) => {
-		// 각 회원 데이터에서 undefined 제거
 		membersObj[index] = cleanObject(member);
 	});
 
@@ -580,41 +557,22 @@ function saveToFirebase() {
 	firebaseDb.ref('settings').set(cleanObject(settings));
 }
 
-function checkTimeConflict(day1, startTime1, endTime1, day2, startTime2, endTime2, excludeIndex = null) {
+// ========== 스케줄 충돌 체크 (코치별 중복 불가, 다른 코치 간 중복 허용) ==========
+function checkTimeConflict(day1, startTime1, endTime1, day2, startTime2, endTime2, coach, excludeIndex = null) {
+	// 코치가 비어있으면 충돌 체크 안함
+	if (!coach) return { conflict: false };
+
 	for (let i = 0; i < members.length; i++) {
 		if (excludeIndex !== null && i === excludeIndex) continue;
 
 		const member = members[i];
+		// 같은 코치인 경우에만 충돌 체크
+		if (member.coach !== coach) continue;
 
-		if (member.day1 === day1 && member.startTime1 && member.endTime1) {
-			if ((startTime1 >= member.startTime1 && startTime1 < member.endTime1) ||
-				(endTime1 > member.startTime1 && endTime1 <= member.endTime1) ||
-				(startTime1 <= member.startTime1 && endTime1 >= member.endTime1)) {
-				return {
-					conflict: true,
-					memberName: member.name,
-					existingTime: `${dayNames[member.day1]} ${member.startTime1}~${member.endTime1}`
-				};
-			}
-		}
-
-		if (member.day2 === day1 && member.startTime2 && member.endTime2) {
-			if ((startTime1 >= member.startTime2 && startTime1 < member.endTime2) ||
-				(endTime1 > member.startTime2 && endTime1 <= member.endTime2) ||
-				(startTime1 <= member.startTime2 && endTime1 >= member.endTime2)) {
-				return {
-					conflict: true,
-					memberName: member.name,
-					existingTime: `${dayNames[member.day2]} ${member.startTime2}~${member.endTime2}`
-				};
-			}
-		}
-
-		if (day2) {
-			if (member.day1 === day2 && member.startTime1 && member.endTime1) {
-				if ((startTime2 >= member.startTime1 && startTime2 < member.endTime1) ||
-					(endTime2 > member.startTime1 && endTime2 <= member.endTime1) ||
-					(startTime2 <= member.startTime1 && endTime2 >= member.endTime1)) {
+		// 스케줄 1과의 충돌 체크
+		if (day1 && startTime1 && endTime1) {
+			if (member.day1 === day1 && member.startTime1 && member.endTime1) {
+				if (timesOverlap(startTime1, endTime1, member.startTime1, member.endTime1)) {
 					return {
 						conflict: true,
 						memberName: member.name,
@@ -622,11 +580,30 @@ function checkTimeConflict(day1, startTime1, endTime1, day2, startTime2, endTime
 					};
 				}
 			}
+			if (member.day2 === day1 && member.startTime2 && member.endTime2) {
+				if (timesOverlap(startTime1, endTime1, member.startTime2, member.endTime2)) {
+					return {
+						conflict: true,
+						memberName: member.name,
+						existingTime: `${dayNames[member.day2]} ${member.startTime2}~${member.endTime2}`
+					};
+				}
+			}
+		}
 
+		// 스케줄 2와의 충돌 체크
+		if (day2 && startTime2 && endTime2) {
+			if (member.day1 === day2 && member.startTime1 && member.endTime1) {
+				if (timesOverlap(startTime2, endTime2, member.startTime1, member.endTime1)) {
+					return {
+						conflict: true,
+						memberName: member.name,
+						existingTime: `${dayNames[member.day1]} ${member.startTime1}~${member.endTime1}`
+					};
+				}
+			}
 			if (member.day2 === day2 && member.startTime2 && member.endTime2) {
-				if ((startTime2 >= member.startTime2 && startTime2 < member.endTime2) ||
-					(endTime2 > member.startTime2 && endTime2 <= member.endTime2) ||
-					(startTime2 <= member.startTime2 && endTime2 >= member.endTime2)) {
+				if (timesOverlap(startTime2, endTime2, member.startTime2, member.endTime2)) {
 					return {
 						conflict: true,
 						memberName: member.name,
@@ -638,6 +615,72 @@ function checkTimeConflict(day1, startTime1, endTime1, day2, startTime2, endTime
 	}
 	return { conflict: false };
 }
+
+// 시간 겹침 판별 헬퍼
+function timesOverlap(s1, e1, s2, e2) {
+	return (s1 >= s2 && s1 < e2) ||
+		   (e1 > s2 && e1 <= e2) ||
+		   (s1 <= s2 && e1 >= e2);
+}
+
+// ========== 코치 관련 기능 ==========
+
+// 코치 radio 버튼 렌더링
+function renderCoachRadioButtons() {
+	const container = document.getElementById('coachRadioGroup');
+	container.innerHTML = '';
+
+	const activeCoaches = settings.coaches.filter(name => name && name.trim() !== '');
+
+	if (activeCoaches.length === 0) {
+		container.innerHTML = '<div style="font-size: 13px; color: #999; padding: 8px 0;">코치가 등록되지 않았습니다. 관리자 설정에서 코치를 추가해주세요.</div>';
+		return;
+	}
+
+	// "미선택" 옵션
+	const noneLabel = document.createElement('label');
+	noneLabel.className = 'coach-radio-label';
+	noneLabel.innerHTML = `
+		<input type="radio" name="coach" class="coach-radio" value="" checked>
+		<span class="coach-radio-text">미선택</span>
+	`;
+	container.appendChild(noneLabel);
+
+	activeCoaches.forEach((name) => {
+		const label = document.createElement('label');
+		label.className = 'coach-radio-label';
+		label.innerHTML = `
+			<input type="radio" name="coach" class="coach-radio" value="${name}">
+			<span class="coach-radio-text">🏋️ ${name}</span>
+		`;
+		container.appendChild(label);
+	});
+}
+
+// 선택된 코치 값 가져오기
+function getSelectedCoach() {
+	const checked = document.querySelector('input[name="coach"]:checked');
+	return checked ? checked.value : '';
+}
+
+// 코치 radio 버튼에 값 설정
+function setSelectedCoach(coachName) {
+	const radios = document.querySelectorAll('input[name="coach"]');
+	let found = false;
+	radios.forEach(radio => {
+		if (radio.value === coachName) {
+			radio.checked = true;
+			found = true;
+		}
+	});
+	// 코치가 삭제된 경우 미선택으로
+	if (!found) {
+		const noneRadio = document.querySelector('input[name="coach"][value=""]');
+		if (noneRadio) noneRadio.checked = true;
+	}
+}
+
+// ========== UI 업데이트 ==========
 
 function updateFeePresetButtons() {
 	const feePresetsEl = document.getElementById('feePresets');
@@ -699,6 +742,8 @@ function sortMembers(sortBy) {
 	renderMembers();
 }
 
+// ========== 회원 목록 렌더링 ==========
+
 function renderMembers() {
 	const listEl = document.getElementById('listSection');
 	const countEl = document.getElementById('memberCount');
@@ -729,6 +774,7 @@ function renderMembers() {
 		if (member.day2 && member.startTime2 && member.endTime2) {
 			scheduleBadges += `<span class="schedule-badge">${dayNames[member.day2]} ${member.startTime2}~${member.endTime2}</span>`;
 		}
+
 		const currentCount = member.currentCount || 0;
 		const targetCount = member.targetCount || 0;
 
@@ -740,6 +786,12 @@ function renderMembers() {
 					📊 ${currentCount}/${targetCount}회
 				</span>
 			`;
+		}
+
+		// 코치 배지 표시
+		let coachBadge = '';
+		if (member.coach) {
+			coachBadge = `<span class="coach-badge">🏋️ ${member.coach}</span>`;
 		}
 
 		// 버튼 숨김/표시 처리
@@ -769,14 +821,18 @@ function renderMembers() {
 						${phoneLink}
 						<span class="member-fee">💰 월회비:${formatNumber(member.fee)}원</span>
 					</div>
-					${scheduleBadges ? `<div class="schedule-container">${scheduleBadges}</div>` : ''}
+					<div class="member-meta-row">
+						${coachBadge}
+						${scheduleBadges ? `<div class="schedule-container">${scheduleBadges}</div>` : ''}
+					</div>
 				</div>
 			</div>
 		</div>
 	`}).join('');
 }
 
-// 회원 상세 정보 팝업 표시 함수 추가
+// ========== 회원 상세 정보 팝업 ==========
+
 function showMemberDetails(index) {
 	const member = members[index];
 	
@@ -809,28 +865,28 @@ function showMemberDetails(index) {
 	if (member.phone) {
 		detailsHTML += `<tr><td>📞 전화번호:</td><td><a href="tel:${member.phone.replace(/-/g, '')}">${member.phone}</a></td></tr>`;
 	}
-	
 	if (member.email) {
 		detailsHTML += `<tr><td>📧 이메일:</td><td>${member.email}</td></tr>`;
 	}
-	
 	if (member.address) {
 		detailsHTML += `<tr><td>📍 주소:</td><td>${member.address}</td></tr>`;
 	}
-	
 	if (member.registerDate) {
 		detailsHTML += `<tr><td>📅 등록일:</td><td>${formatDate(member.registerDate)}</td></tr>`;
 	}
-	
 	if (member.fee) {
 		detailsHTML += `<tr><td>💰 월회비:</td><td>${formatNumber(member.fee)}원</td></tr>`;
+	}
+	// 코치 정보 표시
+	if (member.coach) {
+		detailsHTML += `<tr><td>🏋️ 담당 코치:</td><td><strong>${member.coach}</strong></td></tr>`;
 	}
 	
 	// 출석 정보
 	const targetCount = member.targetCount || 0;
 	const currentCount = member.currentCount || 0;
 	if (targetCount > 0) {
-		detailsHTML += `<tr><td>📊 출석:</td><td>${currentCount}/${targetCount}회</td></tr>`;
+		detailsHTML += `<tr><td>📊 현재 출석:</td><td>${currentCount}/${targetCount}회</td></tr>`;
 	}
 	
 	detailsHTML += `
@@ -839,42 +895,42 @@ function showMemberDetails(index) {
 	`;
 	
 	// 스케줄 정보
-	if (member.day1 && member.startTime1 && member.endTime1 || 
-		member.day2 && member.startTime2 && member.endTime2) {
+	if ((member.day1 && member.startTime1 && member.endTime1) || 
+		(member.day2 && member.startTime2 && member.endTime2)) {
 		detailsHTML += `
 			<div class="member-details-section">
 				<h3>스케줄</h3>
 				<table class="member-details-table">
 		`;
-		
 		if (member.day1 && member.startTime1 && member.endTime1) {
 			detailsHTML += `<tr><td>📅 스케줄 1:</td><td>${dayNames[member.day1]} ${member.startTime1}~${member.endTime1}</td></tr>`;
 		}
-		
 		if (member.day2 && member.startTime2 && member.endTime2) {
 			detailsHTML += `<tr><td>📅 스케줄 2:</td><td>${dayNames[member.day2]} ${member.startTime2}~${member.endTime2}</td></tr>`;
 		}
-		
 		detailsHTML += `
 				</table>
 			</div>
 		`;
 	}
 	
-	// 출석 기록
-	if (member.attendanceDates && member.attendanceDates.length > 0) {
+	// 출석 기록 (attendanceHistory + attendanceDates 합쳐서 표시)
+	const allDates = getAllAttendanceDates(member);
+	if (allDates.length > 0) {
 		detailsHTML += `
 			<div class="member-details-section">
-				<h3>출석 기록 (최근 ${Math.min(member.attendanceDates.length, 10)}건)</h3>
+				<h3>출석 기록 (전체 ${allDates.length}건)</h3>
 				<div class="attendance-dates">
 		`;
-		
-		const recentDates = [...member.attendanceDates].reverse().slice(0, 10);
-		recentDates.forEach(date => {
+		// 최근 날짜부터 표시 (최대 20건)
+		const sortedDates = [...allDates].sort((a, b) => b.localeCompare(a)).slice(0, 20);
+		sortedDates.forEach(date => {
 			const formattedDate = formatDate(date);
 			detailsHTML += `<span class="attendance-date-badge">${formattedDate}</span>`;
 		});
-		
+		if (allDates.length > 20) {
+			detailsHTML += `<span style="font-size: 12px; color: #999; align-self: center;">+${allDates.length - 20}건 더...</span>`;
+		}
 		detailsHTML += `
 				</div>
 			</div>
@@ -890,14 +946,12 @@ function showMemberDetails(index) {
 		</div>
 	`;
 	
-	// 모달 생성 및 표시
 	const modal = document.createElement('div');
 	modal.id = 'memberDetailsModal';
 	modal.className = 'modal active';
 	modal.innerHTML = detailsHTML;
 	document.body.appendChild(modal);
 	
-	// 모달 닫기 이벤트
 	modal.addEventListener('click', function(e) {
 		if (e.target === modal) {
 			closeMemberDetails();
@@ -907,13 +961,22 @@ function showMemberDetails(index) {
 	resetLockTimer();
 }
 
-// 회원 상세 정보 팝업 닫기 함수
+// 회원의 모든 출석 날짜 가져오기 (history + 현재)
+function getAllAttendanceDates(member) {
+	const history = member.attendanceHistory || [];
+	const current = member.attendanceDates || [];
+	const allSet = new Set([...history, ...current]);
+	return Array.from(allSet);
+}
+
 function closeMemberDetails() {
 	const modal = document.getElementById('memberDetailsModal');
 	if (modal) {
 		modal.remove();
 	}
 }
+
+// ========== 스케줄 렌더링 ==========
 
 function renderSchedule() {
 	const scheduleEl = document.getElementById('scheduleContent');
@@ -928,14 +991,16 @@ function renderSchedule() {
 			scheduleByDay[member.day1].push({
 				name: member.name,
 				startTime: member.startTime1,
-				endTime: member.endTime1
+				endTime: member.endTime1,
+				coach: member.coach || ''
 			});
 		}
 		if (member.day2 && member.startTime2 && member.endTime2) {
 			scheduleByDay[member.day2].push({
 				name: member.name,
 				startTime: member.startTime2,
-				endTime: member.endTime2
+				endTime: member.endTime2,
+				coach: member.coach || ''
 			});
 		}
 	});
@@ -955,7 +1020,7 @@ function renderSchedule() {
 					members: []
 				};
 			}
-			timeSlots[timeKey].members.push(member.name);
+			timeSlots[timeKey].members.push({ name: member.name, coach: member.coach });
 		});
 
 		const sortedTimeSlots = Object.values(timeSlots).sort((a, b) => {
@@ -984,7 +1049,10 @@ function renderSchedule() {
 					<div class="time-slot">
 						<div class="time-range">${slot.startTime} ~ ${slot.endTime}</div>
 						<div class="time-members">
-							${slot.members.map(name => `<span class="time-member">${name}</span>`).join('')}
+							${slot.members.map(m => {
+								const coachTag = m.coach ? `<span class="time-member-coach">${m.coach}</span>` : '';
+								return `<span class="time-member">${m.name}${coachTag}</span>`;
+							}).join('')}
 						</div>
 					</div>
 				`;
@@ -997,6 +1065,8 @@ function renderSchedule() {
 	scheduleEl.innerHTML = scheduleHTML;
 }
 
+// ========== 유틸리티 ==========
+
 function formatDate(dateString) {
 	const date = new Date(dateString);
 	return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
@@ -1005,6 +1075,8 @@ function formatDate(dateString) {
 function formatNumber(num) {
 	return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
+
+// ========== 회원 추가 ==========
 
 function addMember() {
 	const name = document.getElementById('name').value.trim();
@@ -1019,49 +1091,45 @@ function addMember() {
 	const endTime2 = document.getElementById('endTime2').value;
 	const email = document.getElementById('email').value.trim();
 	const address = document.getElementById('address').value.trim();
+	const coach = getSelectedCoach();
 
 	if (!name) {
 		showAlert('이름을 입력해주세요!');
 		return;
 	}
 
-	const schedules = [];
-	
+	// 스케줄 유효성 체크
 	if (day1 && startTime1 && endTime1) {
 		if (startTime1 >= endTime1) {
 			showAlert('첫 번째 스케줄의 종료시간은 시작시간보다 커야 합니다!');
 			return;
 		}
-		schedules.push({ day: day1, startTime: startTime1, endTime: endTime1 });
 	}
-
 	if (day2 && startTime2 && endTime2) {
 		if (startTime2 >= endTime2) {
 			showAlert('두 번째 스케줄의 종료시간은 시작시간보다 커야 합니다!');
 			return;
 		}
-		schedules.push({ day: day2, startTime: startTime2, endTime: endTime2 });
 	}
 
-	for (const schedule of schedules) {
-		const conflict = checkTimeConflict(
-			schedule.day, 
-			schedule.startTime, 
-			schedule.endTime,
-			null, null, null
-		);
-		if (conflict.conflict) {
-			showAlert(`시간 충돌! ${conflict.memberName} 회원이 이미 ${conflict.existingTime}에 등록되어 있습니다.`);
-			return;
-		}
+	// 코치별 스케줄 충돌 체크 (같은 코치 내에서만)
+	const conflict = checkTimeConflict(
+		day1 && startTime1 && endTime1 ? day1 : null,
+		day1 && startTime1 && endTime1 ? startTime1 : null,
+		day1 && startTime1 && endTime1 ? endTime1 : null,
+		day2 && startTime2 && endTime2 ? day2 : null,
+		day2 && startTime2 && endTime2 ? startTime2 : null,
+		day2 && startTime2 && endTime2 ? endTime2 : null,
+		coach
+	);
+	if (conflict.conflict) {
+		showAlert(`코치 [${coach}] 시간 충돌!\n${conflict.memberName} 회원이 이미 ${conflict.existingTime}에 등록되어 있습니다.`);
+		return;
 	}
 
 	// 출석 관련 필드 처리
 	const targetCountInput = document.getElementById('targetCount').value;
-	const currentCountInput = document.getElementById('currentCount').value;
-	
 	const targetCount = targetCountInput === "" ? 0 : parseInt(targetCountInput) || 0;
-	const currentCount = currentCountInput === "" ? 0 : parseInt(currentCountInput) || 0;
 
 	const member = {
 		name,
@@ -1069,9 +1137,11 @@ function addMember() {
 		photo: currentPhotoData || '',
 		registerDate: registerDate || new Date().toISOString().split('T')[0],
 		fee: fee ? parseInt(fee) : null,
+		coach: coach,
 		targetCount: targetCount,
-		currentCount: currentCount,
+		currentCount: 0,
 		attendanceDates: [],
+		attendanceHistory: [], // 출석 기록 (초기화 후에도 유지)
 		day1: day1 || null,
 		startTime1: startTime1 || null,
 		endTime1: endTime1 || null,
@@ -1091,6 +1161,8 @@ function addMember() {
 	showAlert('회원이 추가되었습니다!');
 }
 
+// ========== 회원 수정 ==========
+
 function updateMember() {
 	if (currentEditIndex === null) {
 		showAlert('수정할 회원을 선택해주세요!');
@@ -1109,54 +1181,51 @@ function updateMember() {
 	const endTime2 = document.getElementById('endTime2').value;
 	const email = document.getElementById('email').value.trim();
 	const address = document.getElementById('address').value.trim();
+	const coach = getSelectedCoach();
 
 	if (!name) {
 		showAlert('이름을 입력해주세요!');
 		return;
 	}
 
-	const schedules = [];
-
+	// 스케줄 유효성 체크
 	if (day1 && startTime1 && endTime1) {
 		if (startTime1 >= endTime1) {
 			showAlert('첫 번째 스케줄의 종료시간은 시작시간보다 커야 합니다!');
 			return;
 		}
-		schedules.push({ day: day1, startTime: startTime1, endTime: endTime1 });
 	}
-
 	if (day2 && startTime2 && endTime2) {
 		if (startTime2 >= endTime2) {
 			showAlert('두 번째 스케줄의 종료시간은 시작시간보다 커야 합니다!');
 			return;
 		}
-		schedules.push({ day: day2, startTime: startTime2, endTime: endTime2 });
 	}
 
-	for (const schedule of schedules) {
-		const conflict = checkTimeConflict(
-			schedule.day, 
-			schedule.startTime, 
-			schedule.endTime,
-			null, null, null,
-			currentEditIndex
-		);
-		if (conflict.conflict) {
-			showAlert(`시간 충돌! ${conflict.memberName} 회원이 이미 ${conflict.existingTime}에 등록되어 있습니다.`);
-			return;
-		}
+	// 코치별 스케줄 충돌 체크 (현재 회원 제외)
+	const conflict = checkTimeConflict(
+		day1 && startTime1 && endTime1 ? day1 : null,
+		day1 && startTime1 && endTime1 ? startTime1 : null,
+		day1 && startTime1 && endTime1 ? endTime1 : null,
+		day2 && startTime2 && endTime2 ? day2 : null,
+		day2 && startTime2 && endTime2 ? startTime2 : null,
+		day2 && startTime2 && endTime2 ? endTime2 : null,
+		coach,
+		currentEditIndex
+	);
+	if (conflict.conflict) {
+		showAlert(`코치 [${coach}] 시간 충돌!\n${conflict.memberName} 회원이 이미 ${conflict.existingTime}에 등록되어 있습니다.`);
+		return;
 	}
 
-	// 출석 관련 필드 처리 - 수정 시 빈 값이면 기존 값 유지
+	// 출석 관련 필드 처리
 	const targetCountInput = document.getElementById('targetCount').value;
-	const currentCountInput = document.getElementById('currentCount').value;
-	
 	const targetCount = targetCountInput === "" ? 
 					   members[currentEditIndex].targetCount || 0 : 
 					   parseInt(targetCountInput) || 0;
-	const currentCount = currentCountInput === "" ? 
-						members[currentEditIndex].currentCount || 0 : 
-						parseInt(currentCountInput) || 0;
+
+	// 기존 attendanceHistory 유지
+	const existingHistory = members[currentEditIndex].attendanceHistory || [];
 
 	members[currentEditIndex] = {
 		name,
@@ -1164,9 +1233,11 @@ function updateMember() {
 		photo: currentPhotoData !== null ? currentPhotoData : (members[currentEditIndex].photo || ''),
 		registerDate: registerDate || members[currentEditIndex].registerDate,
 		fee: fee ? parseInt(fee) : null,
+		coach: coach,
 		targetCount: targetCount,
-		currentCount: currentCount,
+		currentCount: members[currentEditIndex].currentCount || 0,
 		attendanceDates: members[currentEditIndex].attendanceDates || [],
+		attendanceHistory: existingHistory, // 기록 유지
 		day1: day1 || null,
 		startTime1: startTime1 || null,
 		endTime1: endTime1 || null,
@@ -1183,8 +1254,10 @@ function updateMember() {
 	renderSchedule();
 	clearForm();
 	showAlert('회원 정보가 수정되었습니다!');
-	resetLockTimer(); // 활동 감지
+	resetLockTimer();
 }
+
+// ========== 회원 편집 폼 채우기 ==========
 
 function editMember(index) {
 	const member = members[index];
@@ -1202,6 +1275,10 @@ function editMember(index) {
 	document.getElementById('address').value = member.address || '';
 	document.getElementById("targetCount").value = member.targetCount || 0;
 	document.getElementById("currentCount").value = member.currentCount || 0;
+
+	// 코치 radio 설정
+	setSelectedCoach(member.coach || '');
+
 	if (member.photo) {
 		currentPhotoData = member.photo;
 		displayPhotoPreview();
@@ -1211,13 +1288,15 @@ function editMember(index) {
 
 	currentEditIndex = index;
 	window.scrollTo({ top: 0, behavior: 'smooth' });
-	resetLockTimer(); // 활동 감지
+	resetLockTimer();
 }
+
+// ========== 삭제 ==========
 
 function showDeleteModal(index) {
 	deleteIndex = index;
 	document.getElementById('deleteModal').classList.add('active');
-	resetLockTimer(); // 활동 감지
+	resetLockTimer();
 }
 
 function confirmDelete() {
@@ -1230,13 +1309,15 @@ function confirmDelete() {
 		deleteIndex = null;
 		closeModal();
 		showAlert('회원이 삭제되었습니다!');
-		resetLockTimer(); // 활동 감지
+		resetLockTimer();
 	}
 }
 
 function closeModal() {
 	document.getElementById('deleteModal').classList.remove('active');
 }
+
+// ========== 알림 ==========
 
 function showAlert(message) {
 	document.getElementById('alertMessage').textContent = message;
@@ -1246,6 +1327,8 @@ function showAlert(message) {
 function closeAlertModal() {
 	document.getElementById('alertModal').classList.remove('active');
 }
+
+// ========== 폼 초기화 ==========
 
 function clearForm() {
 	document.getElementById('name').value = '';
@@ -1263,10 +1346,15 @@ function clearForm() {
 	document.getElementById("targetCount").value = "0";
 	document.getElementById("currentCount").value = "0";
 
+	// 코치 미선택으로 리셋
+	setSelectedCoach('');
+
 	removePhoto();
 	currentEditIndex = null;
-	resetLockTimer(); // 활동 감지
+	resetLockTimer();
 }
+
+// ========== 탭 전환 ==========
 
 function switchTab(tabName) {
 	document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -1287,8 +1375,10 @@ function switchTab(tabName) {
 		document.getElementById('scheduleSection').classList.add('active');
 		renderSchedule();
 	}
-	resetLockTimer(); // 활동 감지
+	resetLockTimer();
 }
+
+// ========== 설정 ==========
 
 function openSettings() {
 	document.getElementById('passwordInput').value = '';
@@ -1319,6 +1409,13 @@ function openSettingsDialog() {
 	document.getElementById('feePreset5').value = settings.feePresets[4] || '';
 	document.getElementById('editPassword').value = settings.editPassword || '0000';
 	document.getElementById('adminPassword').value = '';
+
+	// 코치 이름 설정 폼에 채우기
+	document.getElementById('coachName1').value = settings.coaches[0] || '';
+	document.getElementById('coachName2').value = settings.coaches[1] || '';
+	document.getElementById('coachName3').value = settings.coaches[2] || '';
+	document.getElementById('coachName4').value = settings.coaches[3] || '';
+
 	document.getElementById('settingsModal').classList.add('active');
 }
 
@@ -1336,6 +1433,14 @@ function saveSettings() {
 	} else {
 		settings.lockTimeout = 60;
 	}
+
+	// 코치 이름 저장
+	settings.coaches = [
+		document.getElementById('coachName1').value.trim(),
+		document.getElementById('coachName2').value.trim(),
+		document.getElementById('coachName3').value.trim(),
+		document.getElementById('coachName4').value.trim()
+	];
 
 	settings.feePresets = [
 		parseInt(document.getElementById('feePreset1').value) || 0,
@@ -1360,6 +1465,7 @@ function saveSettings() {
 		document.getElementById('clubNameDisplay').textContent = settings.clubName;
 	}
 	updateFeePresetButtons();
+	renderCoachRadioButtons(); // 코치 radio 다시 렌더링
 	closeSettings();
 	showAlert('설정이 저장되었습니다!');
 
@@ -1370,6 +1476,8 @@ function saveSettings() {
 		updateLockStatus();
 	}
 }
+
+// ========== 데이터 내보내기 / 가져오기 ==========
 
 function exportData() {
 	const data = {
@@ -1387,7 +1495,7 @@ function exportData() {
 	URL.revokeObjectURL(url);
 	
 	showAlert('데이터가 내보내기되었습니다!');
-	resetLockTimer(); // 활동 감지
+	resetLockTimer();
 }
 
 function importData(event) {
@@ -1400,7 +1508,11 @@ function importData(event) {
 			const data = JSON.parse(e.target.result);
 			
 			if (data.members) {
-				members = data.members;
+				members = data.members.map(m => {
+					if (!m.attendanceHistory) m.attendanceHistory = [];
+					if (!m.coach) m.coach = '';
+					return m;
+				});
 				filteredMembers = [...members];
 				saveToFirebase();
 			}
@@ -1422,7 +1534,11 @@ function importData(event) {
 				if (data.settings.lockTimeout) {
 					settings.lockTimeout = data.settings.lockTimeout;
 				}
+				if (data.settings.coaches) {
+					settings.coaches = data.settings.coaches;
+				}
 				updateFeePresetButtons();
+				renderCoachRadioButtons();
 			}
 
 			renderMembers();
@@ -1430,7 +1546,6 @@ function importData(event) {
 			closeSettings();
 			showAlert('데이터를 성공적으로 가져왔습니다!');
 
-			// 데이터 가져오기 시 잠금 상태 초기화
 			isUnlocked = false;
 			remainingTime = settings.lockTimeout * 60;
 			updateLockStatus();
@@ -1442,7 +1557,8 @@ function importData(event) {
 	reader.readAsText(file);
 }
 
-// 초기화
+// ========== 초기화 ==========
+
 document.getElementById('registerDate').valueAsDate = new Date();
 document.getElementById('startTime1').value = "13:00";
 document.getElementById('endTime1').value = "13:20";
@@ -1452,7 +1568,8 @@ document.getElementById('targetCount').value = "0";
 document.getElementById('currentCount').value = "0";
 
 updateFeePresetButtons();
-updateLockStatus(); // 초기 잠금 상태 설정
+renderCoachRadioButtons();
+updateLockStatus();
 
 // 활동 감지 이벤트 리스너 추가
 document.addEventListener('click', resetLockTimer);
@@ -1484,7 +1601,6 @@ function toggleCalendar() {
 		return;
 	}
 	
-	// 목표 횟수가 설정된 회원이 있는지 확인
 	const hasMembersWithTarget = members.some(member => {
 		const targetCount = member.targetCount || 0;
 		return targetCount > 0;
@@ -1552,10 +1668,11 @@ function renderFormCalendar() {
 
 		const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
 
-		// 출석 체크 확인
+		// 출석 체크 확인 (현재 + history 모두 확인)
 		let hasAttendance = false;
 		members.forEach(member => {
-			if (member.attendanceDates && member.attendanceDates.includes(dateStr)) {
+			const allDates = getAllAttendanceDates(member);
+			if (allDates.includes(dateStr)) {
 				hasAttendance = true;
 			}
 		});
@@ -1602,7 +1719,6 @@ function nextMonthForm() {
 }
 
 function selectDate(year, month, date) {
-	// 목표 횟수가 설정된 회원이 있는지 확인
 	const hasMembersWithTarget = members.some(member => {
 		const targetCount = member.targetCount || 0;
 		return targetCount > 0;
@@ -1622,17 +1738,15 @@ function showAttendanceSelectModal() {
 	const list = document.getElementById('memberSelectList');
 	const searchInput = document.getElementById('attendanceSearchInput');
 	
-	// 검색창 초기화
 	if (searchInput) {
 		searchInput.value = '';
 	}
 	
 	list.innerHTML = '';
 
-	// 목표 횟수가 설정된 회원만 필터링
 	const validMembers = members.filter(member => {
 		const targetCount = member.targetCount || 0;
-		return targetCount > 0; // 목표 횟수가 0보다 큰 회원만
+		return targetCount > 0;
 	});
 
 	if (validMembers.length === 0) {
@@ -1645,7 +1759,6 @@ function showAttendanceSelectModal() {
 	modal.classList.add('active');
 }
 
-// 출석 회원 목록 렌더링 함수 (재사용)
 function renderAttendanceMemberList(membersToShow) {
 	const list = document.getElementById('memberSelectList');
 	list.innerHTML = '';
@@ -1656,8 +1769,8 @@ function renderAttendanceMemberList(membersToShow) {
 	}
 
 	membersToShow.forEach((member, index) => {
-		// 원본 members 배열에서의 인덱스 찾기
 		const originalIndex = members.indexOf(member);
+		// 현재 회차의 출석 날짜만 체크 (history는 체크하지 않음)
 		const alreadyChecked = member.attendanceDates && member.attendanceDates.includes(selectedDate);
 		const currentCount = member.currentCount || 0;
 		const targetCount = member.targetCount || 8;
@@ -1670,6 +1783,7 @@ function renderAttendanceMemberList(membersToShow) {
 					<div style="font-weight: 600; font-size: 16px;">${member.name}
 						<span style="font-size: 13px; color: #666; margin-left:15px;">출석: ${currentCount} / ${targetCount}회</span>
 					</div>
+					${member.coach ? `<div style="font-size: 12px; color: #888; margin-top: 3px;">🏋️ ${member.coach}</div>` : ''}
 				</div>
 				<div style="color: ${alreadyChecked ? '#4CAF50' : '#999'}; font-size: 24px;">
 					${alreadyChecked ? '✓' : '○'}
@@ -1679,24 +1793,21 @@ function renderAttendanceMemberList(membersToShow) {
 		
 		item.onmouseover = () => item.style.background = '#f8f9fa';
 		item.onmouseout = () => item.style.background = 'white';
-		item.onclick = () => toggleAttendance(originalIndex); // 원본 인덱스 사용
+		item.onclick = () => toggleAttendance(originalIndex);
 		
 		list.appendChild(item);
 	});
 }
 
-// 출석 회원 검색 필터링 함수
 function filterAttendanceMembers() {
 	const searchInput = document.getElementById('attendanceSearchInput');
 	const searchTerm = searchInput.value.toLowerCase().trim();
 	
-	// 목표 횟수가 설정된 회원만 필터링
 	let validMembers = members.filter(member => {
 		const targetCount = member.targetCount || 0;
 		return targetCount > 0;
 	});
 	
-	// 검색어가 있으면 이름으로 필터링
 	if (searchTerm) {
 		validMembers = validMembers.filter(member => 
 			member.name.toLowerCase().includes(searchTerm)
@@ -1705,7 +1816,6 @@ function filterAttendanceMembers() {
 	
 	renderAttendanceMemberList(validMembers);
 }
-
 
 function closeAttendanceSelectModal() {
 	document.getElementById('attendanceSelectModal').classList.remove('active');
@@ -1718,6 +1828,9 @@ function toggleAttendance(memberIndex) {
 	if (!member.attendanceDates) {
 		member.attendanceDates = [];
 	}
+	if (!member.attendanceHistory) {
+		member.attendanceHistory = [];
+	}
 
 	const dateIndex = member.attendanceDates.indexOf(selectedDate);
 
@@ -1728,30 +1841,32 @@ function toggleAttendance(memberIndex) {
 
 		const targetCount = member.targetCount || 0;
 
-		// 목표 1회 전 알림 (목표가 0보다 큰 경우에만)
+		// 목표 1회 전 알림
 		if (targetCount > 0 && member.currentCount === targetCount - 1) {
 			showAttendanceAlert(member.name, member.currentCount, targetCount);
 		}
-		// 목표 도달 시 초기화 (목표가 0보다 큰 경우에만)
+		// 목표 도달 시 초기화 (기록은 history에 저장)
 		else if (targetCount > 0 && member.currentCount >= targetCount) {
-			// 목표 도달 메시지
 			showAlert(`${member.name} 회원님 목표 ${targetCount}회를 달성했습니다!`);
 			
-			// 출석 횟수 초기화
+			// 현재 출석 날짜를 기록에 저장
+			member.attendanceDates.forEach(date => {
+				if (!member.attendanceHistory.includes(date)) {
+					member.attendanceHistory.push(date);
+				}
+			});
+
+			// 현재 회차 초기화
 			member.currentCount = 0;
 			member.attendanceDates = [];
 
-			// 즉시 저장 및 화면 업데이트
 			saveToFirebase();
 			renderMembers();
 			
-			// 초기화 알림
-			showAlert(`${member.name} 회원님의 출석 횟수가 초기화되었습니다. (0/${targetCount}회)`);
+			showAlert(`${member.name} 회원님의 출석 횟수가 초기화되었습니다. (0/${targetCount}회)\n출석 기록은 유지됩니다.`);
 		} else if (targetCount > 0) {
-			// 목표가 설정된 경우
 			showAlert(`${member.name} 출석 체크 완료! (${member.currentCount}/${targetCount}회)`);
 		} else {
-			// 목표가 0인 경우 (출석 관리 제외)
 			showAlert(`${member.name} 출석 체크 완료!`);
 		}
 	} else {
@@ -1769,7 +1884,6 @@ function toggleAttendance(memberIndex) {
 	saveToFirebase();
 	renderMembers();
 
-	// 달력이 열려있으면 다시 렌더링
 	const calendar = document.getElementById('formCalendar');
 	if (calendar.style.display !== 'none') {
 		renderFormCalendar();

@@ -109,6 +109,14 @@
 					<input type="tel" id="phone" placeholder="">
 				</div>
 
+				<!-- 코치 선택 (radio) -->
+				<div class="form-group full-width">
+					<label>담당 코치</label>
+					<div class="coach-radio-group" id="coachRadioGroup">
+						<!-- JS에서 코치 목록을 동적으로 렌더링 -->
+					</div>
+				</div>
+
 				<!-- 출석 관리 필드 추가 -->
 				<div class="form-group">
 					<label for="targetCount">출석 목표 횟수</label>
@@ -201,10 +209,10 @@
 					<div style="display: flex; flex-direction: column; gap: 10px;">
 						<div style="display: flex; gap: 10px;">
 							<button type="button" class="photo-btn" onclick="openCamera()" style="flex: 1;">
-								📷 카메라로 찍기
+								📷 카메라
 							</button>
 							<button type="button" class="photo-btn" onclick="document.getElementById('photoInput').click()" style="flex: 1;">
-								📁 갤러리 선택
+								🖼️ 갤러리
 							</button>
 						</div>
 
@@ -305,6 +313,32 @@
 				<input type="number" id="lockTimeoutInput" min="1" max="120" placeholder="60" value="60">
 				<div style="font-size: 12px; color: #666; margin-top: 5px;">
 					※ 암호 입력 후 자동으로 잠기기까지의 시간입니다. 기본값: 60분
+				</div>
+			</div>
+
+			<!-- 코치 이름 설정 (4명) -->
+			<div class="form-group">
+				<label>코치 이름 설정 (최대 4명)</label>
+				<div class="coach-settings-grid">
+					<div class="coach-setting-item">
+						<span class="coach-setting-label">코치 1</span>
+						<input type="text" id="coachName1" placeholder="코치 이름">
+					</div>
+					<div class="coach-setting-item">
+						<span class="coach-setting-label">코치 2</span>
+						<input type="text" id="coachName2" placeholder="코치 이름">
+					</div>
+					<div class="coach-setting-item">
+						<span class="coach-setting-label">코치 3</span>
+						<input type="text" id="coachName3" placeholder="코치 이름">
+					</div>
+					<div class="coach-setting-item">
+						<span class="coach-setting-label">코치 4</span>
+						<input type="text" id="coachName4" placeholder="코치 이름">
+					</div>
+				</div>
+				<div style="font-size: 12px; color: #666; margin-top: 8px;">
+					※ 비어있는 코치는 회원 폼에서 표시되지 않습니다.
 				</div>
 			</div>
 
