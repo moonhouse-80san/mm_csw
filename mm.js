@@ -19,6 +19,7 @@ let filteredMembers = [];
 let currentEditIndex = null;
 let deleteIndex = null;
 let currentSort = 'name';
+let sortAscending = true;
 let settings = { 
 	clubName: '',
 	feePresets: [40000, 70000, 100000, 200000, 300000],
@@ -745,41 +746,69 @@ function searchMembers() {
 		});
 	}
 
-	sortMembers(currentSort);
+	sortMembers(currentSort, true);
 }
 
-function sortMembers(sortBy) {
-	currentSort = sortBy;
+function sortMembers(sortBy, fromSearch) {
+	// 검색에서 호출된 경우: 방향 토글과 버튼 갱신 건너뜀
+	if (!fromSearch) {
+		// 같은 정렬 버튼을 다시 누르면 정순↔역순 토글, 다른 버튼이면 정순으로 리셋
+		if (currentSort === sortBy) {
+			sortAscending = !sortAscending;
+		} else {
+			sortAscending = true;
+		}
+		currentSort = sortBy;
 
-	document.querySelectorAll('.filter-btn').forEach(btn => {
-		btn.classList.remove('active');
-	});
-	event.target.classList.add('active');
+		// 활성 버튼 교체
+		document.querySelectorAll('.filter-btn').forEach(btn => {
+			btn.classList.remove('active');
+			// 기본 라벨 복원 (화살표 제거)
+			const labels = { name: '이름순', registerDate: '등록일순', coach: '코치순' };
+			btn.textContent = labels[btn.dataset.sort] || btn.textContent;
+		});
+		const activeBtn = document.querySelector(`.filter-btn[data-sort="${sortBy}"]`);
+		if (activeBtn) {
+			activeBtn.classList.add('active');
+			activeBtn.textContent += sortAscending ? ' ▲' : ' ▼';
+		}
+	}
+
+	// 코치순일 때: 코치가 없는 회원 제외
+	let sortTarget = filteredMembers;
+	if (sortBy === 'coach') {
+		sortTarget = filteredMembers.filter(m => m.coach && m.coach.trim() !== '');
+	}
 
 	switch(sortBy) {
 		case 'name':
-			filteredMembers.sort((a, b) => a.name.localeCompare(b.name));
+			sortTarget.sort((a, b) => {
+				const cmp = a.name.localeCompare(b.name);
+				return sortAscending ? cmp : -cmp;
+			});
 			break;
 		case 'registerDate':
-			filteredMembers.sort((a, b) => {
+			sortTarget.sort((a, b) => {
+				if (!a.registerDate && !b.registerDate) return 0;
 				if (!a.registerDate) return 1;
 				if (!b.registerDate) return -1;
-				return new Date(b.registerDate) - new Date(a.registerDate);
+				const cmp = new Date(a.registerDate) - new Date(b.registerDate);
+				return sortAscending ? cmp : -cmp;
 			});
 			break;
 		case 'coach':
-			filteredMembers.sort((a, b) => {
-				const coachA = a.coach || '';
-				const coachB = b.coach || '';
-				// 코치 없는 회원은 맨 뒤로
-				if (!coachA && coachB) return 1;
-				if (coachA && !coachB) return -1;
-				if (!coachA && !coachB) return a.name.localeCompare(b.name);
-				// 같은 코치면 이름순
-				const coachCompare = coachA.localeCompare(coachB);
-				return coachCompare !== 0 ? coachCompare : a.name.localeCompare(b.name);
+			sortTarget.sort((a, b) => {
+				const coachCmp = a.coach.localeCompare(b.coach);
+				if (coachCmp !== 0) return sortAscending ? coachCmp : -coachCmp;
+				// 같은 코치면 이름순 (항상 정순)
+				return a.name.localeCompare(b.name);
 			});
 			break;
+	}
+
+	// 코치순이면 정렬된 코치 회원만 교체, 아니면 전체 사용
+	if (sortBy === 'coach') {
+		filteredMembers = sortTarget;
 	}
 
 	renderMembers();

@@ -49,9 +49,9 @@
 				<input type="text" id="searchInput" placeholder="🔍 이름, 전화번호로 검색..." onkeyup="searchMembers()">
 			</div>
 			<div class="filter-buttons">
-				<button class="filter-btn active" onclick="sortMembers('name')">이름순</button>
-				<button class="filter-btn" onclick="sortMembers('registerDate')">등록일순</button>
-				<button class="filter-btn" onclick="sortMembers('coach')">코치순</button>
+				<button class="filter-btn active" data-sort="name" onclick="sortMembers('name')">이름순 ▲</button>
+				<button class="filter-btn" data-sort="registerDate" onclick="sortMembers('registerDate')">등록일순</button>
+				<button class="filter-btn" data-sort="coach" onclick="sortMembers('coach')">코치순</button>
 			</div>
 
 			<div class="tab-section" style="margin-top:10px">
@@ -137,7 +137,6 @@
 						※ 자동으로 계산됩니다. 수동으로 초기화하려면 버튼을 클릭하세요.
 					</div>
 				</div>
-
 				<div class="form-group">
 					<label for="fee">월회비 (원)</label>
 					<input type="number" id="fee" placeholder="회비 입력">
@@ -172,7 +171,7 @@
 						<div class="form-group">
 							<label for="day1">요일</label>
 							<select id="day1">
-								<option value="">요일선택</option>
+								<option value="">요일 선택</option>
 								<option value="월">월요일</option>
 								<option value="화">화요일</option>
 								<option value="수">수요일</option>
@@ -191,6 +190,7 @@
 						</div>
 					</div>
 				</div>
+
 				<!-- 두 번째 스케줄 -->
 				<div class="form-group full-width">
 					<div class="schedule-section-header">📅 스케줄 2</div>
@@ -198,7 +198,7 @@
 						<div class="form-group">
 							<label for="day2">요일</label>
 							<select id="day2">
-								<option value="">요일선택</option>
+								<option value="">요일 선택</option>
 								<option value="월">월요일</option>
 								<option value="화">화요일</option>
 								<option value="수">수요일</option>
