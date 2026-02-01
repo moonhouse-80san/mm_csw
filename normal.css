@@ -368,7 +368,6 @@ body {
 	grid-template-columns: repeat(3, 1fr);
 	gap: 10px;
 	margin-top: 15px;
-	position: relative;
 }
 
 .btn {
@@ -406,44 +405,26 @@ body {
 	position: relative;
 }
 
-/* 잠금 해제 문구 표시 */
-.unlock-tooltip {
+.btn-disabled::after {
+	content: "🔒 잠금 해제 필요";
 	position: absolute;
-	top: -75px;
+	top: -30px;
 	left: 50%;
 	transform: translateX(-50%);
 	background: #333;
 	color: white;
-	padding: 10px 14px;
-	border-radius: 8px;
-	font-size: 13px;
+	padding: 5px 10px;
+	border-radius: 5px;
+	font-size: 12px;
 	white-space: nowrap;
 	opacity: 0;
-	transition: opacity 0.3s, visibility 0.3s;
-	visibility: hidden;
-	z-index: 1000;
+	transition: opacity 0.3s;
 	pointer-events: none;
-	box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-	text-align: center;
-	line-height: 1.4;
-	width: max-content;
-	max-width: 200px;
+	z-index: 1000;
 }
 
-.unlock-tooltip::after {
-	content: '';
-	position: absolute;
-	bottom: -8px;
-	left: 50%;
-	transform: translateX(-50%);
-	border-width: 8px 8px 0;
-	border-style: solid;
-	border-color: #333 transparent transparent;
-}
-
-.unlock-tooltip.show {
+.btn-disabled:hover::after {
 	opacity: 1;
-	visibility: visible;
 }
 
 /* 탭 섹션 */
@@ -566,6 +547,38 @@ body {
 
 .btn-delete {
 	background: #f44336;
+}
+
+/* 잠금 상태 비활성화 수정/삭제 버튼 */
+.btn-edit-disabled, .btn-delete-disabled {
+	background: #9E9E9E !important;
+	cursor: not-allowed;
+	opacity: 0.6;
+	position: relative;
+}
+
+.btn-edit-disabled::after,
+.btn-delete-disabled::after {
+	content: "🔒 잠금 해제 필요";
+	position: absolute;
+	top: -30px;
+	left: 50%;
+	transform: translateX(-50%);
+	background: #333;
+	color: white;
+	padding: 5px 10px;
+	border-radius: 5px;
+	font-size: 12px;
+	white-space: nowrap;
+	opacity: 0;
+	transition: opacity 0.3s;
+	pointer-events: none;
+	z-index: 1000;
+}
+
+.btn-edit-disabled:hover::after,
+.btn-delete-disabled:hover::after {
+	opacity: 1;
 }
 
 /* 잠금 상태 버튼 숨김 */
@@ -1621,14 +1634,6 @@ body {
 	.coach-settings-grid {
 		grid-template-columns: 1fr 1fr;
 		gap: 8px;
-	}
-
-	/* 잠금 해제 툴팁 모바일 최적화 */
-	.unlock-tooltip {
-		top: -85px;
-		font-size: 12px;
-		padding: 8px 12px;
-		max-width: 180px;
 	}
 
 	/* 모바일 달력 최적화 */
