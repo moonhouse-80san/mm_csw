@@ -35,7 +35,6 @@ let currentPaymentList = []; // 회비 입금 내역 (수정 중 임시 저장)
 
 // 보안 관련 변수
 let isUnlocked = false;
-let lockTimer = null;
 let remainingTime = 60 * 60; // 60분 (초 단위)
 let lockInterval = null;
 
@@ -63,31 +62,58 @@ try {
 
 // ========== 개선된 보안 기능 ==========
 
+// 폼 입력란 클릭 시 잠금 툴팁 표시
+document.addEventListener('DOMContentLoaded', function() {
+	const formSection = document.querySelector('.form-section');
+	if (!formSection) return;
+
+	// 폼 내 모든 입력 요소에 클릭 이벤트 위임
+	formSection.addEventListener('click', function(e) {
+		const target = e.target;
+		// input, select, button, textarea 등 입력 영역 클릭 시
+		const isInput = target.closest('input, select, textarea, button, label');
+		if (!isInput) return;
+
+		const tooltip = document.getElementById('lockTooltip');
+		const tooltipText = document.getElementById('lockTooltipText');
+
+		if (!isUnlocked) {
+			// 잠김 상태: 잠금 안내 표시
+			tooltipText.textContent = '🔒 잠김 상태 - 수정/삭제 암호를 입력해주세요';
+			tooltip.classList.remove('unlocked-style');
+			tooltip.classList.add('visible');
+		} else {
+			// 해제 상태: 남은 시간 표시
+			tooltipText.textContent = `🔓 잠금 해제됨 - ${formatTime(remainingTime)} 후 자동 잠금`;
+			tooltip.classList.add('unlocked-style');
+			tooltip.classList.add('visible');
+		}
+	});
+});
+
 // 잠금 상태 업데이트
 function updateLockStatus() {
-	const lockStatusEl = document.getElementById('lockStatus');
 	const updateBtn = document.getElementById('updateBtn');
+	const tooltip = document.getElementById('lockTooltip');
+	const tooltipText = document.getElementById('lockTooltipText');
 
 	if (isUnlocked) {
-		lockStatusEl.innerHTML = `🔓 잠금 해제됨 - ${formatTime(remainingTime)} 후 자동 잠금 <span class="lock-timer" id="lockTimer"></span>`;
-		lockStatusEl.classList.remove('locked');
-		lockStatusEl.classList.add('unlocked');
-
 		updateBtn.classList.remove('btn-disabled');
 		updateBtn.classList.add('btn-update');
 		updateBtn.textContent = '수정';
-
 		showMemberButtons();
-	} else {
-		lockStatusEl.innerHTML = `🔒 잠김 상태 - 수정/삭제 버튼 숨김 <span class="lock-timer" id="lockTimer"></span>`;
-		lockStatusEl.classList.remove('unlocked');
-		lockStatusEl.classList.add('locked');
 
+		// 잠금 해제되면 툴팁 숨김
+		tooltip.classList.remove('visible');
+	} else {
 		updateBtn.classList.remove('btn-update');
 		updateBtn.classList.add('btn-disabled');
 		updateBtn.textContent = '수정';
-
 		hideMemberButtons();
+
+		// 잠금 상태로 돌아오면 툴팁도 숨김 (다시 클릭 시에만 표시)
+		tooltip.classList.remove('visible');
+		tooltipText.textContent = '🔒 잠김 상태 - 수정/삭제 암호를 입력해주세요';
 	}
 }
 
@@ -148,10 +174,9 @@ function startAutoLockTimer() {
 
 // 타이머 표시 업데이트
 function updateTimerDisplay() {
+	const tooltipText = document.getElementById('lockTooltipText');
 	if (isUnlocked) {
-		document.getElementById('lockTimer').textContent = `(${formatTime(remainingTime)})`;
-	} else {
-		document.getElementById('lockTimer').textContent = '';
+		tooltipText.textContent = `🔓 잠금 해제됨 - ${formatTime(remainingTime)} 후 자동 잠금`;
 	}
 }
 
@@ -170,6 +195,9 @@ function lockEditButtons() {
 		clearInterval(lockInterval);
 		lockInterval = null;
 	}
+
+	// 타이머 만료 시 툴팁 숨김
+	document.getElementById('lockTooltip').classList.remove('visible');
 
 	updateLockStatus();
 	showAlert('자동 잠금되었습니다. 다시 암호를 입력해주세요.');
@@ -640,46 +668,48 @@ function renderCoachRadioButtons() {
 		return;
 	}
 
-	// "미선택" 옵션
-	const noneLabel = document.createElement('label');
-	noneLabel.className = 'coach-radio-label';
-	noneLabel.innerHTML = `
-		<input type="radio" name="coach" class="coach-radio" value="" checked>
-		<span class="coach-radio-text">미선택</span>
-	`;
-	container.appendChild(noneLabel);
+	// "미선택" 버튼
+	const noneBtn = document.createElement('button');
+	noneBtn.type = 'button';
+	noneBtn.className = 'coach-btn active'; // 초기 기본 선택
+	noneBtn.dataset.value = '';
+	noneBtn.textContent = '미선택';
+	noneBtn.onclick = () => selectCoachBtn(noneBtn);
+	container.appendChild(noneBtn);
 
 	activeCoaches.forEach((name) => {
-		const label = document.createElement('label');
-		label.className = 'coach-radio-label';
-		label.innerHTML = `
-			<input type="radio" name="coach" class="coach-radio" value="${name}">
-			<span class="coach-radio-text">${name}</span>
-		`;
-		container.appendChild(label);
+		const btn = document.createElement('button');
+		btn.type = 'button';
+		btn.className = 'coach-btn';
+		btn.dataset.value = name;
+		btn.textContent = name;
+		btn.onclick = () => selectCoachBtn(btn);
+		container.appendChild(btn);
 	});
+}
+
+// 코치 버튼 선택 처리
+function selectCoachBtn(clickedBtn) {
+	document.querySelectorAll('.coach-btn').forEach(btn => btn.classList.remove('active'));
+	clickedBtn.classList.add('active');
 }
 
 // 선택된 코치 값 가져오기
 function getSelectedCoach() {
-	const checked = document.querySelector('input[name="coach"]:checked');
-	return checked ? checked.value : '';
+	const active = document.querySelector('.coach-btn.active');
+	return active ? active.dataset.value : '';
 }
 
-// 코치 radio 버튼에 값 설정
+// 코치 버튼에 값 설정
 function setSelectedCoach(coachName) {
-	const radios = document.querySelectorAll('input[name="coach"]');
-	let found = false;
-	radios.forEach(radio => {
-		if (radio.value === coachName) {
-			radio.checked = true;
-			found = true;
-		}
+	document.querySelectorAll('.coach-btn').forEach(btn => {
+		btn.classList.toggle('active', btn.dataset.value === coachName);
 	});
-	// 코치가 삭제된 경우 미선택으로
-	if (!found) {
-		const noneRadio = document.querySelector('input[name="coach"][value=""]');
-		if (noneRadio) noneRadio.checked = true;
+	// 해당 코치가 없으면(삭제된 경우) 미선택으로
+	const hasMatch = document.querySelector(`.coach-btn[data-value="${coachName}"]`);
+	if (!hasMatch) {
+		const noneBtn = document.querySelector('.coach-btn[data-value=""]');
+		if (noneBtn) noneBtn.classList.add('active');
 	}
 }
 
@@ -737,8 +767,18 @@ function sortMembers(sortBy) {
 				return new Date(b.registerDate) - new Date(a.registerDate);
 			});
 			break;
-		case 'fee':
-			filteredMembers.sort((a, b) => (b.fee || 0) - (a.fee || 0));
+		case 'coach':
+			filteredMembers.sort((a, b) => {
+				const coachA = a.coach || '';
+				const coachB = b.coach || '';
+				// 코치 없는 회원은 맨 뒤로
+				if (!coachA && coachB) return 1;
+				if (coachA && !coachB) return -1;
+				if (!coachA && !coachB) return a.name.localeCompare(b.name);
+				// 같은 코치면 이름순
+				const coachCompare = coachA.localeCompare(coachB);
+				return coachCompare !== 0 ? coachCompare : a.name.localeCompare(b.name);
+			});
 			break;
 	}
 

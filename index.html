@@ -51,7 +51,7 @@
 			<div class="filter-buttons">
 				<button class="filter-btn active" onclick="sortMembers('name')">이름순</button>
 				<button class="filter-btn" onclick="sortMembers('registerDate')">등록일순</button>
-				<button class="filter-btn" onclick="sortMembers('fee')">회비순</button>
+				<button class="filter-btn" onclick="sortMembers('coach')">코치순</button>
 			</div>
 
 			<div class="tab-section" style="margin-top:10px">
@@ -89,12 +89,12 @@
 					   onkeyup="if(event.key === 'Enter') unlockEditButtons()">
 				<button class="unlock-btn" onclick="unlockEditButtons()">
 					🔓 잠금 해제
-					<div class="lock-status locked" id="lockStatus">
-						🔒 잠김 상태 - 수정/삭제 버튼 숨김
-						<span class="lock-timer" id="lockTimer"></span>
-					</div>
 				</button>
 			</div>
+		</div>
+		<!-- 잠금 상태 알림 (폼 입력 클릭 시 표시, 잠금 해제/타이머 만료 시 숨김) -->
+		<div class="lock-tooltip" id="lockTooltip">
+			<span id="lockTooltipText">🔒 잠김 상태 - 수정/삭제 암호를 입력해주세요</span>
 		</div>
 
 		<div class="form-section">

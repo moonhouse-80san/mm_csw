@@ -72,26 +72,43 @@ body {
 	transform: translateY(-2px);
 }
 
-.lock-status {
-	font-size: 12px;
-	color: white;
-	font-weight: 500;
-	padding: 3px 8px;
-	background: rgba(0,0,0,0.2);
-	border-radius: 12px;
-	margin-top: 3px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	gap: 5px;
+.lock-tooltip {
+	max-height: 0;
+	overflow: hidden;
+	transition: max-height 0.3s ease, opacity 0.3s ease;
+	opacity: 0;
+	background: #fff3e0;
+	border-left: 4px solid #FF9800;
+	margin: 0 10px;
+	border-radius: 0 6px 6px 0;
 }
 
-.lock-status.locked {
-	color: #FFEB3B;
+.lock-tooltip.visible {
+	max-height: 40px;
+	opacity: 1;
 }
 
-.lock-status.unlocked {
-	color: #4CAF50;
+.lock-tooltip span {
+	display: block;
+	padding: 8px 12px;
+	font-size: 13px;
+	font-weight: 600;
+	color: #e65100;
+	white-space: nowrap;
+}
+
+.lock-tooltip.visible span {
+	/* 해제 상태일 때 초록색 테matica로 변경 — JS에서 클래스 제어 대신 텍스트 내용으로 구분 */
+}
+
+/* 잠금 해제 상태 툴팁 스타일 (텍스트가 🔓로 시작하면) — 순수 CSS로 구분 불가하여 JS에서 클래스 추가로 처리 */
+.lock-tooltip.unlocked-style {
+	background: #e8f5e9;
+	border-left-color: #4CAF50;
+}
+
+.lock-tooltip.unlocked-style span {
+	color: #2e7d32;
 }
 
 /* 헤더 */
@@ -1413,62 +1430,38 @@ body {
 	font-weight: 600;
 }
 
-/* ========== 코치 radio 버튼 ========== */
+/* ========== 코치 버튼 ========== */
 .coach-radio-group {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 8px;
-	padding: 10px 0;
-}
-
-.coach-radio-label {
-	display: flex;
-	align-items: center;
 	gap: 6px;
-	padding: 8px 14px;
+	padding: 8px 0;
+}
+
+.coach-btn {
+	padding: 5px 12px;
 	border: 2px solid #e0e0e0;
-	border-radius: 20px;
-	cursor: pointer;
-	transition: all 0.25s;
+	border-radius: 16px;
 	background: white;
-	user-select: none;
-}
-
-.coach-radio-label:hover {
-	border-color: #2196F3;
-	background: #e3f2fd;
-}
-
-.coach-radio-label input[type="radio"] {
-	/* 기본 appearance 숨김 */
-	-webkit-appearance: none;
-	-moz-appearance: none;
-	appearance: none;
-	width: 16px;
-	height: 16px;
-	border: 2px solid #ccc;
-	border-radius: 50%;
-	background: white;
-	cursor: pointer;
-	transition: all 0.2s;
-	flex-shrink: 0;
-}
-
-.coach-radio-label input[type="radio"]:checked {
-	border-color: #2196F3;
-	background: #2196F3;
-	box-shadow: inset 0 0 0 3px white;
-}
-
-.coach-radio-label:has(input[type="radio"]:checked) {
-	border-color: #2196F3;
-	background: linear-gradient(135deg, #e3f2fd, #bbdefb);
-	font-weight: 600;
-}
-
-.coach-radio-text {
 	font-size: 14px;
 	color: #333;
+	cursor: pointer;
+	transition: all 0.2s;
+	font-weight: 500;
+	line-height: 1.2;
+}
+
+.coach-btn:hover {
+	border-color: #2196F3;
+	background: #e3f2fd;
+	color: #1976d2;
+}
+
+.coach-btn.active {
+	background: #2196F3;
+	color: white;
+	border-color: #2196F3;
+	font-weight: 600;
 }
 
 /* ========== 설정 모달 코치 설정 ========== */
@@ -1620,13 +1613,13 @@ body {
 		padding: 8px 12px;
 	}
 
-	/* 코치 radio 모바일 최적화 */
+	/* 코치 버튼 모바일 최적화 */
 	.coach-radio-group {
-		gap: 6px;
+		gap: 5px;
 	}
 
-	.coach-radio-label {
-		padding: 7px 10px;
+	.coach-btn {
+		padding: 5px 10px;
 		font-size: 13px;
 	}
 
@@ -1738,14 +1731,10 @@ body {
 		padding: 1px 4px;
 	}
 
-	/* 코치 radio 초소형 최적화 */
-	.coach-radio-label {
-		padding: 6px 8px;
-		font-size: 14px;
-	}
-
-	.coach-radio-text {
-		font-size: 14px;
+	/* 코치 버튼 초소형 최적화 */
+	.coach-btn {
+		padding: 4px 8px;
+		font-size: 12px;
 	}
 
 	/* 코치 설정 초소형 */
@@ -1756,6 +1745,6 @@ body {
 
 	.coach-setting-item input {
 		padding: 6px 8px;
-		font-size: 8px;
+		font-size: 13px;
 	}
 }
