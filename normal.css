@@ -1415,60 +1415,67 @@ body {
 
 /* ========== 코치 radio 버튼 ========== */
 .coach-radio-group {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 8px;
-	padding: 10px 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px; /* 간격 축소 */
+    padding: 8px 0;
 }
 
 .coach-radio-label {
-	display: flex;
-	align-items: center;
-	gap: 6px;
-	padding: 8px 14px;
-	border: 2px solid #e0e0e0;
-	border-radius: 20px;
-	cursor: pointer;
-	transition: all 0.25s;
-	background: white;
-	user-select: none;
+    display: flex;
+    align-items: center;
+    gap: 4px; /* 텍스트와 라디오 간격 축소 */
+    padding: 5px 10px; /* 패딩 축소 */
+    border: 1px solid #e0e0e0; /* 테두리 두께 축소 */
+    border-radius: 15px; /* 둥근 정도 축소 */
+    cursor: pointer;
+    transition: all 0.2s;
+    background: white;
+    user-select: none;
+    font-size: 13px; /* 폰트 크기 축소 */
 }
 
 .coach-radio-label:hover {
-	border-color: #2196F3;
-	background: #e3f2fd;
+    border-color: #2196F3;
+    background: #f0f8ff; /* 더 연한 배경색 */
 }
 
+/* 라디오 버튼 크기 축소 */
 .coach-radio-label input[type="radio"] {
-	/* 기본 appearance 숨김 */
-	-webkit-appearance: none;
-	-moz-appearance: none;
-	appearance: none;
-	width: 16px;
-	height: 16px;
-	border: 2px solid #ccc;
-	border-radius: 50%;
-	background: white;
-	cursor: pointer;
-	transition: all 0.2s;
-	flex-shrink: 0;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 14px; /* 크기 축소 */
+    height: 14px; /* 크기 축소 */
+    border: 1.5px solid #ccc; /* 테두리 두께 축소 */
+    border-radius: 50%;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    margin: 0; /* 마진 제거 */
 }
 
 .coach-radio-label input[type="radio"]:checked {
-	border-color: #2196F3;
-	background: #2196F3;
-	box-shadow: inset 0 0 0 3px white;
+    border-color: #2196F3;
+    background: #2196F3;
+    box-shadow: inset 0 0 0 2.5px white; /* 내부 그림자 크기 축소 */
 }
 
 .coach-radio-label:has(input[type="radio"]:checked) {
-	border-color: #2196F3;
-	background: linear-gradient(135deg, #e3f2fd, #bbdefb);
-	font-weight: 600;
+    border-color: #2196F3;
+    background: #e3f2fd; /* 그라데이션 제거하고 단색으로 */
+    font-weight: 500; /* 두께 약간만 */
 }
 
 .coach-radio-text {
-	font-size: 14px;
-	color: #333;
+    font-size: 12px; /* 텍스트 크기 축소 */
+    color: #333;
+}
+
+/* 미선택 옵션 특별 스타일 */
+.coach-radio-label:first-child {
+    opacity: 0.8; /* 미선택 옵션은 약간 투명하게 */
 }
 
 /* ========== 설정 모달 코치 설정 ========== */
@@ -1621,14 +1628,26 @@ body {
 	}
 
 	/* 코치 radio 모바일 최적화 */
-	.coach-radio-group {
-		gap: 6px;
-	}
-
-	.coach-radio-label {
-		padding: 7px 10px;
-		font-size: 13px;
-	}
+    .coach-radio-group {
+        gap: 4px;
+        padding: 6px 0;
+    }
+    
+    .coach-radio-label {
+        padding: 4px 8px;
+        font-size: 12px;
+        border-radius: 12px;
+    }
+    
+    .coach-radio-text {
+        font-size: 11px;
+    }
+    
+    .coach-radio-label input[type="radio"] {
+        width: 12px;
+        height: 12px;
+        box-shadow: inset 0 0 0 2px white;
+    }
 
 	/* 코치 설정 모바일 최적화 */
 	.coach-settings-grid {
@@ -1739,14 +1758,14 @@ body {
 	}
 
 	/* 코치 radio 초소형 최적화 */
-	.coach-radio-label {
-		padding: 6px 8px;
-		font-size: 12px;
-	}
-
-	.coach-radio-text {
-		font-size: 12px;
-	}
+    .coach-radio-label {
+        padding: 3px 6px;
+        font-size: 11px;
+    }
+    
+    .coach-radio-text {
+        font-size: 10px;
+    }
 
 	/* 코치 설정 초소형 */
 	.coach-settings-grid {
