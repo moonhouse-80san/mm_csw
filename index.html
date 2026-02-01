@@ -109,10 +109,10 @@
 					<input type="tel" id="phone" placeholder="">
 				</div>
 
-				<!-- 코치 선택 (radio) -->
+				<!-- 코치 선택 (pill 버튼) -->
 				<div class="form-group full-width">
 					<label>담당 코치</label>
-					<div class="coach-radio-group" id="coachRadioGroup">
+					<div class="coach-btn-group" id="coachBtnGroup">
 						<!-- JS에서 코치 목록을 동적으로 렌더링 -->
 					</div>
 				</div>
@@ -391,8 +391,8 @@
 				<button style="background: #9E9E9E;" onclick="closeSettings()">취소</button>
 			</div>
 			<div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #e0e0e0;">
-				<button style="width: 100%; padding: 12px; background: #f44336; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;" onclick="exportData()">📥 데이터 내보내기</button>
-				<button style="width: 100%; padding: 12px; background: #4CAF50; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; margin-top: 10px;" onclick="document.getElementById('importFile').click()">📤 데이터 가져오기</button>
+				<button style="width: 100%; padding: 12px; background: #f44336; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;" onclick="exportData()">📤 데이터 내보내기</button>
+				<button style="width: 100%; padding: 12px; background: #4CAF50; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; margin-top: 10px;" onclick="document.getElementById('importFile').click()">📥 데이터 가져오기</button>
 				<input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(event)">
 			</div>
 		</div>
@@ -404,6 +404,17 @@
 			<div class="modal-buttons">
 				<button style="background: #f44336;" onclick="confirmDelete()">삭제</button>
 				<button style="background: #9E9E9E;" onclick="closeModal()">취소</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- 출석 초기화 확인 모달 -->
+	<div id="confirmModal" class="modal">
+		<div class="modal-content">
+			<p id="confirmModalMessage"></p>
+			<div class="modal-buttons">
+				<button style="background: #FF9800;" onclick="confirmResetAttendance()">초기화</button>
+				<button style="background: #9E9E9E;" onclick="closeConfirmModal()">취소</button>
 			</div>
 		</div>
 	</div>
