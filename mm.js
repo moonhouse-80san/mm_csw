@@ -767,7 +767,7 @@ function renderMembers() {
 				<div class="member-info">
 					<div class="phone-fee-row">
 						${phoneLink}
-						<span class="member-fee">${formatNumber(member.fee)}원</span>
+						<span class="member-fee">회비 : ${formatNumber(member.fee)}원</span>
 					</div>
 					${scheduleBadges ? `<div class="schedule-container">${scheduleBadges}</div>` : ''}
 				</div>

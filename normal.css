@@ -1410,11 +1410,11 @@ body {
 
 .schedule-badge {
 	display: inline-block;
-	padding: 3px 8px;
+	padding: 3px 5px;
 	background: #f0f4ff;
 	color: #4a6bff;
 	border-radius: 4px;
-	font-size: 12px;
+	font-size: 11px;
 	border-left: 3px solid #4a6bff;
 	white-space: nowrap;   /* 배지 안의 텍스트가 줄 바꿈되지 않도록 설정 */
 	margin-right: 0;       /* gap을 사용하므로 기존 margin 제거 가능 */
@@ -1430,16 +1430,10 @@ body {
 
 /* 금액 스타일 (작게 표시) */
 .member-fee {
-    font-size: 0.85em;    /* 기존보다 작게 */
+    padding: 3px 5px;
+	font-size: 0.85em;    /* 기존보다 작게 */
     color: #666;          /* 약간 흐리게 처리하여 전화번호와 구분 */
     font-weight: normal;
-}
-
-/* 기존 스케줄 컨테이너 (한 줄 나열 유지) */
-.schedule-container {
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 5px;
-    margin-top: 5px;
-    overflow-x: auto;
+	background: #ffccff;
+	border-left: 3px solid #ffccff;
 }
