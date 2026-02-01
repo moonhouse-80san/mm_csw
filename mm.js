@@ -766,7 +766,7 @@ function renderMembers() {
 				</div>
 				<div class="member-info">
 					${phoneLink}
-					${scheduleBadges ? `<div style="margin-top: 5px;">${scheduleBadges}</div>` : ''}
+					${scheduleBadges ? `<div class="schedule-container">${scheduleBadges}</div>` : ''}
 				</div>
 			</div>
 		</div>

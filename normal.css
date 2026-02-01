@@ -1399,3 +1399,24 @@ body {
 		padding: 1px 4px;
 	}
 }
+
+.schedule-container {
+	display: flex;         /* 가로로 나열 */
+	flex-wrap: nowrap;     /* 줄 바꿈 방지 (공간이 부족해도 한 줄 유지) */
+	gap: 5px;              /* 배지 사이 간격 */
+	margin-top: 5px;
+	overflow-x: auto;      /* 혹시 화면보다 길어질 경우 가로 스크롤 허용 */
+}
+
+.schedule-badge {
+	display: inline-block;
+	padding: 3px 8px;
+	background: #f0f4ff;
+	color: #4a6bff;
+	border-radius: 4px;
+	font-size: 12px;
+	border-left: 3px solid #4a6bff;
+	white-space: nowrap;   /* 배지 안의 텍스트가 줄 바꿈되지 않도록 설정 */
+	margin-right: 0;       /* gap을 사용하므로 기존 margin 제거 가능 */
+	margin-top: 0;         /* 컨테이너에서 제어하므로 제거 */
+}
