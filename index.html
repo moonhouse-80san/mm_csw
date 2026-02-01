@@ -188,19 +188,6 @@
 						</div>
 					</div>
 				</div>
-				<div class="form-group">
-					<label for="registerDate">회원등록일</label>
-					<input type="date" id="registerDate">
-				</div>
-				<div class="form-group">
-					<label for="email">이메일</label>
-					<input type="email" id="email" placeholder="example@email.com">
-				</div>
-				<div class="form-group">
-					<label for="address">주소</label>
-					<input type="text" id="address" placeholder="주소 입력">
-				</div>
-
 				<div class="form-group full-width">
 					<label for="photo">회원 사진</label>
 					<div style="display: flex; flex-direction: column; gap: 10px;">
@@ -223,6 +210,18 @@
 						<input type="file" id="photoInput" accept="image/*" style="display: none;" onchange="handlePhotoUpload(event)">
 					</div>
 				</div>
+			</div>
+			<div class="form-group">
+				<label for="registerDate">회원등록일</label>
+				<input type="date" id="registerDate">
+			</div>
+			<div class="form-group">
+				<label for="email">이메일</label>
+				<input type="email" id="email" placeholder="example@email.com">
+			</div>
+			<div class="form-group">
+				<label for="address">주소</label>
+				<input type="text" id="address" placeholder="주소 입력">
 			</div>
 
 			<!-- 추가/수정/초기화 버튼 - 모바일에서 한 줄로 -->
