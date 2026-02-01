@@ -1420,3 +1420,26 @@ body {
 	margin-right: 0;       /* gap을 사용하므로 기존 margin 제거 가능 */
 	margin-top: 0;         /* 컨테이너에서 제어하므로 제거 */
 }
+
+/* 가로 정렬을 위한 컨테이너 */
+.phone-fee-row {
+    display: flex;
+    align-items: center; /* 세로 중앙 정렬 */
+    gap: 8px;            /* 전화번호와 금액 사이 간격 */
+}
+
+/* 금액 스타일 (작게 표시) */
+.member-fee {
+    font-size: 0.85em;    /* 기존보다 작게 */
+    color: #666;          /* 약간 흐리게 처리하여 전화번호와 구분 */
+    font-weight: normal;
+}
+
+/* 기존 스케줄 컨테이너 (한 줄 나열 유지) */
+.schedule-container {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 5px;
+    margin-top: 5px;
+    overflow-x: auto;
+}
