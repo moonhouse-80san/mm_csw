@@ -51,7 +51,7 @@
 			<div class="filter-buttons">
 				<button class="filter-btn active" onclick="sortMembers('name')">이름순</button>
 				<button class="filter-btn" onclick="sortMembers('registerDate')">등록일순</button>
-				<button class="filter-btn" onclick="sortMembers('fee')">회비순</button>
+				<button class="filter-btn" onclick="sortMembers('coach')">코치순</button>
 			</div>
 
 			<div class="tab-section" style="margin-top:10px">
@@ -260,7 +260,13 @@
 			<!-- 추가/수정/초기화 버튼 - 모바일에서 한 줄로 -->
 			<div class="button-group">
 				<button class="btn btn-add" onclick="addMember()" style="font-size:20px; padding:3px 5px;">추가</button>
-				<button class="btn btn-update btn-disabled" id="updateBtn" onclick="checkLockBeforeUpdate()" style="font-size:20px; padding:3px 5px;">수정</button>
+				<div style="position: relative;">
+					<button class="btn btn-update btn-disabled" id="updateBtn" onclick="checkLockBeforeUpdate()" style="font-size:20px; padding:3px 5px;">수정</button>
+					<div class="unlock-tooltip" id="unlockTooltip">
+						🔒 잠금 해제 필요<br>
+						상단 암호 입력 후 잠금 해제
+					</div>
+				</div>
 				<button class="btn btn-clear" onclick="clearForm()" style="font-size:20px; padding:3px 5px;">초기화</button>
 			</div>
 		</div>

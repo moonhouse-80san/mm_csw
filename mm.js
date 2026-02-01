@@ -63,6 +63,28 @@ try {
 
 // ========== 개선된 보안 기능 ==========
 
+// 잠금 해제 문구 표시/숨기기 함수
+function showUnlockTooltip() {
+	if (!isUnlocked) {
+		const tooltip = document.getElementById('unlockTooltip');
+		if (tooltip) {
+			tooltip.classList.add('show');
+			
+			// 3초 후 자동 숨기기
+			setTimeout(() => {
+				hideUnlockTooltip();
+			}, 3000);
+		}
+	}
+}
+
+function hideUnlockTooltip() {
+	const tooltip = document.getElementById('unlockTooltip');
+	if (tooltip) {
+		tooltip.classList.remove('show');
+	}
+}
+
 // 잠금 상태 업데이트
 function updateLockStatus() {
 	const lockStatusEl = document.getElementById('lockStatus');
@@ -76,6 +98,9 @@ function updateLockStatus() {
 		updateBtn.classList.remove('btn-disabled');
 		updateBtn.classList.add('btn-update');
 		updateBtn.textContent = '수정';
+
+		// 잠금 해제 시 툴팁 숨기기
+		hideUnlockTooltip();
 
 		showMemberButtons();
 	} else {
@@ -171,6 +196,9 @@ function lockEditButtons() {
 		lockInterval = null;
 	}
 
+	// 툴팁 숨기기
+	hideUnlockTooltip();
+	
 	updateLockStatus();
 	showAlert('자동 잠금되었습니다. 다시 암호를 입력해주세요.');
 }
@@ -737,8 +765,12 @@ function sortMembers(sortBy) {
 				return new Date(b.registerDate) - new Date(a.registerDate);
 			});
 			break;
-		case 'fee':
-			filteredMembers.sort((a, b) => (b.fee || 0) - (a.fee || 0));
+		case 'coach':
+			filteredMembers.sort((a, b) => {
+				const coachA = a.coach || '';
+				const coachB = b.coach || '';
+				return coachA.localeCompare(coachB) || a.name.localeCompare(b.name);
+			});
 			break;
 	}
 
@@ -1682,6 +1714,30 @@ updateLockStatus();
 document.addEventListener('click', resetLockTimer);
 document.addEventListener('keydown', resetLockTimer);
 document.addEventListener('scroll', resetLockTimer);
+
+// 잠금 해제 툴팁 이벤트 초기화
+function initUnlockTooltip() {
+	const updateBtn = document.getElementById('updateBtn');
+	const lockPassword = document.getElementById('lockPassword');
+	
+	if (updateBtn) {
+		updateBtn.addEventListener('mouseenter', showUnlockTooltip);
+		updateBtn.addEventListener('mouseleave', hideUnlockTooltip);
+		updateBtn.addEventListener('click', () => {
+			if (!isUnlocked) {
+				showUnlockTooltip();
+			}
+		});
+	}
+	
+	if (lockPassword) {
+		lockPassword.addEventListener('focus', hideUnlockTooltip);
+	}
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+	initUnlockTooltip();
+});
 
 // ========== 출석 관리 함수 ==========
 
