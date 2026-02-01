@@ -1172,9 +1172,10 @@ function addPaymentEntry() {
 	currentPaymentList.push({ date: date, amount: amount });
 	renderPaymentList(currentPaymentList);
 
-	// 입력 필드 초기화
-	dateInput.value = '';
-	amountInput.value = '';
+	// 입력 필드 리셋: 날짜는 오늘, 금액은 현재 수정 중인 회원의 월회비로 복원
+	dateInput.value = new Date().toISOString().split('T')[0];
+	const currentFee = (currentEditIndex !== null && members[currentEditIndex]) ? members[currentEditIndex].fee : null;
+	amountInput.value = currentFee || '';
 }
 
 // 입금 항목 삭제
@@ -1418,6 +1419,9 @@ function editMember(index) {
 	// 회비 입금 내역 표시 (수정시에만)
 	document.getElementById('paymentSection').style.display = 'block';
 	renderPaymentList(member.paymentHistory || []);
+	// 입금날 기본값: 오늘, 입금금액 기본값: 해당 회원의 월회비
+	document.getElementById('paymentDate').value = new Date().toISOString().split('T')[0];
+	document.getElementById('paymentAmount').value = member.fee || '';
 
 	if (member.photo) {
 		currentPhotoData = member.photo;
