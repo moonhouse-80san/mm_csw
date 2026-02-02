@@ -287,10 +287,10 @@
 }
 
 .attendance-date-badge {
-    padding: 6px 12px;
+    padding: 6px;
     background: #e3f2fd;
     color: #1976d2;
-    border-radius: 6px;
+    border-radius: 4px;
     font-size: 13px;
 }
 
