@@ -44,6 +44,8 @@
     cursor: pointer;
     transition: all 0.3s;
     white-space: nowrap;
+	margin-top:-15px;
+	max-width:200px;
 }
 
 .unlock-btn:hover {
