@@ -189,13 +189,26 @@ function formatDate(dateString) {
 // 초기화
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('registerDate').valueAsDate = new Date();
-    document.getElementById('startTime1').value = "13:00";
-    document.getElementById('endTime1').value = "13:20";
-    document.getElementById('startTime2').value = "13:00";
-    document.getElementById('endTime2').value = "13:20";
+    document.getElementById('startTime1').value = "12:00";
+    document.getElementById('endTime1').value = "12:20";
+    document.getElementById('startTime2').value = "12:00";
+    document.getElementById('endTime2').value = "12:20";
     document.getElementById('targetCount').value = "0";
     document.getElementById('currentCount').value = "0";
     
     updateFeePresetButtons();
     renderCoachButtons();
+    
+    // 잠금 상태 초기화 및 회원 목록 렌더링
+    updateLockStatus();
+    
+    // Firebase 로딩이 완료되면 회원 목록 렌더링
+    // Firebase 로드가 비동기이므로 약간의 지연 후 실행
+    setTimeout(() => {
+        if (members.length > 0) {
+            renderMembers();
+            renderSchedule();
+        }
+    }, 500);
+
 });
