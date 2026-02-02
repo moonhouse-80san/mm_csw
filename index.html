@@ -86,23 +86,23 @@
 			</div>
 		</div>
 
-        <!-- 암호 입력 섹션 -->
-        <div class="password-section" style="margin:10px; border-radius:10px; padding:10px">
-            <div class="password-input-group">
-                <input type="password" 
-                       id="lockPassword" 
-                       class="password-input" 
-                       placeholder="수정/삭제 암호 입력"
-                       onkeyup="if(event.key === 'Enter') unlockEditButtons()">
-                <button class="unlock-btn" onclick="unlockEditButtons()">
-                    🔓 잠금 해제
-                </button>
-            </div>
-        </div>
-        <!-- 잠금 상태 알림 -->
-        <div class="lock-tooltip" id="lockTooltip">
-            <span id="lockTooltipText">🔒 잠김 상태 - 수정/삭제 암호를 입력해주세요</span>
-        </div>
+		<!-- 암호 입력 섹션 -->
+		<div class="password-section" style="margin:10px 0; border-radius:10px">
+			<div class="password-input-group">
+				<input type="password" 
+					   id="lockPassword" 
+					   class="password-input" 
+					   placeholder="수정/삭제 암호 입력"
+					   onkeyup="if(event.key === 'Enter') unlockEditButtons()">
+				<button class="unlock-btn" onclick="unlockEditButtons()">
+					🔓 잠금 해제
+				</button>
+			</div>
+			<!-- 잠금 상태 알림을 password-section 안으로 이동 -->
+			<div class="lock-tooltip" id="lockTooltip">
+				<span id="lockTooltipText">🔒 잠김 상태 - 수정/삭제 암호를 입력해주세요</span>
+			</div>
+		</div>
 
         <!-- 회원 폼 섹션 -->
         <div class="form-section">

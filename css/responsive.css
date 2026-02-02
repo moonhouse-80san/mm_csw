@@ -103,14 +103,21 @@
         font-size: 13px;
     }
 
+    .password-input-group {
+        flex-direction: column;
+    }
+    
+    .password-input {
+        width: 100%;
+    }
+    
+    .unlock-btn {
+        width: 100%;
+    }
+    
     .lock-tooltip {
-        bottom: -80px; /* 모바일에서는 더 아래로 */
-        min-width: 90%; /* 너비 조정 */
-        max-width: 95%;
-        font-size: 13px;
-        padding: 10px 15px;
-        white-space: normal; /* 모바일에서는 줄바꿈 허용 */
-        word-break: keep-all;
+        font-size: 12px;
+        padding: 6px 10px;
     }
 	
     .coach-btn {
@@ -251,12 +258,5 @@
     .coach-setting-item input {
         padding: 6px 8px;
         font-size: 13px;
-    }
-	
-    .lock-tooltip {
-        bottom: -240px;
-        font-size: 12px;
-        padding: 8px 12px;
-       max-width: 95%;
     }
 }
