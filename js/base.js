@@ -132,13 +132,26 @@ function normalizeMember(member) {
     const cleaned = {};
     for (const key in member) {
         if (member[key] !== undefined) {
-            cleaned[key] = member[key];
+            // 특정 필드의 데이터 타입 보장
+            if (key === 'phone' && member[key] !== null) {
+                cleaned[key] = String(member[key]);
+            } else if (key === 'name' && member[key] !== null) {
+                cleaned[key] = String(member[key]);
+            } else if (key === 'coach' && member[key] !== null) {
+                cleaned[key] = String(member[key]);
+            } else {
+                cleaned[key] = member[key];
+            }
         }
     }
+    
+    // 필수 필드 기본값 설정
     if (!cleaned.photo) cleaned.photo = '';
     if (!cleaned.attendanceHistory) cleaned.attendanceHistory = [];
     if (!cleaned.coach) cleaned.coach = '';
     if (!cleaned.paymentHistory) cleaned.paymentHistory = [];
+    if (!cleaned.phone) cleaned.phone = '';
+    
     return cleaned;
 }
 

@@ -97,8 +97,14 @@ function renderMembers() {
 
     listEl.innerHTML = filteredMembers.map((member, index) => {
         const originalIndex = members.indexOf(member);
-        const phoneLink = member.phone ? 
-            `<div><a href="tel:${member.phone.replace(/-/g, '')}" class="phone-link">📞 ${member.phone}</a></div>` : '';
+        
+        // 전화번호 안전하게 처리
+        let phoneLink = '';
+        if (member.phone) {
+            const phoneStr = String(member.phone);
+            const cleanPhone = phoneStr.replace(/-/g, '');
+            phoneLink = `<div><a href="tel:${cleanPhone}" class="phone-link">📞 ${phoneStr}</a></div>`;
+        }
 
         let scheduleBadges = '';
         if (member.day1 && member.startTime1 && member.endTime1) {
@@ -125,7 +131,6 @@ function renderMembers() {
             coachBadge = `<span class="coach-badge">🏋️ ${member.coach}</span>`;
         }
 
-        // 잠금 상태에 따라 버튼 클래스 다르게 설정
         const editBtnClass = isUnlocked ? 'btn-edit' : 'btn-edit btn-edit-disabled btn-hidden';
         const deleteBtnClass = isUnlocked ? 'btn-delete' : 'btn-delete btn-delete-disabled btn-hidden';
 
