@@ -1,6 +1,84 @@
+// 전역 변수
 let currentEditIndex = null;
 let deleteIndex = null;
 let currentPaymentList = [];
+let currentAwards = [];
+
+// DOM 로드 시 초기화
+document.addEventListener('DOMContentLoaded', function() {
+    // 성별 버튼 이벤트 리스너
+    document.querySelectorAll('.gender-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.gender-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+    
+    // 수상경력 입력창 엔터 키 이벤트
+    document.getElementById('awardInput').addEventListener('keyup', function(event) {
+        if (event.key === 'Enter') {
+            addAward();
+        }
+    });
+});
+
+// 선택된 성별 값 가져오기
+function getSelectedGender() {
+    const activeBtn = document.querySelector('.gender-btn.active');
+    return activeBtn ? activeBtn.dataset.value : '';
+}
+
+// 성별 값 설정하기
+function setSelectedGender(gender) {
+    document.querySelectorAll('.gender-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.value === gender);
+    });
+}
+
+// 수상경력 추가
+function addAward() {
+    const awardInput = document.getElementById('awardInput');
+    const awardText = awardInput.value.trim();
+    
+    if (!awardText) {
+        showAlert('수상경력을 입력해주세요!');
+        return;
+    }
+    
+    currentAwards.push(awardText);
+    renderAwardsList();
+    awardInput.value = '';
+    awardInput.focus();
+}
+
+// 수상경력 삭제
+function deleteAward(index) {
+    currentAwards.splice(index, 1);
+    renderAwardsList();
+}
+
+// 수상경력 목록 렌더링
+function renderAwardsList() {
+    const container = document.getElementById('awardsList');
+    
+    if (currentAwards.length === 0) {
+        container.innerHTML = '<div style="font-size:13px; color:#999; padding:8px 0; text-align:center;">수상경력이 없습니다</div>';
+        return;
+    }
+    
+    container.innerHTML = currentAwards.map((award, index) => `
+        <div class="award-list-item">
+            <div class="award-text">🏆 ${award}</div>
+            <button class="award-delete-btn" onclick="deleteAward(${index})">×</button>
+        </div>
+    `).join('');
+}
+
+// 수상경력 목록 설정
+function setAwardsList(awards) {
+    currentAwards = awards || [];
+    renderAwardsList();
+}
 
 // 회원 추가
 function addMember() {
@@ -17,6 +95,13 @@ function addMember() {
     const email = document.getElementById('email').value.trim();
     const address = document.getElementById('address').value.trim();
     const coach = getSelectedCoach();
+    
+    // 새로운 필드들
+    const gender = getSelectedGender();
+    const birthYear = document.getElementById('birthYear').value ? parseInt(document.getElementById('birthYear').value) : null;
+    const skillLevel = document.getElementById('skillLevel').value ? parseInt(document.getElementById('skillLevel').value) : null;
+    const etc = document.getElementById('etc').value.trim();
+    const awards = [...currentAwards];
 
     if (!name) {
         showAlert('이름을 입력해주세요!');
@@ -73,7 +158,13 @@ function addMember() {
         startTime2: startTime2 || null,
         endTime2: endTime2 || null,
         email,
-        address
+        address,
+        // 새로운 필드들
+        gender: gender || '',
+        birthYear: birthYear,
+        skillLevel: skillLevel,
+        awards: awards,
+        etc: etc
     };
 
     members.push(member);
@@ -84,11 +175,17 @@ function addMember() {
     clearForm();
     showAlert('회원이 추가되었습니다!');
     
+    // 수정 모드 클래스 제거
+    const formSection = document.querySelector('.form-section');
+    if (formSection) {
+        formSection.classList.remove('form-edit-mode');
+    }
+    
     // 상단으로 스크롤 이동
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// 회원 수정 (스크롤 상단으로 이동 추가)
+// 회원 수정
 function updateMember() {
     if (currentEditIndex === null) {
         showAlert('수정할 회원을 선택해주세요!');
@@ -108,6 +205,13 @@ function updateMember() {
     const email = document.getElementById('email').value.trim();
     const address = document.getElementById('address').value.trim();
     const coach = getSelectedCoach();
+    
+    // 새로운 필드들
+    const gender = getSelectedGender();
+    const birthYear = document.getElementById('birthYear').value ? parseInt(document.getElementById('birthYear').value) : null;
+    const skillLevel = document.getElementById('skillLevel').value ? parseInt(document.getElementById('skillLevel').value) : null;
+    const etc = document.getElementById('etc').value.trim();
+    const awards = [...currentAwards];
 
     if (!name) {
         showAlert('이름을 입력해주세요!');
@@ -170,7 +274,13 @@ function updateMember() {
         startTime2: startTime2 || null,
         endTime2: endTime2 || null,
         email,
-        address
+        address,
+        // 새로운 필드들
+        gender: gender || '',
+        birthYear: birthYear,
+        skillLevel: skillLevel,
+        awards: awards,
+        etc: etc
     };
 
     saveToFirebase();
@@ -181,43 +291,10 @@ function updateMember() {
     showAlert('회원 정보가 수정되었습니다!');
     resetLockTimer();
     
-    // 상단으로 스크롤 이동
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-// 폼 초기화 (스크롤 상단으로 이동 추가)
-function clearForm() {
-    document.getElementById('name').value = '';
-    document.getElementById('phone').value = '';
-    document.getElementById('registerDate').value = '';
-    document.getElementById('fee').value = '';
-    document.getElementById('day1').value = '';
-    document.getElementById('startTime1').value = '';
-    document.getElementById('endTime1').value = '';
-    document.getElementById('day2').value = '';
-    document.getElementById('startTime2').value = '';
-    document.getElementById('endTime2').value = '';
-    document.getElementById('email').value = '';
-    document.getElementById('address').value = '';
-    document.getElementById("targetCount").value = "0";
-    document.getElementById("currentCount").value = "0";
-
-    setSelectedCoach('');
-
-    document.getElementById('paymentSection').style.display = 'none';
-    document.getElementById('paymentDate').value = '';
-    document.getElementById('paymentAmount').value = '';
-    currentPaymentList = [];
-    document.getElementById('paymentList').innerHTML = '';
-
-    removePhoto();
-    currentEditIndex = null;
-    resetLockTimer();
-    
-    // 이름 입력란에 포커스
-    const nameInput = document.getElementById('name');
-    if (nameInput) {
-        nameInput.focus();
+    // 수정 모드 클래스 제거
+    const formSection = document.querySelector('.form-section');
+    if (formSection) {
+        formSection.classList.remove('form-edit-mode');
     }
     
     // 상단으로 스크롤 이동
@@ -227,6 +304,13 @@ function clearForm() {
 // 회원 편집 폼 채우기
 function editMember(index) {
     const member = members[index];
+    
+    // 폼 섹션에 수정 모드 클래스 추가
+    const formSection = document.querySelector('.form-section');
+    if (formSection) {
+        formSection.classList.add('form-edit-mode');
+    }
+    
     document.getElementById('name').value = member.name;
     document.getElementById('phone').value = member.phone || '';
     document.getElementById('registerDate').value = member.registerDate || '';
@@ -242,13 +326,23 @@ function editMember(index) {
     document.getElementById("targetCount").value = member.targetCount || 0;
     document.getElementById("currentCount").value = member.currentCount || 0;
 
+    // 코치 설정
     setSelectedCoach(member.coach || '');
 
+    // 새로운 필드들 채우기
+    setSelectedGender(member.gender || '');
+    document.getElementById('birthYear').value = member.birthYear || '';
+    document.getElementById('skillLevel').value = member.skillLevel || '';
+    document.getElementById('etc').value = member.etc || '';
+    setAwardsList(member.awards || []);
+
+    // 회비 입금 내역
     document.getElementById('paymentSection').style.display = 'block';
     renderPaymentList(member.paymentHistory || []);
     document.getElementById('paymentDate').value = new Date().toISOString().split('T')[0];
     document.getElementById('paymentAmount').value = member.fee || '';
 
+    // 사진
     if (member.photo) {
         currentPhotoData = member.photo;
         displayPhotoPreview();
@@ -257,7 +351,20 @@ function editMember(index) {
     }
 
     currentEditIndex = index;
+    
+    // 상단으로 스크롤 이동
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    // 이름 입력란에 포커스 이동 (스크롤 완료 후)
+    setTimeout(() => {
+        const nameInput = document.getElementById('name');
+        if (nameInput) {
+            nameInput.focus();
+            // 텍스트 선택 (편집 용이성)
+            nameInput.select();
+        }
+    }, 300); // 스크롤 애니메이션 시간 고려
+    
     resetLockTimer();
 }
 
@@ -278,17 +385,44 @@ function clearForm() {
     document.getElementById("targetCount").value = "0";
     document.getElementById("currentCount").value = "0";
 
+    // 코치 초기화
     setSelectedCoach('');
 
+    // 새로운 필드들 초기화
+    setSelectedGender('');
+    document.getElementById('birthYear').value = '';
+    document.getElementById('skillLevel').value = '';
+    document.getElementById('etc').value = '';
+    currentAwards = [];
+    renderAwardsList();
+
+    // 회비 입금 내역 초기화
     document.getElementById('paymentSection').style.display = 'none';
     document.getElementById('paymentDate').value = '';
     document.getElementById('paymentAmount').value = '';
     currentPaymentList = [];
     document.getElementById('paymentList').innerHTML = '';
 
+    // 사진 초기화
     removePhoto();
     currentEditIndex = null;
+    
+    // 수정 모드 클래스 제거
+    const formSection = document.querySelector('.form-section');
+    if (formSection) {
+        formSection.classList.remove('form-edit-mode');
+    }
+    
     resetLockTimer();
+    
+    // 이름 입력란에 포커스
+    const nameInput = document.getElementById('name');
+    if (nameInput) {
+        nameInput.focus();
+    }
+    
+    // 상단으로 스크롤 이동
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // 회비 입금 내역 관리

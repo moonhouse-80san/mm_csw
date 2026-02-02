@@ -213,6 +213,16 @@
     }
 }
 
+.form-row {
+	flex-direction: column;
+	gap: 15px;
+	align-items: stretch;
+}
+
+.form-row .form-group {
+	width: 100%;
+}
+  
 @media (max-width: 400px) {
     .photo-preview {
         width: 250px;

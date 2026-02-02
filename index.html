@@ -29,7 +29,7 @@
                 </svg>
             </div>
             <div class="club-name" id="clubNameDisplay">구장명을 설정하세요</div>
-            <div class="member-count">총 <span id="memberCount">0</span>명</div>
+            <div class="member-count">총<span id="memberCount">0</span></div>
         </div>
 
         <!-- 검색 및 목록 섹션 -->
@@ -226,10 +226,66 @@
                     </div>
                 </div>
 
+				<!-- 기존 회원등록일 위에 새로운 필드들 추가 -->
+				<div class="form-row1">
+					<div class="form-group1">
+						<label>성별</label>
+						<div class="gender-btn-group">
+							<button type="button" class="gender-btn" data-value="남">남</button>
+							<button type="button" class="gender-btn" data-value="여">여</button>
+						</div>
+					</div>
+
+					<div class="form-group1">
+						<label for="birthYear">생년</label>
+						<input type="number" id="birthYear" placeholder="예: 1990" min="1900" max="2099">
+					</div>
+
+					<div class="form-group1">
+						<label for="skillLevel">부수 (실력)</label>
+						<select id="skillLevel">
+							<option value="">선택</option>
+							<option value="0">선출</option>
+							<option value="0">0부</option>
+							<option value="1">1부</option>
+							<option value="2">2부</option>
+							<option value="3">3부</option>
+							<option value="4">4부</option>
+							<option value="5">5부</option>
+							<option value="6">6부</option>
+							<option value="7">7부</option>
+							<option value="8">8부</option>
+							<option value="9">9부</option>
+							<option value="10">10부</option>
+							<option value="-1">희망</option>
+						</select>
+					</div>
+				</div>
+
                 <div class="form-group">
                     <label for="registerDate">회원등록일</label>
                     <input type="date" id="registerDate">
                 </div>
+				
+				<!-- 수상경력 (동적 추가) -->
+				<div class="form-group full-width">
+					<label>수상경력</label>
+					<div class="awards-section">
+						<div class="award-input-row">
+							<input type="text" id="awardInput" placeholder="수상경력 입력" style="flex: 1;">
+							<button type="button" class="photo-btn" onclick="addAward()" style="padding: 10px 15px;">+ 추가</button>
+						</div>
+						<div class="awards-list" id="awardsList">
+							<!-- 수상경력 목록이 여기에 추가됨 -->
+						</div>
+					</div>
+				</div>
+
+				<!-- 기타란 -->
+				<div class="form-group full-width">
+					<label for="etc">기타</label>
+					<textarea id="etc" placeholder="기타 참고사항을 입력하세요" rows="3"></textarea>
+				</div>
 
                 <div class="form-group full-width">
                     <label for="photo">회원 사진</label>

@@ -490,3 +490,269 @@
 .btn-hidden {
     display: none !important;
 }
+
+/* 코치별 섹션 스타일 */
+.coach-section {
+    margin-bottom: 25px;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    overflow: hidden;
+    background: white;
+}
+
+.coach-section-header {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    padding: 12px 15px;
+    border-bottom: 2px solid #5a67d8;
+}
+
+.coach-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.coach-title .coach-badge {
+    font-size: 16px;
+    font-weight: 700;
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    color: white;
+}
+
+.coach-count {
+    font-size: 14px;
+    color: white;
+    font-weight: 600;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 4px 10px;
+    border-radius: 12px;
+}
+
+.coach-members-list {
+    padding: 10px;
+}
+
+.coach-members-list .member-card {
+    border: 1px solid #e0e0e0;
+    margin-bottom: 8px;
+    border-radius: 8px;
+}
+
+.coach-members-list .member-card:last-child {
+    margin-bottom: 0;
+}
+
+/* 미선택 섹션 스타일 */
+.coach-section:nth-last-child(1) .coach-section-header {
+    background: linear-gradient(135deg, #9E9E9E, #757575);
+}
+
+.coach-section:nth-last-child(1) .coach-title .coach-badge {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* 수상경력 상세 스타일 */
+.awards-details {
+    background: #f9f9f9;
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 10px;
+}
+
+.award-item {
+    padding: 8px 10px;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 14px;
+}
+
+.award-item:last-child {
+    border-bottom: none;
+}
+
+/* 기타란 상세 스타일 */
+.etc-details {
+    background: #f9f9f9;
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 10px;
+    font-size: 14px;
+    line-height: 1.6;
+    white-space: pre-line;
+}
+
+.form-row1 {
+  display: flex;
+  gap: 20px;
+  align-items: flex-end; /* 라벨과 입력 필드 정렬 */
+  margin-bottom: 10px;
+  flex-wrap: nowrap; /* 줄바꿈 방지 */
+}
+
+.form-row1 .form-group1 {
+  flex: 1;
+  min-width: 0;
+}
+
+.form-row1 label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  font-size: 14px;
+  color: #333;
+  white-space: nowrap;
+}
+
+/* 성별 버튼 그룹 */
+.gender-btn-group {
+  display: flex;
+  gap: 2px;
+}
+
+.gender-btn {
+  padding: 10px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  background: white;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex: 1;
+  text-align: center;
+  height: 42px; /* 다른 입력 필드와 높이 일치 */
+}
+
+.gender-btn:hover {
+  border-color: #2196F3;
+  background: #e3f2fd;
+}
+
+.gender-btn.active {
+  background: #2196F3;
+  color: white;
+  border-color: #2196F3;
+  font-weight: 600;
+}
+
+/* 생년 입력 필드 */
+#birthYear {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  box-sizing: border-box;
+  height: 42px;
+}
+
+/* 부수 셀렉트 박스 */
+#skillLevel {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  background: white;
+  box-sizing: border-box;
+  height: 42px;
+  cursor: pointer;
+}
+
+/* 입력 필드 포커스 효과 */
+#birthYear:focus,
+#skillLevel:focus {
+  outline: none;
+  border-color: #2196F3;
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
+}
+
+/* 수상경력 스타일 */
+.awards-section {
+    margin-top: 5px;
+}
+
+.award-input-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.awards-list {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 5px;
+}
+
+.award-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 10px;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background 0.2s;
+}
+
+.award-list-item:hover {
+    background: #f9f9f9;
+}
+
+.award-list-item:last-child {
+    border-bottom: none;
+}
+
+.award-text {
+    flex: 1;
+    font-size: 14px;
+    color: #333;
+}
+
+.award-delete-btn {
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: #f44336;
+    color: white;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 기타란 스타일 */
+textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 16px;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 80px;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: #2196F3;
+}
+
+/* 부수 선택 스타일 */
+select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 16px;
+    background: white;
+    cursor: pointer;
+}
+
+select:focus {
+    outline: none;
+    border-color: #2196F3;
+}
