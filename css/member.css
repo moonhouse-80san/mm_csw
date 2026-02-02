@@ -44,10 +44,11 @@
     font-size: 12px;
     font-weight: 500;
     padding: 3px 8px;
-    background: #e3f2fd;
-    color: #1976d2;
+    background: #000;
+    color: #fff;
     border-radius: 12px;
     white-space: nowrap;
+	text-decoration:none;
 }
 
 .member-actions {
@@ -288,4 +289,180 @@
     border: none;
     border-radius: 8px;
     cursor: pointer;
+}
+
+/* ========== 회비 입금 내역 섹션 ========== */
+.payment-section-wrap {
+	margin-top: 5px;
+}
+
+.payment-input-row {
+	display: flex;
+	gap: 8px;
+	align-items: flex-end;
+	flex-wrap: wrap;
+	margin-bottom: 12px;
+}
+
+.payment-input-item {
+	flex: 1;
+	min-width: 120px;
+}
+
+.payment-input-item label {
+	display: block;
+	font-size: 12px;
+	color: #666;
+	margin-bottom: 4px;
+	font-weight: 600;
+}
+
+.payment-input-item input {
+	width: 100%;
+	padding: 9px 10px;
+	border: 2px solid #e0e0e0;
+	border-radius: 8px;
+	font-size: 14px;
+	transition: border-color 0.3s;
+}
+
+.payment-input-item input:focus {
+	outline: none;
+	border-color: #2196F3;
+}
+
+.payment-add-btn {
+	padding: 9px 16px;
+	background: linear-gradient(135deg, #43a047, #2e7d32);
+	color: white;
+	border: none;
+	border-radius: 8px;
+	font-size: 14px;
+	font-weight: 600;
+	cursor: pointer;
+	white-space: nowrap;
+	transition: all 0.2s;
+	align-self: flex-end;
+}
+
+.payment-add-btn:hover {
+	background: linear-gradient(135deg, #66bb6a, #388e3c);
+	transform: translateY(-1px);
+}
+
+.payment-list {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	margin-top: 4px;
+	max-height: 200px;
+	overflow-y: auto;
+}
+
+.payment-list-item {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 8px 12px;
+	background: #f0f7ff;
+	border: 1px solid #bbdefb;
+	border-radius: 8px;
+	font-size: 14px;
+	gap: 8px;
+}
+
+.payment-list-item .payment-info {
+	display: flex;
+	gap: 14px;
+	align-items: center;
+	flex: 1;
+}
+
+.payment-list-item .payment-date {
+	color: #555;
+	font-weight: 600;
+	font-size: 13px;
+	white-space: nowrap;
+}
+
+.payment-list-item .payment-amount {
+	color: #1976d2;
+	font-weight: 700;
+	font-size: 14px;
+}
+
+.payment-list-item .payment-delete-btn {
+	background: #ef5350;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	width: 24px;
+	height: 24px;
+	font-size: 14px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	transition: background 0.2s;
+}
+
+.payment-list-item .payment-delete-btn:hover {
+	background: #c62828;
+}
+
+/* 회원 상세 팝업 내 입금 내역 테이블 */
+.payment-history-table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-top: 4px;
+}
+
+.payment-history-table thead th {
+	text-align: center;
+	padding: 8px 4px;
+	font-size: 13px;
+	color: #888;
+	font-weight: 600;
+	border-bottom: 2px solid #e0e0e0;
+	background: #fafafa;
+}
+
+.payment-history-table tbody tr {
+	border-bottom: 1px solid #f0f0f0;
+}
+
+.payment-history-table tbody td {
+	text-align: center;
+	padding: 9px 4px;
+	font-size: 14px;
+	color: #444;
+}
+
+.payment-history-table tbody td:last-child {
+	color: #1976d2;
+	font-weight: 700;
+}
+
+.payment-history-total {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	gap: 8px;
+	margin-top: 10px;
+	padding: 8px 30px 0 0;
+	border-top: 2px solid #e0e0e0;
+	font-size: 15px;
+	font-weight: 700;
+	color: #1976d2;
+}
+
+.payment-history-total .total-label {
+	color: #555;
+	font-weight: 600;
+}
+
+/* 추가: 잠금 상태에서 버튼 숨김 */
+.btn-hidden {
+    display: none !important;
 }

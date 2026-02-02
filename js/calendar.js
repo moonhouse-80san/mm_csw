@@ -202,19 +202,23 @@ function renderAttendanceMemberList(membersToShow) {
         const item = document.createElement('div');
         item.style.cssText = 'padding: 15px; border-bottom: 1px solid #e0e0e0; cursor: pointer; transition: background 0.3s;';
         item.innerHTML = `
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <div style="flex: 1;">
-                    <div style="font-weight: 600; font-size: 16px;">${member.name}
-                        <span class="attendance-count" style="margin-left: 8px;">
-                         📊 ${currentCount}/${targetCount}회
-                        </span>
-                    </div>
-                    ${member.coach ? `<div class="coach-badge">🏋️${member.coach}</div>` : ''}
-                </div>
-                <div style="color: ${alreadyChecked ? '#4CAF50' : '#999'}; font-size: 24px;">
-                    ${alreadyChecked ? '✓' : '○'}
-                </div>
-            </div>
+		<div style="display: flex; align-items: center; gap: 10px;">
+			<div style="flex: 1;">
+				<div class="member-title">
+					<span class="member-name">${member.name}</span>
+
+					<span class="attendance-count">
+						📊 ${currentCount}/${targetCount}회
+					</span>
+
+					${member.coach ? `<span class="coach-badge">🏋️${member.coach}</span>` : ''}
+				</div>
+			</div>
+
+			<div style="color: ${alreadyChecked ? '#4CAF50' : '#999'}; font-size: 24px;">
+				${alreadyChecked ? '✓' : '○'}
+			</div>
+		</div>
         `;
         
         item.onmouseover = () => item.style.background = '#f8f9fa';

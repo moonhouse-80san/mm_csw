@@ -103,9 +103,26 @@
         font-size: 13px;
     }
 
-    .coach-btn {
-        padding: 5px 10px;
+    .lock-tooltip {
+        bottom: -80px; /* 모바일에서는 더 아래로 */
+        min-width: 90%; /* 너비 조정 */
+        max-width: 95%;
         font-size: 13px;
+        padding: 10px 15px;
+        white-space: normal; /* 모바일에서는 줄바꿈 허용 */
+        word-break: keep-all;
+    }
+	
+    .coach-btn {
+        padding: 8px 16px; /* 모바일에서는 조금 작게 */
+        font-size: 16px;
+        margin-right: 8px;
+        margin-bottom: 6px;
+        min-height: 40px;
+    }
+    
+    .coach-btn-group {
+        gap: 8px;
     }
 
     .coach-settings-grid {
@@ -219,13 +236,27 @@
         font-size: 12px;
     }
 
-    .coach-settings-grid {
-        grid-template-columns: 1fr 1fr;
+    .coach-btn {
+        padding: 6px 12px;
+        font-size: 15px;
+        margin-right: 6px;
+        margin-bottom: 5px;
+        min-height: 36px;
+    }
+    
+    .coach-btn-group {
         gap: 6px;
     }
 
     .coach-setting-item input {
         padding: 6px 8px;
         font-size: 13px;
-    }   
+    }
+	
+    .lock-tooltip {
+        bottom: -220px;
+        font-size: 12px;
+        padding: 8px 12px;
+       max-width: 95%;
+    }
 }

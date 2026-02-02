@@ -1,39 +1,59 @@
 .coach-badge {
-    display: inline-block;
-    padding: 3px 8px;
+   display: inline-flex;
+    padding: 4px 10px;
     background: linear-gradient(135deg, #667eea, #764ba2);
     color: white;
     border-radius: 12px;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 600;
     white-space: nowrap;
 }
 
 .coach-btn {
-    padding: 5px 12px;
+    padding: 10px 20px; /* 5px 12px에서 10px 20px로 증가 */
     border: 2px solid #e0e0e0;
-    border-radius: 16px;
+    border-radius: 20px; /* 16px에서 20px로 증가 */
     background: white;
-    font-size: 16px;
+    font-size: 18px; /* 16px에서 18px로 증가 */
     color: #333;
     cursor: pointer;
     transition: all 0.2s;
-    font-weight: 500;
+    font-weight: 600; /* 500에서 600으로 증가 (더 굵게) */
     line-height: 1.4;
-    margin-right:10px;
+    margin-right: 12px; /* 10px에서 12px로 증가 */
+    margin-bottom: 8px; /* 아래쪽 여백 추가 */
+    min-height: 44px; /* 터치 영역 확보 (접근성) */
 }
 
 .coach-btn:hover {
     border-color: #2196F3;
     background: #e3f2fd;
     color: #1976d2;
+    transform: translateY(-2px); /* 호버 시 살짝 올라가는 효과 */
+    box-shadow: 0 2px 8px rgba(33, 150, 243, 0.2); /* 그림자 효과 추가 */
 }
 
 .coach-btn.active {
     background: #2196F3;
     color: white;
     border-color: #2196F3;
-    font-weight: 600;
+    font-weight: 700; /* 활성화 시 더 굵게 */
+    box-shadow: 0 2px 12px rgba(33, 150, 243, 0.3); /* 활성화 시 그림자 강화 */
+}
+
+/* 코치 버튼 그룼 컨테이너 */
+.coach-btn-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* 버튼 사이 간격 통일 */
+    margin-top: 8px;
+}
+
+/* 더 큰 버튼을 원한다면 이 클래스를 추가 */
+.coach-btn.large {
+    padding: 14px 24px;
+    font-size: 20px;
+    border-radius: 24px;
 }
 
 .coach-settings-grid {

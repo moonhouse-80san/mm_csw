@@ -1,3 +1,10 @@
+.member-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;   /* 한 줄 고정 */
+}
+
 .attendance-count {
     display: inline-flex;
     align-items: center;

@@ -76,7 +76,7 @@ function sortMembers(sortBy, fromSearch) {
     renderMembers();
 }
 
-// 회원 목록 렌더링
+// 회원 목록 렌더링 (수정된 부분)
 function renderMembers() {
     const listEl = document.getElementById('listSection');
     const countEl = document.getElementById('memberCount');
@@ -125,14 +125,15 @@ function renderMembers() {
             coachBadge = `<span class="coach-badge">🏋️ ${member.coach}</span>`;
         }
 
-        const editBtnClass = isUnlocked ? 'btn-edit' : 'btn-edit btn-hidden';
-        const deleteBtnClass = isUnlocked ? 'btn-delete' : 'btn-delete btn-hidden';
+        // 잠금 상태에 따라 버튼 클래스 다르게 설정
+        const editBtnClass = isUnlocked ? 'btn-edit' : 'btn-edit btn-edit-disabled btn-hidden';
+        const deleteBtnClass = isUnlocked ? 'btn-delete' : 'btn-delete btn-delete-disabled btn-hidden';
 
         return `
         <div class="member-card">
             <div class="member-content">
                 <div class="member-header">
-                    <div class="member-name" style="cursor: pointer; color: #2196F3; text-decoration: underline;" 
+                    <div class="member-name" style="cursor: pointer; color: #000; text-decoration: none;" 
                          onclick="showMemberDetails(${originalIndex})">
                         ${member.name}
                         ${attendanceCount}
@@ -177,7 +178,7 @@ function showMemberDetails(index) {
     
     if (member.photo) {
         detailsHTML += `
-            <div class="member-details-photo">
+            <div class="member-details-photo" style="display: flex; justify-content: center; align-items: center;">
                 <img src="${member.photo}" alt="${member.name}" style="width: 200px; height: 200px; border-radius: 10px; object-fit: cover; margin-bottom: 20px;">
             </div>
         `;
@@ -219,36 +220,37 @@ function showMemberDetails(index) {
         </div>
     `;
 
-    const payments = member.paymentHistory || [];
-    if (payments.length > 0) {
-        const sortedPayments = [...payments].sort((a, b) => b.date.localeCompare(a.date));
-        const totalAmount = payments.reduce((sum, p) => sum + (p.amount || 0), 0);
+	// 회비 입금 내역
+	const payments = member.paymentHistory || [];
+	if (payments.length > 0) {
+		const sortedPayments = [...payments].sort((a, b) => b.date.localeCompare(a.date));
+		const totalAmount = payments.reduce((sum, p) => sum + (p.amount || 0), 0);
 
-        detailsHTML += `
-            <div class="member-details-section">
-                <h3>💳 회비 입금 내역</h3>
-                <table class="payment-history-table">
-                    <thead>
-                        <tr>
-                            <th>입금날</th>
-                            <th>입금금액</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-        `;
-        sortedPayments.forEach(p => {
-            detailsHTML += `<tr><td>${formatDate(p.date)}</td><td>${formatNumber(p.amount)}원</td></tr>`;
-        });
-        detailsHTML += `
-                    </tbody>
-                </table>
-                <div class="payment-history-total">
-                    <span class="total-label">합계:</span>
-                    <span>${formatNumber(totalAmount)}원</span>
-                </div>
-            </div>
-        `;
-    }
+		detailsHTML += `
+			<div class="member-details-section">
+				<h3>💳 회비 입금 내역</h3>
+				<table class="payment-history-table">
+					<thead>
+						<tr>
+							<th>입금날</th>
+							<th>입금금액</th>
+						</tr>
+					</thead>
+					<tbody>
+		`;
+		sortedPayments.forEach(p => {
+			detailsHTML += `<tr><td>${formatDate(p.date)}</td><td>${formatNumber(p.amount)}원</td></tr>`;
+		});
+		detailsHTML += `
+					</tbody>
+				</table>
+				<div class="payment-history-total">
+					<span class="total-label">합계:</span>
+					<span>${formatNumber(totalAmount)}원</span>
+				</div>
+			</div>
+		`;
+	}
     
     if ((member.day1 && member.startTime1 && member.endTime1) || 
         (member.day2 && member.startTime2 && member.endTime2)) {

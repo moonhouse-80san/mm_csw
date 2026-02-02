@@ -7,6 +7,7 @@
     border-bottom: 2px solid #e0e0e0;
     margin: 10px 0;
     border-radius: 10px;
+    position: relative; /* 부모 요소에 relative 추가 */
 }
 
 .password-input-group {
@@ -43,16 +44,36 @@
     cursor: pointer;
     transition: all 0.3s;
     white-space: nowrap;
+	margin-top: -15px;
+	max-width: 200px;
 }
 
 .unlock-btn:hover {
-    background: #1976D2;
     transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* 잠금 상태일 때 (파란색) */
+.unlock-btn.locked-state {
+    background: #2196F3;
+}
+
+.unlock-btn.locked-state:hover {
+    background: #1976D2;
+}
+
+/* 잠금 해제 상태일 때 (주황색) */
+.unlock-btn.unlocked-state {
+    background: #FF9800;
+}
+
+.unlock-btn.unlocked-state:hover {
+    background: #F57C00;
 }
 
 .lock-tooltip {
-    position: fixed;
-    bottom: 20px;
+    position: absolute; /* fixed에서 absolute로 변경 */
+    bottom: -60px; /* 부모 요소 기준 아래쪽으로 위치 */
     left: 50%;
     transform: translateX(-50%);
     background: #f44336;
@@ -69,6 +90,7 @@
     text-align: center;
     min-width: 300px;
     max-width: 90%;
+    white-space: nowrap;
 }
 
 .lock-tooltip.visible {

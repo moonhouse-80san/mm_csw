@@ -28,37 +28,59 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// 잠금 상태 업데이트
+// 잠금 상태 업데이트 (버튼 텍스트도 변경)
 function updateLockStatus() {
     const updateBtn = document.getElementById('updateBtn');
+    const unlockBtn = document.querySelector('.unlock-btn');
     const tooltip = document.getElementById('lockTooltip');
     const tooltipText = document.getElementById('lockTooltipText');
 
     if (isUnlocked) {
+        // 잠금 해제된 상태
         updateBtn.classList.remove('btn-disabled');
         updateBtn.classList.add('btn-update');
         updateBtn.textContent = '수정';
+        
+        // 잠금 해제 버튼 텍스트 변경
+        if (unlockBtn) {
+            unlockBtn.textContent = '🔓 잠금';
+            unlockBtn.style.background = '#FF9800'; // 주황색으로 변경
+        }
+        
         showMemberButtons();
         tooltip.classList.remove('visible');
     } else {
+        // 잠긴 상태
         updateBtn.classList.remove('btn-update');
         updateBtn.classList.add('btn-disabled');
         updateBtn.textContent = '수정';
+        
+        // 잠금 해제 버튼 텍스트 변경
+        if (unlockBtn) {
+            unlockBtn.textContent = '🔓 잠금 해제';
+            unlockBtn.style.background = '#2196F3'; // 파란색으로 복원
+        }
+        
         hideMemberButtons();
         tooltip.classList.remove('visible');
         tooltipText.textContent = '🔒 잠김 상태 - 수정/삭제 암호를 입력해주세요';
     }
+    
+    // 회원 목록도 다시 렌더링해서 버튼 상태 업데이트
+    renderMembers();
 }
 
-// 잠금 해제
+// 잠금 해제 함수 수정
 function unlockEditButtons() {
     const password = document.getElementById('lockPassword').value;
+    const unlockBtn = document.querySelector('.unlock-btn');
 
     if (!password) {
         showAlert('암호를 입력해주세요!');
         return;
     }
 
+    // 이미 잠금 해제된 상태에서 올바른 암호를 입력하면 즉시 잠금
     if (isUnlocked && password === settings.editPassword) {
         isUnlocked = false;
         remainingTime = settings.lockTimeout * 60;
@@ -69,8 +91,14 @@ function unlockEditButtons() {
         }
 
         document.getElementById('lockPassword').value = '';
-        updateLockStatus();
+        updateLockStatus(); // 상태 업데이트
         showAlert('앱이 잠겼습니다!');
+        
+        // 잠금 해제 버튼 텍스트 변경
+        if (unlockBtn) {
+            unlockBtn.textContent = '🔒 잠김 상태';
+            unlockBtn.style.background = '#2196F3';
+        }
         return;
     }
 
@@ -80,9 +108,15 @@ function unlockEditButtons() {
 
         startAutoLockTimer();
         document.getElementById('lockPassword').value = '';
-        updateLockStatus();
+        updateLockStatus(); // 상태 업데이트
         showAlert(`잠금이 해제되었습니다! ${settings.lockTimeout}분 후 자동으로 잠깁니다.`);
         resetLockTimer();
+        
+        // 잠금 해제 버튼 텍스트 변경
+        if (unlockBtn) {
+            unlockBtn.textContent = '🔓 잠금 해제 상태';
+            unlockBtn.style.background = '#FF9800';
+        }
     } else {
         showAlert('암호가 틀렸습니다!');
     }
