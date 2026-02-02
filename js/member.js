@@ -76,7 +76,7 @@ function sortMembers(sortBy, fromSearch) {
     renderMembers();
 }
 
-// 회원 목록 렌더링 (수정된 부분)
+// 회원 목록 렌더링
 function renderMembers() {
     const listEl = document.getElementById('listSection');
     const countEl = document.getElementById('memberCount');
@@ -444,5 +444,55 @@ function switchTab(tabName) {
         document.getElementById('scheduleSection').classList.add('active');
         renderSchedule();
     }
+    resetLockTimer();
+}
+
+// 회원 편집 폼 채우기
+function editMember(index) {
+    const member = members[index];
+    document.getElementById('name').value = member.name;
+    document.getElementById('phone').value = member.phone || '';
+    document.getElementById('registerDate').value = member.registerDate || '';
+    document.getElementById('fee').value = member.fee || '';
+    document.getElementById('day1').value = member.day1 || '';
+    document.getElementById('startTime1').value = member.startTime1 || '';
+    document.getElementById('endTime1').value = member.endTime1 || '';
+    document.getElementById('day2').value = member.day2 || '';
+    document.getElementById('startTime2').value = member.startTime2 || '';
+    document.getElementById('endTime2').value = member.endTime2 || '';
+    document.getElementById('email').value = member.email || '';
+    document.getElementById('address').value = member.address || '';
+    document.getElementById("targetCount").value = member.targetCount || 0;
+    document.getElementById("currentCount").value = member.currentCount || 0;
+
+    setSelectedCoach(member.coach || '');
+
+    document.getElementById('paymentSection').style.display = 'block';
+    renderPaymentList(member.paymentHistory || []);
+    document.getElementById('paymentDate').value = new Date().toISOString().split('T')[0];
+    document.getElementById('paymentAmount').value = member.fee || '';
+
+    if (member.photo) {
+        currentPhotoData = member.photo;
+        displayPhotoPreview();
+    } else {
+        removePhoto();
+    }
+
+    currentEditIndex = index;
+    
+    // 상단으로 스크롤 이동
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    // 이름 입력란에 포커스 이동 (스크롤 완료 후)
+    setTimeout(() => {
+        const nameInput = document.getElementById('name');
+        if (nameInput) {
+            nameInput.focus();
+            // 텍스트 선택 (편집 용이성)
+            nameInput.select();
+        }
+    }, 300); // 스크롤 애니메이션 시간 고려
+    
     resetLockTimer();
 }

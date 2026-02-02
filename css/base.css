@@ -506,6 +506,24 @@ body {
     border-radius: 4px;
 }
 
+/* 이름 입력란 강조 스타일 */
+#name:focus {
+    border-color: #2196F3;
+    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
+    background-color: #f8fdff;
+}
+
+/* 수정 모드일 때 이름 입력란 강조 */
+.form-edit-mode #name {
+    border-color: #FF9800;
+    background-color: #fff8e1;
+}
+
+.form-edit-mode #name:focus {
+    border-color: #FF9800;
+    box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.2);
+}
+
 @keyframes slideIn {
     from {
         opacity: 0;

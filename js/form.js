@@ -20,6 +20,7 @@ function addMember() {
 
     if (!name) {
         showAlert('이름을 입력해주세요!');
+        document.getElementById('name').focus();
         return;
     }
 
@@ -82,9 +83,12 @@ function addMember() {
     renderSchedule();
     clearForm();
     showAlert('회원이 추가되었습니다!');
+    
+    // 상단으로 스크롤 이동
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// 회원 수정
+// 회원 수정 (스크롤 상단으로 이동 추가)
 function updateMember() {
     if (currentEditIndex === null) {
         showAlert('수정할 회원을 선택해주세요!');
@@ -107,6 +111,7 @@ function updateMember() {
 
     if (!name) {
         showAlert('이름을 입력해주세요!');
+        document.getElementById('name').focus();
         return;
     }
 
@@ -175,6 +180,48 @@ function updateMember() {
     clearForm();
     showAlert('회원 정보가 수정되었습니다!');
     resetLockTimer();
+    
+    // 상단으로 스크롤 이동
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// 폼 초기화 (스크롤 상단으로 이동 추가)
+function clearForm() {
+    document.getElementById('name').value = '';
+    document.getElementById('phone').value = '';
+    document.getElementById('registerDate').value = '';
+    document.getElementById('fee').value = '';
+    document.getElementById('day1').value = '';
+    document.getElementById('startTime1').value = '';
+    document.getElementById('endTime1').value = '';
+    document.getElementById('day2').value = '';
+    document.getElementById('startTime2').value = '';
+    document.getElementById('endTime2').value = '';
+    document.getElementById('email').value = '';
+    document.getElementById('address').value = '';
+    document.getElementById("targetCount").value = "0";
+    document.getElementById("currentCount").value = "0";
+
+    setSelectedCoach('');
+
+    document.getElementById('paymentSection').style.display = 'none';
+    document.getElementById('paymentDate').value = '';
+    document.getElementById('paymentAmount').value = '';
+    currentPaymentList = [];
+    document.getElementById('paymentList').innerHTML = '';
+
+    removePhoto();
+    currentEditIndex = null;
+    resetLockTimer();
+    
+    // 이름 입력란에 포커스
+    const nameInput = document.getElementById('name');
+    if (nameInput) {
+        nameInput.focus();
+    }
+    
+    // 상단으로 스크롤 이동
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // 회원 편집 폼 채우기

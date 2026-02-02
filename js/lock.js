@@ -189,7 +189,7 @@ function showMemberButtons() {
     });
 }
 
-// 수정 전 잠금 확인
+// 수정 전 잠금 확인 (수정이 성공한 경우에만 상단 이동)
 function checkLockBeforeUpdate() {
     if (!isUnlocked) {
         showAlert('수정 기능을 사용하려면 먼저 잠금을 해제해주세요!');
@@ -197,8 +197,9 @@ function checkLockBeforeUpdate() {
         return false;
     }
     resetLockTimer();
-    updateMember();
-    return true;
+    
+    // updateMember 함수가 성공적으로 실행되면 그 안에서 상단 이동 처리
+    return updateMember(); // updateMember()가 boolean을 반환하도록 수정해야 함
 }
 
 // 삭제 전 잠금 확인

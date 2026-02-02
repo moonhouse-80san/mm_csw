@@ -5,7 +5,7 @@
     flex-direction: column;
     gap: 8px;
     border-bottom: 2px solid #e0e0e0;
-    margin: 10px 0;
+    margin: 10px;
     border-radius: 10px;
     position: relative; /* 중요: 자식 요소의 기준점 */
 }
