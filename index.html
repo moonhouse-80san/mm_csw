@@ -401,11 +401,20 @@
                 <button style="background: #2196F3;" onclick="saveSettings()">저장</button>
                 <button style="background: #9E9E9E;" onclick="closeSettings()">취소</button>
             </div>
-            <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #e0e0e0;">
-                <button style="width: 100%; padding: 12px; background: #f44336; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;" onclick="exportData()">📤 데이터 내보내기</button>
-                <button style="width: 100%; padding: 12px; background: #4CAF50; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; margin-top: 10px;" onclick="document.getElementById('importFile').click()">📥 데이터 가져오기</button>
-                <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(event)">
-            </div>
+
+			<!-- settingsModal 내부의 버튼 부분 수정 -->
+			<div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #e0e0e0;">
+				<button style="width: 100%; padding: 12px; background: #2196F3; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;" onclick="exportData()">
+					📤 엑셀 내보내기
+				</button>
+				<button style="width: 100%; padding: 12px; background: #FF9800; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; margin-top: 10px;" onclick="downloadTemplate()">
+					📝 엑셀 템플릿 다운로드
+				</button>
+				<button style="width: 100%; padding: 12px; background: #4CAF50; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; margin-top: 10px;" onclick="document.getElementById('importFile').click()">
+					📥 엑셀 가져오기
+				</button>
+				<input type="file" id="importFile" accept=".xlsx,.xls" style="display: none;" onchange="importData(event)">
+			</div>
         </div>
     </div>
 
@@ -444,6 +453,7 @@
     <!-- Firebase 스크립트 -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+	<script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
     
     <!-- 분리된 JS 파일들 -->
     <script src="js/base.js"></script>
