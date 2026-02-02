@@ -190,6 +190,14 @@
 	z-index: 10001;
 }
 
+.member-details-modal img {
+    display: block !important;
+    margin: 20px auto !important;
+    max-width: 100% !important;
+    border-radius: 12px !important;
+    object-fit: cover !important;
+}
+
 .member-details-header {
     display: flex;
     justify-content: space-between;
