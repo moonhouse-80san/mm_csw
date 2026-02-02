@@ -132,6 +132,7 @@ function capturePhoto() {
             const reader = new FileReader();
             reader.onload = function(e) {
                 currentPhotoData = e.target.result;
+                isPhotoRemoved = false; // 새 사진이 추가되었으므로 삭제 플래그 해제
                 displayPhotoPreview();
                 closeCamera();
                 showAlert('사진이 촬영되었습니다!');
@@ -169,6 +170,7 @@ function handlePhotoUpload(event) {
             ctx.drawImage(img, x, y, newWidth, newHeight);
 
             currentPhotoData = canvas.toDataURL('image/jpeg', 0.8);
+            isPhotoRemoved = false; // 새 사진이 추가되었으므로 삭제 플래그 해제
             displayPhotoPreview();
             showAlert('사진이 업로드되었습니다!');
         };
@@ -191,6 +193,8 @@ function displayPhotoPreview() {
 
 function removePhoto() {
     currentPhotoData = null;
+    isPhotoRemoved = true; // 삭제 플래그 설정
     displayPhotoPreview();
     document.getElementById('photoInput').value = '';
+    showAlert('사진이 삭제되었습니다. 수정 버튼을 눌러 저장하세요.');
 }
