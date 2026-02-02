@@ -114,7 +114,7 @@ function unlockEditButtons() {
         
         // 잠금 해제 버튼 텍스트 변경
         if (unlockBtn) {
-            unlockBtn.textContent = '🔓 잠금 해제 상태';
+            unlockBtn.textContent = '🔓 잠금 해제된 상태';
             unlockBtn.style.background = '#FF9800';
         }
     } else {
