@@ -451,35 +451,51 @@ function showMemberDetails(index) {
         </div>
     `;
 
-    const payments = member.paymentHistory || [];
-    if (payments.length > 0) {
-        const sortedPayments = [...payments].sort((a, b) => b.date.localeCompare(a.date));
-        const totalAmount = payments.reduce((sum, p) => sum + (p.amount || 0), 0);
+    // 입금 내역은 잠금 해제 시에만 표시
+    if (isUnlocked) {
+        const payments = member.paymentHistory || [];
+        if (payments.length > 0) {
+            const sortedPayments = [...payments].sort((a, b) => b.date.localeCompare(a.date));
+            const totalAmount = payments.reduce((sum, p) => sum + (p.amount || 0), 0);
 
-        detailsHTML += `
-            <div class="member-details-section">
-                <h3>💳 회비 입금 내역</h3>
-                <table class="payment-history-table">
-                    <thead>
-                        <tr>
-                            <th>입금날</th>
-                            <th>입금금액</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-        `;
-        sortedPayments.forEach(p => {
-            detailsHTML += `<tr><td>${formatDate(p.date)}</td><td>${formatNumber(p.amount)}원</td></tr>`;
-        });
-        detailsHTML += `
-                    </tbody>
-                </table>
-                <div class="payment-history-total">
-                    <span class="total-label">합계:</span>
-                    <span>${formatNumber(totalAmount)}원</span>
+            detailsHTML += `
+                <div class="member-details-section">
+                    <h3>💳 회비 입금 내역</h3>
+                    <table class="payment-history-table">
+                        <thead>
+                            <tr>
+                                <th>입금날</th>
+                                <th>입금금액</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            sortedPayments.forEach(p => {
+                detailsHTML += `<tr><td>${formatDate(p.date)}</td><td>${formatNumber(p.amount)}원</td></tr>`;
+            });
+            detailsHTML += `
+                        </tbody>
+                    </table>
+                    <div class="payment-history-total">
+                        <span class="total-label">합계:</span>
+                        <span>${formatNumber(totalAmount)}원</span>
+                    </div>
                 </div>
-            </div>
-        `;
+            `;
+        }
+    } else {
+        // 잠금 상태일 때는 입금 내역 대신 안내 메시지 표시
+        const payments = member.paymentHistory || [];
+        if (payments.length > 0) {
+            detailsHTML += `
+                <div class="member-details-section">
+                    <h3>💳 회비 입금 내역</h3>
+                    <div style="text-align: center; padding: 20px; background: #f9f9f9; border-radius: 8px; color: #666;">
+                        🔒 입금 내역을 보려면 잠금을 해제해주세요
+                    </div>
+                </div>
+            `;
+        }
     }
     
     if ((member.day1 && member.startTime1 && member.endTime1) || 
@@ -553,7 +569,14 @@ function showMemberDetails(index) {
     detailsHTML += `
             </div>
             <div class="member-details-footer">
-                <button class="btn btn-edit" onclick="editMember(${index}); closeMemberDetails();">수정</button>
+    `;
+    
+    // 수정 버튼은 잠금 해제 시에만 표시
+    if (isUnlocked) {
+        detailsHTML += `<button class="btn btn-edit" onclick="editMember(${index}); closeMemberDetails();">수정</button>`;
+    }
+    
+    detailsHTML += `
                 <button class="btn btn-secondary" onclick="closeMemberDetails()">닫기</button>
             </div>
         </div>

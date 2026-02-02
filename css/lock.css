@@ -82,3 +82,18 @@
 .lock-tooltip.unlocked-style {
     background: #4CAF50;
 }
+
+.detail-access-btn:hover {
+    border-color: #2196F3;
+    background: #e3f2fd;
+}
+
+.detail-access-btn.active {
+    background: #2196F3;
+    color: white;
+    border-color: #2196F3;
+}
+
+.detail-access-btn.active div {
+    color: white;
+}
