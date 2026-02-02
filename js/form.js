@@ -3,6 +3,7 @@ let currentEditIndex = null;
 let deleteIndex = null;
 let currentPaymentList = [];
 let currentAwards = [];
+let isPhotoRemoved = false; // 이미지 삭제 플래그 추가
 
 // DOM 로드 시 초기화
 document.addEventListener('DOMContentLoaded', function() {
@@ -255,10 +256,24 @@ function updateMember() {
     const existingHistory = members[currentEditIndex].attendanceHistory || [];
     const paymentHistory = currentPaymentList || [];
 
+    // 이미지 처리: isPhotoRemoved 플래그 확인
+    let newPhoto = '';
+    if (isPhotoRemoved) {
+        // 이미지가 명시적으로 삭제된 경우
+        newPhoto = '';
+    } else if (currentPhotoData !== null) {
+        // 새 이미지가 업로드된 경우
+        newPhoto = currentPhotoData;
+    } else {
+        // 이미지가 변경되지 않았으면 기존 이미지 유지
+        newPhoto = members[currentEditIndex].photo || '';
+    }
+
     members[currentEditIndex] = {
+        ...members[currentEditIndex],
         name,
         phone,
-        photo: currentPhotoData !== null ? currentPhotoData : (members[currentEditIndex].photo || ''),
+        photo: newPhoto, // 올바르게 처리된 이미지
         registerDate: registerDate || members[currentEditIndex].registerDate,
         fee: fee ? parseInt(fee) : null,
         coach: coach,
@@ -299,6 +314,9 @@ function updateMember() {
     
     // 상단으로 스크롤 이동
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    // 삭제 플래그 초기화
+    isPhotoRemoved = false;
 }
 
 // 회원 편집 폼 채우기
@@ -347,8 +365,12 @@ function editMember(index) {
         currentPhotoData = member.photo;
         displayPhotoPreview();
     } else {
-        removePhoto();
+        currentPhotoData = null;
+        displayPhotoPreview();
     }
+
+    // 삭제 플래그 초기화
+    isPhotoRemoved = false;
 
     currentEditIndex = index;
     
@@ -404,7 +426,11 @@ function clearForm() {
     document.getElementById('paymentList').innerHTML = '';
 
     // 사진 초기화
-    removePhoto();
+    currentPhotoData = null;
+    isPhotoRemoved = false;
+    displayPhotoPreview();
+    document.getElementById('photoInput').value = '';
+    
     currentEditIndex = null;
     
     // 수정 모드 클래스 제거
