@@ -1,0 +1,82 @@
+.password-section {
+    background: linear-gradient(135deg, #FF9800, #F57C00);
+    padding: 10px 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    border-bottom: 2px solid #e0e0e0;
+    margin: 10px 0;
+    border-radius: 10px;
+}
+
+.password-input-group {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.password-input {
+    flex: 1;
+    padding: 10px 12px;
+    border: 2px solid rgba(255,255,255,0.5);
+    border-radius: 8px;
+    font-size: 14px;
+    background: rgba(255,255,255,0.9);
+    color: #333;
+    min-width: 0;
+}
+
+.password-input:focus {
+    outline: none;
+    border-color: white;
+    background: white;
+}
+
+.unlock-btn {
+    padding: 10px 15px;
+    background: #2196F3;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    white-space: nowrap;
+}
+
+.unlock-btn:hover {
+    background: #1976D2;
+    transform: translateY(-2px);
+}
+
+.lock-tooltip {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #f44336;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s;
+    text-align: center;
+    min-width: 300px;
+    max-width: 90%;
+}
+
+.lock-tooltip.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.lock-tooltip.unlocked-style {
+    background: #4CAF50;
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}

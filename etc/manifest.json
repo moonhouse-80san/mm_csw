@@ -10,7 +10,7 @@
   "scope": "/",
   "icons": [
     {
-      "src": "icon-192x192.png",
+      "src": "./etcicon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"

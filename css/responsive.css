@@ -1,0 +1,231 @@
+@media (max-width: 600px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .button-group {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+    }
+
+    .button-group .btn {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .filter-buttons {
+        font-size: 11px;
+    }
+
+    .time-group {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+    }
+
+    .time-group span {
+        order: 2;
+    }
+
+    .member-card {
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+    }
+
+    .member-info-container {
+        flex: 1;
+    }
+
+    .member-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 6px;
+    }
+
+    .member-name {
+        font-weight: bold;
+        font-size: 17px;
+    }
+
+    .member-name .attendance-count {
+        font-size: 11px;
+        padding: 2px 6px;
+    }
+
+    .member-actions {
+        display: flex;
+        gap: 6px;
+    }
+
+    .member-info {
+        font-size: 14px;
+        color: #555;
+        line-height: 1.5;
+    }
+
+    .photo-preview {
+        width: 300px;
+        height: 300px;
+    }
+
+    #cameraModal .modal-content {
+        padding: 15px;
+        margin: 10px;
+    }
+
+    .camera-controls {
+        flex-direction: column;
+    }
+
+    .camera-btn {
+        width: 100%;
+    }
+
+    .password-input-group {
+        flex-direction: column;
+    }
+
+    .password-input {
+        width: 100%;
+    }
+
+    .unlock-btn {
+        width: 100%;
+    }
+
+    .password-section {
+        padding: 8px 12px;
+    }
+    
+    .unlock-btn {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+
+    .coach-btn {
+        padding: 5px 10px;
+        font-size: 13px;
+    }
+
+    .coach-settings-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+
+    .calendar-container {
+        padding: 10px;
+        margin-top: 10px;
+    }
+
+    .calendar-header {
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+    .calendar-header h3 {
+        font-size: 16px;
+        text-align: center;
+    }
+
+    .calendar-nav {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .calendar-nav-btn {
+        flex: 1;
+        max-width: 120px;
+        padding: 8px 10px;
+        font-size: 13px;
+    }
+
+    .calendar-grid {
+        gap: 2px;
+    }
+
+    .calendar-day-header {
+        padding: 6px 2px;
+        font-size: 11px;
+    }
+
+    .calendar-day {
+        border-width: 1px;
+        padding: 2px;
+        min-height: 40px;
+    }
+
+    .calendar-day-number {
+        font-size: 12px;
+    }
+
+    .calendar-attendance-dot {
+        width: 4px;
+        height: 4px;
+        margin-top: 1px;
+    }
+
+    .tab-section {
+        width: 100%;
+        padding: 0;
+    }
+
+    .tabs {
+        display: flex;
+        gap: 0;
+        width: 100%;
+    }
+
+    .tab-btn {
+        flex: 1;
+        padding: 10px 5px;
+        font-size: 14px;
+    }
+
+    .content-section {
+        width: 100%;
+        padding: 15px;
+    }
+}
+
+@media (max-width: 400px) {
+    .photo-preview {
+        width: 250px;
+        height: 250px;
+    }
+    
+    .button-group .btn {
+        font-size: 12px;
+        padding: 8px 5px;
+    }
+    
+    .btn-edit, .btn-delete {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+
+    .member-name {
+        font-size: 16px;
+    }
+
+    .member-name .attendance-count {
+        font-size: 10px;
+        padding: 1px 4px;
+    }
+    
+    .coach-btn {
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+
+    .coach-settings-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+    }
+
+    .coach-setting-item input {
+        padding: 6px 8px;
+        font-size: 13px;
+    }   
+}

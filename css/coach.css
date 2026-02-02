@@ -1,0 +1,73 @@
+.coach-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.coach-btn {
+    padding: 5px 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 16px;
+    background: white;
+    font-size: 16px;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 500;
+    line-height: 1.4;
+    margin-right:10px;
+}
+
+.coach-btn:hover {
+    border-color: #2196F3;
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.coach-btn.active {
+    background: #2196F3;
+    color: white;
+    border-color: #2196F3;
+    font-weight: 600;
+}
+
+.coach-settings-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.coach-setting-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.coach-setting-label {
+    font-size: 12px;
+    color: #888;
+    font-weight: 600;
+}
+
+.coach-setting-item input {
+    padding: 8px 10px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+.coach-setting-item input:focus {
+    outline: none;
+    border-color: #2196F3;
+}
+
+.coach-setting-item input::placeholder {
+    color: #bbb;
+}

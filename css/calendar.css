@@ -1,0 +1,155 @@
+.attendance-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.calendar-container {
+    background: white;
+    border-radius: 15px;
+    padding: 15px;
+    margin-top: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.calendar-header h3 {
+    font-size: 18px;
+    color: #333;
+    margin: 0;
+}
+
+.calendar-nav {
+    display: flex;
+    gap: 8px;
+}
+
+.calendar-nav-btn {
+    padding: 6px 12px;
+    background: #2196F3;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.calendar-nav-btn:hover {
+    background: #1976D2;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+}
+
+.calendar-day-header {
+    text-align: center;
+    padding: 8px;
+    font-weight: 600;
+    color: #666;
+    font-size: 12px;
+}
+
+.calendar-day {
+    aspect-ratio: 1;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    padding: 4px;
+}
+
+.calendar-day:hover {
+    background: #e3f2fd;
+    border-color: #2196F3;
+}
+
+.calendar-day.other-month {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.calendar-day.today {
+    background: #fff3e0;
+    border-color: #FF9800;
+}
+
+.calendar-day-number {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+}
+
+.calendar-day.has-attendance {
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    border-color: #4CAF50;
+}
+
+.calendar-day.has-attendance .calendar-day-number {
+    color: white;
+}
+
+.calendar-attendance-dot {
+    width: 5px;
+    height: 5px;
+    background: #4CAF50;
+    border-radius: 50%;
+    margin-top: 2px;
+}
+
+.calendar-day.has-attendance .calendar-attendance-dot {
+    background: white;
+}
+
+.attendance-alert-modal .modal-content {
+    text-align: center;
+    max-width: 400px;
+}
+
+.attendance-alert-icon {
+    font-size: 60px;
+    margin-bottom: 20px;
+}
+
+.attendance-alert-modal h2 {
+    color: #FF9800;
+    font-size: 28px;
+    margin-bottom: 15px;
+}
+
+.attendance-alert-modal p {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 25px;
+    line-height: 1.6;
+}
+
+.time-member-coach {
+    font-size: 11px;
+    color: #666;
+    background: #f0f0f0;
+    padding: 1px 4px;
+    border-radius: 3px;
+    margin-left: 5px;
+}

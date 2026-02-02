@@ -2,7 +2,7 @@ const CACHE_NAME = 'mm_csw-v1';
 const urlsToCache = [
   '/mm_csw/',
   '/mm_csw/index.html',
-  '/mm_csw/manifest.json'
+  '/mm_csw/etc/manifest.json'
 ];
 
 // 설치 이벤트 - 캐시 생성

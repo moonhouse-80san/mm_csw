@@ -1,474 +1,498 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	<meta name="apple-mobile-web-app-capable" content="yes">
-	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-	<meta name="theme-color" content="#2196F3">
-	<title>회원 관리 앱</title>
-	<link rel="manifest" href="manifest.json">
-	<link rel="apple-touch-icon" href="icon-192x192.png">
-	<link rel="stylesheet" href="normal.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#2196F3">
+    <title>회원 관리 앱</title>
+    <link rel="manifest" href="./etc/manifest.json">
+    <link rel="apple-touch-icon" href="icon-192x192.png">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/lock.css">
+    <link rel="stylesheet" href="css/camera.css">
+    <link rel="stylesheet" href="css/member.css">
+    <link rel="stylesheet" href="css/calendar.css">
+    <link rel="stylesheet" href="css/coach.css">
+    <link rel="stylesheet" href="css/responsive.css">
 </head>
 
 <body>
-	<div class="container">
-		<div class="header">
-			<div class="sync-status" id="syncStatus">☁️ 동기화</div>
-			<div class="settings-icon" onclick="openSettings()">
-				<svg viewBox="0 0 24 24">
-					<path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c.04-0.24.24-0.41.48-0.41 h3.84c0.24,0,0.43,0.17,0.47,0.41L19.25,5.35c0.59,0.24,1.13,0.56,1.62,0.94l2.39-0.96c0.22-0.08,0.47,0,0.59,0.22l1.92,3.32 c0.12,0.22,0.07,0.47-0.12,0.61l-2.03,1.58c0.05,0.3,0.07,0.63,0.07,0.94s-0.02,0.64-0.07,0.94l2.03,1.58 c0.18,0.14,0.23,0.41,0.12,0.61l-1.92,3.32c-0.12,0.22-0.37,0.29-0.59,0.22l-2.39-0.96c-0.5,0.38-1.03,0.7-1.62,0.94l-0.36,2.54 c-0.05,0.24-0.24,0.41-0.47,0.41h-3.84c-0.24,0-0.44-0.17-0.48-0.41l-0.36-2.54c-0.59-0.24-1.13-0.56-1.62-0.94l-2.39,0.96 c-0.22,0.08-0.47,0-0.59-0.22l-1.92,3.32c-0.12-0.22-0.07-0.47,0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
-				</svg>
-			</div>
-			<h1>👥 회원 관리</h1>
-			<div class="club-name" id="clubNameDisplay">구장명을 설정하세요</div>
-			<div class="member-count">총 <span id="memberCount">0</span>명</div>
-		</div>
+    <div class="container">
+        <!-- 헤더 -->
+        <div class="header">
+            <div class="sync-status" id="syncStatus">☁️ 동기화</div>
+            <div class="settings-icon" onclick="openSettings()">
+                <svg viewBox="0 0 24 24">
+                    <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c.04-0.24.24-0.41.48-0.41 h3.84c0.24,0,0.43,0.17,0.47,0.41L19.25,5.35c0.59,0.24,1.13,0.56,1.62,0.94l2.39-0.96c0.22-0.08,0.47,0,0.59,0.22l1.92,3.32 c0.12,0.22,0.07,0.47-0.12,0.61l-2.03,1.58c0.05,0.3,0.07,0.63,0.07,0.94s-0.02,0.64-0.07,0.94l2.03,1.58 c0.18,0.14,0.23,0.41,0.12,0.61l-1.92,3.32c-0.12,0.22-0.37,0.29-0.59,0.22l-2.39-0.96c-0.5,0.38-1.03,0.7-1.62,0.94l-0.36,2.54 c-0.05,0.24-0.24,0.41-0.47,0.41h-3.84c-0.24,0-0.44-0.17-0.48-0.41l-0.36-2.54c-0.59-0.24-1.13-0.56-1.62-0.94l-2.39,0.96 c-0.22,0.08-0.47,0-0.59-0.22l-1.92,3.32c-0.12-0.22-0.07-0.47,0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
+                </svg>
+            </div>
+            <div class="club-name" id="clubNameDisplay">구장명을 설정하세요</div>
+            <div class="member-count">총 <span id="memberCount">0</span>명</div>
+        </div>
 
-		<div class="search-section">
-			<!-- 달력 -->
-			<div class="form-group full-width">
-				<label>출석 관리</label>
-				<button type="button" class="photo-btn" onclick="toggleCalendar()" style="margin-bottom: 10px;">
-					📅 <span id="calendarToggleText">달력 열기</span>
-				</button>
-				<div class="calendar-container" id="formCalendar" style="display: none;">
-					<div class="calendar-header">
-						<h3 id="formCalendarTitle">2026년 1월</h3>
-						<div class="calendar-nav">
-							<button class="calendar-nav-btn" onclick="previousMonthForm()">◀ 이전</button>
-							<button class="calendar-nav-btn" onclick="nextMonthForm()">다음 ▶</button>
-						</div>
-					</div>
-					<div class="calendar-grid" id="formCalendarGrid"></div>
-				</div>
-			</div>
+        <!-- 검색 및 목록 섹션 -->
+        <div class="search-section">
+            <!-- 달력 -->
+            <div class="form-group full-width">
+                <label>출석 관리</label>
+                <button type="button" class="photo-btn" onclick="toggleCalendar()" style="margin-bottom: 10px;">
+                    📅 <span id="calendarToggleText">달력 열기</span>
+                </button>
+                <div class="calendar-container" id="formCalendar" style="display: none;">
+                    <div class="calendar-header">
+                        <h3 id="formCalendarTitle">2026년 1월</h3>
+                        <div class="calendar-nav">
+                            <button class="calendar-nav-btn" onclick="previousMonthForm()">◀ 이전</button>
+                            <button class="calendar-nav-btn" onclick="nextMonthForm()">다음 ▶</button>
+                        </div>
+                    </div>
+                    <div class="calendar-grid" id="formCalendarGrid"></div>
+                </div>
+            </div>
 
-			<div class="search-box" style="margin-top:10px;">
-				<input type="text" id="searchInput" placeholder="🔍 이름, 전화번호로 검색..." onkeyup="searchMembers()">
-			</div>
-			<div class="filter-buttons">
-				<button class="filter-btn active" data-sort="name" onclick="sortMembers('name')">이름순 ▲</button>
-				<button class="filter-btn" data-sort="registerDate" onclick="sortMembers('registerDate')">등록일순</button>
-				<button class="filter-btn" data-sort="coach" onclick="sortMembers('coach')">코치순</button>
-			</div>
+            <div class="search-box" style="margin-top:10px;">
+                <input type="text" id="searchInput" placeholder="🔍 이름, 전화번호로 검색..." onkeyup="searchMembers()">
+            </div>
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-sort="name" onclick="sortMembers('name')">이름순 ▲</button>
+                <button class="filter-btn" data-sort="registerDate" onclick="sortMembers('registerDate')">등록일순</button>
+                <button class="filter-btn" data-sort="coach" onclick="sortMembers('coach')">코치순</button>
+            </div>
 
-			<div class="tab-section" style="margin-top:10px">
-				<div class="tabs">
-					<button class="tab-btn active" onclick="switchTab('list')">회원 목록</button>
-					<button class="tab-btn" onclick="switchTab('schedule')">📅 전체 스케줄</button>
-				</div>
-			</div>
+            <div class="tab-section" style="margin-top:10px">
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="switchTab('list')">회원 목록</button>
+                    <button class="tab-btn" onclick="switchTab('schedule')">📅 전체 스케줄</button>
+                </div>
+            </div>
 
-			<div class="content-section">
-				<div id="listSection">
-					<div class="empty-state">
-						<svg fill="currentColor" viewBox="0 0 20 20">
-							<path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
-						</svg>
-						<p>등록된 회원이 없습니다</p>
-					</div>
-				</div>
+            <div class="content-section">
+                <div id="listSection">
+                    <div class="empty-state">
+                        <svg fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                        </svg>
+                        <p>등록된 회원이 없습니다</p>
+                    </div>
+                </div>
 
-				<div id="scheduleSection" class="schedule-section">
-					<div id="scheduleContent">
-						<!-- 일주일 스케줄이 여기에 표시됩니다 -->
-					</div>
-				</div>
-			</div>
-		</div>
+                <div id="scheduleSection" class="schedule-section">
+                    <div id="scheduleContent">
+                        <!-- 일주일 스케줄이 여기에 표시됩니다 -->
+                    </div>
+                </div>
+            </div>
+        </div>
 
-		<!-- 수정: 암호 입력 섹션을 더 작게 -->
-		<div class="password-section" style="margin:10px 0; border-radius:10px">
-			<div class="password-input-group">
-				<input type="password" 
-					   id="lockPassword" 
-					   class="password-input" 
-					   placeholder="수정/삭제 암호 입력"
-					   onkeyup="if(event.key === 'Enter') unlockEditButtons()">
-				<button class="unlock-btn" onclick="unlockEditButtons()">
-					🔓 잠금 해제
-				</button>
-			</div>
-		</div>
-		<!-- 잠금 상태 알림 (폼 입력 클릭 시 표시, 잠금 해제/타이머 만료 시 숨김) -->
-		<div class="lock-tooltip" id="lockTooltip">
-			<span id="lockTooltipText">🔒 잠김 상태 - 수정/삭제 암호를 입력해주세요</span>
-		</div>
+        <!-- 암호 입력 섹션 -->
+        <div class="password-section" style="margin:10px 0; border-radius:10px">
+            <div class="password-input-group">
+                <input type="password" 
+                       id="lockPassword" 
+                       class="password-input" 
+                       placeholder="수정/삭제 암호 입력"
+                       onkeyup="if(event.key === 'Enter') unlockEditButtons()">
+                <button class="unlock-btn" onclick="unlockEditButtons()">
+                    🔓 잠금 해제
+                </button>
+            </div>
+        </div>
+        <!-- 잠금 상태 알림 -->
+        <div class="lock-tooltip" id="lockTooltip">
+            <span id="lockTooltipText">🔒 잠김 상태 - 수정/삭제 암호를 입력해주세요</span>
+        </div>
 
-		<div class="form-section">
-			<div class="form-grid">
-				<div class="form-group">
-					<label for="name">이름 *</label>
-					<input type="text" id="name" placeholder="이름 입력">
-				</div>
+        <!-- 회원 폼 섹션 -->
+        <div class="form-section">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="name">이름 *</label>
+                    <input type="text" id="name" placeholder="이름 입력">
+                </div>
 
-				<div class="form-group">
-					<label for="phone">전화번호</label>
-					<input type="tel" id="phone" placeholder="">
-				</div>
+                <div class="form-group">
+                    <label for="phone">전화번호</label>
+                    <input type="tel" id="phone" placeholder="">
+                </div>
 
-				<!-- 코치 선택 (pill 버튼) -->
-				<div class="form-group full-width">
-					<label>담당 코치</label>
-					<div class="coach-btn-group" id="coachBtnGroup">
-						<!-- JS에서 코치 목록을 동적으로 렌더링 -->
-					</div>
-				</div>
+                <!-- 코치 선택 -->
+                <div class="form-group full-width">
+                    <label>담당 코치</label>
+                    <div class="coach-btn-group" id="coachBtnGroup">
+                        <!-- JS에서 코치 목록을 동적으로 렌더링 -->
+                    </div>
+                </div>
 
-				<!-- 출석 관리 필드 추가 -->
-				<div class="form-group">
-					<label for="targetCount">출석 목표 횟수</label>
-					<input type="number" id="targetCount" placeholder="0으로 설정 시 출석 관리 제외" value="0" min="0">
-					<div style="font-size: 12px; color: #666; margin-top: 5px;">
-						※ 0으로 설정하면 출석 관리에서 제외됩니다.
-					</div>
-				</div>
-				<div class="form-group">
-					<label for="currentCount">현재 출석 횟수</label>
-					<div style="display: flex; gap: 10px; align-items: center;">
-						<input type="number" id="currentCount" placeholder="0" value="0" min="0" readonly style="background: #f0f0f0; flex: 1;">
-						<button type="button" class="photo-btn" onclick="resetCurrentAttendance()" style="padding: 8px 12px; font-size: 12px; background: #FF9800;">
-							🔄 초기화
-						</button>
-					</div>
-					<div style="font-size: 12px; color: #666; margin-top: 5px;">
-						※ 자동으로 계산됩니다. 수동으로 초기화하려면 버튼을 클릭하세요.
-					</div>
-				</div>
-				<div class="form-group">
-					<label for="fee">월회비 (원)</label>
-					<input type="number" id="fee" placeholder="회비 입력">
-					<div class="fee-presets" id="feePresets">
-						<!-- 회비 기본값 버튼들이 여기에 생성됩니다 -->
-					</div>
-				</div>
+                <!-- 출석 관리 필드 -->
+                <div class="form-group">
+                    <label for="targetCount">출석 목표 횟수</label>
+                    <input type="number" id="targetCount" placeholder="0으로 설정 시 출석 관리 제외" value="0" min="0">
+                    <div style="font-size: 12px; color: #666; margin-top: 5px;">
+                        ※ 0으로 설정하면 출석 관리에서 제외됩니다.
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="currentCount">현재 출석 횟수</label>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <input type="number" id="currentCount" placeholder="0" value="0" min="0" readonly style="background: #f0f0f0; flex: 1;">
+                        <button type="button" class="photo-btn" onclick="resetCurrentAttendance()" style="padding: 8px 12px; font-size: 12px; background: #FF9800;">
+                            🔄 초기화
+                        </button>
+                    </div>
+                    <div style="font-size: 12px; color: #666; margin-top: 5px;">
+                        ※ 자동으로 계산됩니다. 수동으로 초기화하려면 버튼을 클릭하세요.
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="fee">월회비 (원)</label>
+                    <input type="number" id="fee" placeholder="회비 입력">
+                    <div class="fee-presets" id="feePresets">
+                        <!-- 회비 기본값 버튼들이 여기에 생성됩니다 -->
+                    </div>
+                </div>
 
-				<!-- 회비 입금 내역 (수정시에만 표시) -->
-				<div class="form-group full-width payment-section-wrap" id="paymentSection" style="display: none;">
-					<div class="schedule-section-header">💳 회비 입금 내역</div>
-					<div class="payment-input-row">
-						<div class="payment-input-item">
-							<label for="paymentDate">입금날</label>
-							<input type="date" id="paymentDate">
-						</div>
-						<div class="payment-input-item">
-							<label for="paymentAmount">입금금액 (원)</label>
-							<input type="number" id="paymentAmount" placeholder="금액 입력">
-						</div>
-						<button type="button" class="payment-add-btn" onclick="addPaymentEntry()">+ 추가</button>
-					</div>
-					<div class="payment-list" id="paymentList">
-						<!-- JS에서 동적 렌더링 -->
-					</div>
-				</div>
+                <!-- 회비 입금 내역 -->
+                <div class="form-group full-width payment-section-wrap" id="paymentSection" style="display: none;">
+                    <div class="schedule-section-header">💳 회비 입금 내역</div>
+                    <div class="payment-input-row">
+                        <div class="payment-input-item">
+                            <label for="paymentDate">입금날</label>
+                            <input type="date" id="paymentDate">
+                        </div>
+                        <div class="payment-input-item">
+                            <label for="paymentAmount">입금금액 (원)</label>
+                            <input type="number" id="paymentAmount" placeholder="금액 입력">
+                        </div>
+                        <button type="button" class="payment-add-btn" onclick="addPaymentEntry()">+ 추가</button>
+                    </div>
+                    <div class="payment-list" id="paymentList">
+                        <!-- JS에서 동적 렌더링 -->
+                    </div>
+                </div>
 
-				<!-- 첫 번째 스케줄 -->
-				<div class="form-group full-width">
-					<div class="schedule-section-header">📅 스케줄 1</div>
-					<div class="form-grid" style="grid-template-columns: 1fr 2fr; margin-bottom: 10px;">
-						<div class="form-group">
-							<label for="day1">요일</label>
-							<select id="day1">
-								<option value="">요일 선택</option>
-								<option value="월">월요일</option>
-								<option value="화">화요일</option>
-								<option value="수">수요일</option>
-								<option value="목">목요일</option>
-								<option value="금">금요일</option>
-								<option value="토">토요일</option>
-								<option value="일">일요일</option>
-							</select>
-						</div>
-						<div class="form-group">
-							<label>시간</label>
-							<div class="time-group">
-								<input type="time" id="startTime1" step="300">
-								<input type="time" id="endTime1" step="300">
-							</div>
-						</div>
-					</div>
-				</div>
+                <!-- 첫 번째 스케줄 -->
+                <div class="form-group full-width">
+                    <div class="schedule-section-header">📅 스케줄 1</div>
+                    <div class="form-grid" style="grid-template-columns: 1fr 2fr; margin-bottom: 10px;">
+                        <div class="form-group">
+                            <label for="day1">요일</label>
+                            <select id="day1">
+                                <option value="">요일 선택</option>
+                                <option value="월">월요일</option>
+                                <option value="화">화요일</option>
+                                <option value="수">수요일</option>
+                                <option value="목">목요일</option>
+                                <option value="금">금요일</option>
+                                <option value="토">토요일</option>
+                                <option value="일">일요일</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>시간</label>
+                            <div class="time-group">
+                                <input type="time" id="startTime1" step="300">
+                                <input type="time" id="endTime1" step="300">
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-				<!-- 두 번째 스케줄 -->
-				<div class="form-group full-width">
-					<div class="schedule-section-header">📅 스케줄 2</div>
-					<div class="form-grid" style="grid-template-columns: 1fr 2fr; margin-bottom: 10px;">
-						<div class="form-group">
-							<label for="day2">요일</label>
-							<select id="day2">
-								<option value="">요일 선택</option>
-								<option value="월">월요일</option>
-								<option value="화">화요일</option>
-								<option value="수">수요일</option>
-								<option value="목">목요일</option>
-								<option value="금">금요일</option>
-								<option value="토">토요일</option>
-								<option value="일">일요일</option>
-							</select>
-						</div>
-						<div class="form-group">
-							<label>시간</label>
-							<div class="time-group">
-								<input type="time" id="startTime2" step="300">
-								<input type="time" id="endTime2" step="300">
-							</div>
-						</div>
-					</div>
-				</div>
+                <!-- 두 번째 스케줄 -->
+                <div class="form-group full-width">
+                    <div class="schedule-section-header">📅 스케줄 2</div>
+                    <div class="form-grid" style="grid-template-columns: 1fr 2fr; margin-bottom: 10px;">
+                        <div class="form-group">
+                            <label for="day2">요일</label>
+                            <select id="day2">
+                                <option value="">요일 선택</option>
+                                <option value="월">월요일</option>
+                                <option value="화">화요일</option>
+                                <option value="수">수요일</option>
+                                <option value="목">목요일</option>
+                                <option value="금">금요일</option>
+                                <option value="토">토요일</option>
+                                <option value="일">일요일</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>시간</label>
+                            <div class="time-group">
+                                <input type="time" id="startTime2" step="300">
+                                <input type="time" id="endTime2" step="300">
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-				<div class="form-group">
-					<label for="registerDate">회원등록일</label>
-					<input type="date" id="registerDate">
-				</div>
+                <div class="form-group">
+                    <label for="registerDate">회원등록일</label>
+                    <input type="date" id="registerDate">
+                </div>
 
-				<div class="form-group full-width">
-					<label for="photo">회원 사진</label>
-					<div style="display: flex; flex-direction: column; gap: 10px;">
-						<div style="display: flex; gap: 10px;">
-							<button type="button" class="photo-btn" onclick="openCamera()" style="flex: 1;">
-								📷 카메라
-							</button>
-							<button type="button" class="photo-btn" onclick="document.getElementById('photoInput').click()" style="flex: 1;">
-								🖼️ 갤러리
-							</button>
-						</div>
+                <div class="form-group full-width">
+                    <label for="photo">회원 사진</label>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <div style="display: flex; gap: 10px;">
+                            <button type="button" class="photo-btn" onclick="openCamera()" style="flex: 1;">
+                                📷 카메라
+                            </button>
+                            <button type="button" class="photo-btn" onclick="document.getElementById('photoInput').click()" style="flex: 1;">
+                                🖼️ 갤러리
+                            </button>
+                        </div>
 
-						<div class="photo-preview-container" id="photoPreviewContainer">
-							<div class="photo-preview">
-								<img id="photoPreview" src="" alt="회원 사진 미리보기">
-								<button type="button" class="remove-photo-btn" onclick="removePhoto()">🗑️</button>
-							</div>
-						</div>
+                        <div class="photo-preview-container" id="photoPreviewContainer">
+                            <div class="photo-preview">
+                                <img id="photoPreview" src="" alt="회원 사진 미리보기">
+                                <button type="button" class="remove-photo-btn" onclick="removePhoto()">🗑️</button>
+                            </div>
+                        </div>
 
-						<input type="file" id="photoInput" accept="image/*" style="display: none;" onchange="handlePhotoUpload(event)">
-					</div>
-				</div>
-			</div>
+                        <input type="file" id="photoInput" accept="image/*" style="display: none;" onchange="handlePhotoUpload(event)">
+                    </div>
+                </div>
+            </div>
 
-			<div class="form-group">
-				<label for="email">이메일</label>
-				<input type="email" id="email" placeholder="example@email.com">
-			</div>
+            <div class="form-group">
+                <label for="email">이메일</label>
+                <input type="email" id="email" placeholder="example@email.com">
+            </div>
 
-			<div class="form-group">
-				<label for="address">주소</label>
-				<input type="text" id="address" placeholder="주소 입력">
-			</div>
+            <div class="form-group">
+                <label for="address">주소</label>
+                <input type="text" id="address" placeholder="주소 입력">
+            </div>
 
-			<!-- 추가/수정/초기화 버튼 - 모바일에서 한 줄로 -->
-			<div class="button-group">
-				<button class="btn btn-add" onclick="addMember()" style="font-size:20px; padding:3px 5px;">추가</button>
-				<button class="btn btn-update btn-disabled" id="updateBtn" onclick="checkLockBeforeUpdate()" style="font-size:20px; padding:3px 5px;">수정</button>
-				<button class="btn btn-clear" onclick="clearForm()" style="font-size:20px; padding:3px 5px;">초기화</button>
-			</div>
-		</div>
-	</div>
+            <!-- 추가/수정/초기화 버튼 -->
+            <div class="button-group">
+                <button class="btn btn-add" onclick="addMember()" style="font-size:20px; padding:3px 5px;">추가</button>
+                <button class="btn btn-update btn-disabled" id="updateBtn" onclick="checkLockBeforeUpdate()" style="font-size:20px; padding:3px 5px;">수정</button>
+                <button class="btn btn-clear" onclick="clearForm()" style="font-size:20px; padding:3px 5px;">초기화</button>
+            </div>
+        </div>
+    </div>
 
-	<!-- 카메라 모달 -->
-	<div id="cameraModal" class="modal">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h2>📷 카메라</h2>
-				<button class="close-btn" onclick="closeCamera()">×</button>
-			</div>
-			<div style="text-align: center;">
-				<!-- 카메라 전환 버튼 -->
-				<div class="camera-controls">
-					<button class="camera-btn active" id="frontCameraBtn" onclick="switchCamera('user')">
-						📱 전면 카메라
-					</button>
-					<button class="camera-btn" id="rearCameraBtn" onclick="switchCamera('environment')">
-						📷 후면 카메라
-					</button>
-				</div>
+    <!-- 카메라 모달 -->
+    <div id="cameraModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📷 카메라</h2>
+                <button class="close-btn" onclick="closeCamera()">×</button>
+            </div>
+            <div style="text-align: center;">
+                <!-- 카메라 전환 버튼 -->
+                <div class="camera-controls">
+                    <button class="camera-btn active" id="frontCameraBtn" onclick="switchCamera('user')">
+                        📱 전면 카메라
+                    </button>
+                    <button class="camera-btn" id="rearCameraBtn" onclick="switchCamera('environment')">
+                        📷 후면 카메라
+                    </button>
+                </div>
 
-				<video id="cameraVideo" autoplay playsinline></video>
+                <video id="cameraVideo" autoplay playsinline></video>
 
-				<!-- 사진 찍기 버튼 -->
-				<div class="capture-btn" onclick="capturePhoto()">
-					<div class="capture-inner"></div>
-				</div>
+                <!-- 사진 찍기 버튼 -->
+                <div class="capture-btn" onclick="capturePhoto()">
+                    <div class="capture-inner"></div>
+                </div>
 
-				<div style="text-align: center; color: #666; font-size: 14px;">
-					사진을 찍으려면 원형 버튼을 누르세요
-				</div>
-			</div>
-		</div>
-	</div>
+                <div style="text-align: center; color: #666; font-size: 14px;">
+                    사진을 찍으려면 원형 버튼을 누르세요
+                </div>
+            </div>
+        </div>
+    </div>
 
-	<div id="passwordModal" class="modal">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h2>🔒 비밀번호 입력</h2>
-				<button class="close-btn" onclick="closePasswordModal()">×</button>
-			</div>
-			<p>설정을 열려면 비밀번호를 입력해주세요.</p>
-			<div class="password-input">
-				<input type="password" id="passwordInput" placeholder="비밀번호 입력" onkeyup="if(event.key === 'Enter') checkPassword()">
-			</div>
-			<div class="modal-buttons">
-				<button style="background: #2196F3;" onclick="checkPassword()">확인</button>
-				<button style="background: #9E9E9E;" onclick="closePasswordModal()">취소</button>
-			</div>
-		</div>
-	</div>
+    <!-- 비밀번호 입력 모달 -->
+    <div id="passwordModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🔒 비밀번호 입력</h2>
+                <button class="close-btn" onclick="closePasswordModal()">×</button>
+            </div>
+            <p>설정을 열려면 비밀번호를 입력해주세요.</p>
+            <div class="password-input">
+                <input type="password" id="passwordInput" placeholder="비밀번호 입력" onkeyup="if(event.key === 'Enter') checkPassword()">
+            </div>
+            <div class="modal-buttons">
+                <button style="background: #2196F3;" onclick="checkPassword()">확인</button>
+                <button style="background: #9E9E9E;" onclick="closePasswordModal()">취소</button>
+            </div>
+        </div>
+    </div>
 
-	<div id="settingsModal" class="modal">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h2>⚙️ 설정</h2>
-				<button class="close-btn" onclick="closeSettings()">×</button>
-			</div>
-			<div class="form-group">
-				<label for="clubNameInput">구장명</label>
-				<input type="text" id="clubNameInput" placeholder="예: OO탁구장">
-			</div>
+    <!-- 설정 모달 -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>⚙️ 설정</h2>
+                <button class="close-btn" onclick="closeSettings()">×</button>
+            </div>
+            <div class="form-group">
+                <label for="clubNameInput">구장명</label>
+                <input type="text" id="clubNameInput" placeholder="예: OO탁구장">
+            </div>
 
-			<!-- 추가: 자동 잠금 시간 설정 -->
-			<div class="form-group">
-				<label for="lockTimeoutInput">자동 잠금 시간 (분)</label>
-				<input type="number" id="lockTimeoutInput" min="1" max="120" placeholder="60" value="60">
-				<div style="font-size: 12px; color: #666; margin-top: 5px;">
-					※ 암호 입력 후 자동으로 잠기기까지의 시간입니다. 기본값: 60분
-				</div>
-			</div>
+            <!-- 자동 잠금 시간 설정 -->
+            <div class="form-group">
+                <label for="lockTimeoutInput">자동 잠금 시간 (분)</label>
+                <input type="number" id="lockTimeoutInput" min="1" max="120" placeholder="60" value="60">
+                <div style="font-size: 12px; color: #666; margin-top: 5px;">
+                    ※ 암호 입력 후 자동으로 잠기기까지의 시간입니다. 기본값: 60분
+                </div>
+            </div>
 
-			<!-- 코치 이름 설정 (4명) -->
-			<div class="form-group">
-				<label>코치 이름 설정 (최대 4명)</label>
-				<div class="coach-settings-grid">
-					<div class="coach-setting-item">
-						<span class="coach-setting-label">코치 1</span>
-						<input type="text" id="coachName1" placeholder="코치 이름">
-					</div>
-					<div class="coach-setting-item">
-						<span class="coach-setting-label">코치 2</span>
-						<input type="text" id="coachName2" placeholder="코치 이름">
-					</div>
-					<div class="coach-setting-item">
-						<span class="coach-setting-label">코치 3</span>
-						<input type="text" id="coachName3" placeholder="코치 이름">
-					</div>
-					<div class="coach-setting-item">
-						<span class="coach-setting-label">코치 4</span>
-						<input type="text" id="coachName4" placeholder="코치 이름">
-					</div>
-				</div>
-				<div style="font-size: 12px; color: #666; margin-top: 8px;">
-					※ 비어있는 코치는 회원 폼에서 표시되지 않습니다.
-				</div>
-			</div>
+            <!-- 코치 이름 설정 -->
+            <div class="form-group">
+                <label>코치 이름 설정 (최대 4명)</label>
+                <div class="coach-settings-grid">
+                    <div class="coach-setting-item">
+                        <span class="coach-setting-label">코치 1</span>
+                        <input type="text" id="coachName1" placeholder="코치 이름">
+                    </div>
+                    <div class="coach-setting-item">
+                        <span class="coach-setting-label">코치 2</span>
+                        <input type="text" id="coachName2" placeholder="코치 이름">
+                    </div>
+                    <div class="coach-setting-item">
+                        <span class="coach-setting-label">코치 3</span>
+                        <input type="text" id="coachName3" placeholder="코치 이름">
+                    </div>
+                    <div class="coach-setting-item">
+                        <span class="coach-setting-label">코치 4</span>
+                        <input type="text" id="coachName4" placeholder="코치 이름">
+                    </div>
+                </div>
+                <div style="font-size: 12px; color: #666; margin-top: 8px;">
+                    ※ 비어있는 코치는 회원 폼에서 표시되지 않습니다.
+                </div>
+            </div>
 
-			<div class="form-group">
-				<label>월회비 기본값 설정</label>
-				<div class="fee-presets" style="margin-top: 10px;">
-					<input type="number" id="feePreset1" placeholder="기본값 1" style="margin-bottom: 5px;">
-					<input type="number" id="feePreset2" placeholder="기본값 2" style="margin-bottom: 5px;">
-					<input type="number" id="feePreset3" placeholder="기본값 3" style="margin-bottom: 5px;">
-					<input type="number" id="feePreset4" placeholder="기본값 4" style="margin-bottom: 5px;">
-					<input type="number" id="feePreset5" placeholder="기본값 5" style="margin-bottom: 5px;">
-				</div>
-			</div>
-			<!-- 수정/삭제 암호 설정 추가 -->
-			<div class="form-group">
-				<label for="editPassword">수정/삭제 암호</label>
-				<input type="password" id="editPassword" placeholder="수정/삭제 암호 입력">
-				<div style="font-size: 12px; color: #666; margin-top: 5px;">
-					※ 상단 암호 입력 칸에 사용할 암호입니다.
-				</div>
-			</div>
-			<div class="form-group">
-				<label for="adminPassword">관리자 비밀번호</label>
-				<input type="password" id="adminPassword" placeholder="새 비밀번호 입력">
-				<div style="font-size: 12px; color: #666; margin-top: 5px;">
-					※ 설정 메뉴 접근용 비밀번호입니다.
-				</div>
-			</div>
-			<div class="modal-buttons" style="margin-top: 20px;">
-				<button style="background: #2196F3;" onclick="saveSettings()">저장</button>
-				<button style="background: #9E9E9E;" onclick="closeSettings()">취소</button>
-			</div>
-			<div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #e0e0e0;">
-				<button style="width: 100%; padding: 12px; background: #f44336; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;" onclick="exportData()">📤 데이터 내보내기</button>
-				<button style="width: 100%; padding: 12px; background: #4CAF50; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; margin-top: 10px;" onclick="document.getElementById('importFile').click()">📥 데이터 가져오기</button>
-				<input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(event)">
-			</div>
-		</div>
-	</div>
+            <div class="form-group">
+                <label>월회비 기본값 설정</label>
+                <div class="fee-presets" style="margin-top: 10px;">
+                    <input type="number" id="feePreset1" placeholder="기본값 1" style="margin-bottom: 5px;">
+                    <input type="number" id="feePreset2" placeholder="기본값 2" style="margin-bottom: 5px;">
+                    <input type="number" id="feePreset3" placeholder="기본값 3" style="margin-bottom: 5px;">
+                    <input type="number" id="feePreset4" placeholder="기본값 4" style="margin-bottom: 5px;">
+                    <input type="number" id="feePreset5" placeholder="기본값 5" style="margin-bottom: 5px;">
+                </div>
+            </div>
+            
+            <!-- 수정/삭제 암호 설정 -->
+            <div class="form-group">
+                <label for="editPassword">수정/삭제 암호</label>
+                <input type="password" id="editPassword" placeholder="수정/삭제 암호 입력">
+                <div style="font-size: 12px; color: #666; margin-top: 5px;">
+                    ※ 상단 암호 입력 칸에 사용할 암호입니다.
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="adminPassword">관리자 비밀번호</label>
+                <input type="password" id="adminPassword" placeholder="새 비밀번호 입력">
+                <div style="font-size: 12px; color: #666; margin-top: 5px;">
+                    ※ 설정 메뉴 접근용 비밀번호입니다.
+                </div>
+            </div>
+            <div class="modal-buttons" style="margin-top: 20px;">
+                <button style="background: #2196F3;" onclick="saveSettings()">저장</button>
+                <button style="background: #9E9E9E;" onclick="closeSettings()">취소</button>
+            </div>
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #e0e0e0;">
+                <button style="width: 100%; padding: 12px; background: #f44336; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;" onclick="exportData()">📤 데이터 내보내기</button>
+                <button style="width: 100%; padding: 12px; background: #4CAF50; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; margin-top: 10px;" onclick="document.getElementById('importFile').click()">📥 데이터 가져오기</button>
+                <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(event)">
+            </div>
+        </div>
+    </div>
 
-	<div id="deleteModal" class="modal">
-		<div class="modal-content">
-			<p>정말 삭제하시겠습니까?</p>
-			<div class="modal-buttons">
-				<button style="background: #f44336;" onclick="confirmDelete()">삭제</button>
-				<button style="background: #9E9E9E;" onclick="closeModal()">취소</button>
-			</div>
-		</div>
-	</div>
+    <!-- 삭제 확인 모달 -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <p>정말 삭제하시겠습니까?</p>
+            <div class="modal-buttons">
+                <button style="background: #f44336;" onclick="confirmDelete()">삭제</button>
+                <button style="background: #9E9E9E;" onclick="closeModal()">취소</button>
+            </div>
+        </div>
+    </div>
 
-	<!-- 출석 초기화 확인 모달 -->
-	<div id="confirmModal" class="modal">
-		<div class="modal-content">
-			<p>현재 회원의 출석 횟수를 초기화하시겠습니까?<br><small style="color:#999;">(출석 기록은 유지됩니다)</small></p>
-			<div class="modal-buttons">
-				<button style="background: #FF9800;" onclick="confirmResetAttendance()">초기화</button>
-				<button style="background: #9E9E9E;" onclick="closeConfirmModal()">취소</button>
-			</div>
-		</div>
-	</div>
+    <!-- 출석 초기화 확인 모달 -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <p>현재 회원의 출석 횟수를 초기화하시겠습니까?<br><small style="color:#999;">(출석 기록은 유지됩니다)</small></p>
+            <div class="modal-buttons">
+                <button style="background: #FF9800;" onclick="confirmResetAttendance()">초기화</button>
+                <button style="background: #9E9E9E;" onclick="closeConfirmModal()">취소</button>
+            </div>
+        </div>
+    </div>
 
-	<div id="alertModal" class="modal">
-		<div class="modal-content">
-			<p id="alertMessage"></p>
-			<div class="modal-buttons">
-				<button style="background: #2196F3;" onclick="closeAlertModal()">확인</button>
-			</div>
-		</div>
-	</div>
+    <!-- 알림 모달 -->
+    <div id="alertModal" class="modal">
+        <div class="modal-content">
+            <p id="alertMessage"></p>
+            <div class="modal-buttons">
+                <button style="background: #2196F3;" onclick="closeAlertModal()">확인</button>
+            </div>
+        </div>
+    </div>
 
-	<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-	<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
-	<script src="mm.js"></script>
+    <!-- Firebase 스크립트 -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    
+    <!-- 분리된 JS 파일들 -->
+    <script src="js/base.js"></script>
+    <script src="js/lock.js"></script>
+    <script src="js/modal.js"></script>
+    <script src="js/camera.js"></script>
+    <script src="js/member.js"></script>
+    <script src="js/form.js"></script>
+    <script src="js/calendar.js"></script>
+    <script src="js/coach.js"></script>
+    <script src="js/settings.js"></script>
 
-	<!-- 출석 알림 모달 -->
-	<div id="attendanceAlertModal" class="modal attendance-alert-modal">
-		<div class="modal-content">
-			<div class="attendance-alert-icon">⚠️</div>
-			<h2>출석 알림</h2>
-			<p id="attendanceAlertMessage"></p>
-			<div class="modal-buttons">
-				<button class="btn btn-primary" onclick="closeAttendanceAlert()">확인</button>
-			</div>
-		</div>
-	</div>
+    <!-- 출석 알림 모달 -->
+    <div id="attendanceAlertModal" class="modal attendance-alert-modal">
+        <div class="modal-content">
+            <div class="attendance-alert-icon">⚠️</div>
+            <h2>출석 알림</h2>
+            <p id="attendanceAlertMessage"></p>
+            <div class="modal-buttons">
+                <button class="btn btn-primary" onclick="closeAttendanceAlert()">확인</button>
+            </div>
+        </div>
+    </div>
 
-	<!-- 출석 선택 모달 -->
-	<div id="attendanceSelectModal" class="modal">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h2>출석 체크</h2>
-			</div>
-			<p>어떤 회원의 출석을 체크하시겠습니까?</p>
-			<!-- 검색창 추가 -->
-			<div style="margin: 15px 0;">
-				<input type="text" 
-					   id="attendanceSearchInput" 
-					   placeholder="🔍 이름으로 검색..." 
-					   style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px;"
-					   onkeyup="filterAttendanceMembers()">
-			</div>
-			<div id="memberSelectList" style="max-height: 400px; overflow-y: auto; margin: 20px 0;"></div>
-			<div class="modal-buttons">
-				<button class="btn btn-secondary" onclick="closeAttendanceSelectModal()">취소</button>
-			</div>
-		</div>
-	</div>
+    <!-- 출석 선택 모달 -->
+    <div id="attendanceSelectModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>출석 체크</h2>
+            </div>
+            <p>어떤 회원의 출석을 체크하시겠습니까?</p>
+            <!-- 검색창 추가 -->
+            <div style="margin: 15px 0;">
+                <input type="text" 
+                       id="attendanceSearchInput" 
+                       placeholder="🔍 이름으로 검색..." 
+                       style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px;"
+                       onkeyup="filterAttendanceMembers()">
+            </div>
+            <div id="memberSelectList" style="max-height: 400px; overflow-y: auto; margin: 20px 0;"></div>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="closeAttendanceSelectModal()">취소</button>
+            </div>
+        </div>
+    </div>
 
-	<!-- 알림음 오디오 -->
-	<audio id="notificationSound" preload="auto">
-		<source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTGJ0fPTgjMGHm7A7+OZUQ0PVqvl77RpHwU7k9n0zIIyBSGAxPDdl0MKE160/o1mHAY4kdb0yXwsHGHH8d6SRgsUYLXp6atUGgpJou7ykHI0BSmCzvPbeScAD0Sj5fG0aycGOpPY9NOGLAckg8rx24NLKRNit+3wqV4gCU+r5/S3cCYFMIvW9NSKNgkaf8bx35pFDBZmu+nxrl4XCFG06fCzaiQCNJLY9dCFMwsofcjy14IzBx9qveu0bCEGTqve9NmPPQkaaMHw3pkQAERn3+6wcyYGN5PZ9NKJNAojgsnx2IxADBoRdL3s8K9oJAU/ldv119SDMyAaxfHdn0sLFlqz6/K0byMBO5bZ9NOFMgkdcsXw2olCDBdqt+Pwr2soCkyg4fTWiTQDG2y+7PGubCUFPJLZ9dOIMwsfeMPx2IpBDBpiv+7wtXAjB0Cn4PTYijcAEGO96++tbCcFOJHZ9M+HNQsjfsjx2YpDCyFov+vxtGwjB0Ol4vPWiTYBEmS96++va50AAAA=" type="audio/wav">
-	</audio>
+    <!-- 알림음 오디오 -->
+    <audio id="notificationSound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTGJ0fPTgjMGHm7A7+OZUQ0PVqvl77RpHwU7k9n0zIIyBSGAxPDdl0MKE160/o1mHAY4kdb0yXwsHGHH8d6SRgsUYLXp6atUGgpJou7ykHI0BSmCzvPbeScAD0Sj5fG0aycGOpPY9NOGLAckg8rx24NLKRNit+3wqV4gCU+r5/S3cCYFMIvW9NSKNgkaf8bx35pFDBZmu+nxrl4XCFG06fCzaiQCNJLY9dCFMwsofcjy14IzBx9qveu0bCEGTqve9NmPPQkaaMHw3pkQAERn3+6wcyYGN5PZ9NKJNAojgsnx2IxADBoRdL3s8K9oJAU/ldv119SDMyAaxfHdn0sLFlqz6/K0byMBO5bZ9NOFMgkdcsXw2olCDBdqt+Pwr2soCkyg4fTWiTQDG2y+7PGubCUFPJLZ9dOIMwsfeMPx2IpBDBpiv+7wtXAjB0Cn4PTYijcAEGO96++tbCcFOJHZ9M+HNQsjfsjx2YpDCyFov+vxtGwjB0Ol4vPWiTYBEmS96++va50AAAA=" type="audio/wav">
+    </audio>
 </body>
 </html>
