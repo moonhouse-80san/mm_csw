@@ -95,6 +95,135 @@ function saveSettings() {
     }
 }
 
+// 데이터 엑셀 내보내기
+function exportData() {
+    if (members.length === 0) {
+        showAlert('내보낼 회원 데이터가 없습니다!');
+        return;
+    }
+    
+    try {
+        // 회원 데이터 시트
+        const membersData = members.map(member => [
+            member.name || '',
+            member.phone || '',
+            member.email || '',
+            member.address || '',
+            member.registerDate || '',
+            member.fee || '',
+            member.coach || '',
+            member.targetCount || 0,
+            member.currentCount || 0,
+            member.day1 || '',
+            member.startTime1 || '',
+            member.endTime1 || '',
+            member.day2 || '',
+            member.startTime2 || '',
+            member.endTime2 || '',
+            member.gender || '',
+            member.birthYear || '',
+            member.skillLevel !== undefined && member.skillLevel !== null ? 
+                (member.skillLevel === -1 ? '희망' : 
+                 member.skillLevel === 0 ? '0부' : 
+                 `${member.skillLevel}부`) : '',
+            member.awards ? member.awards.join('; ') : '',
+            member.etc || ''
+        ]);
+        
+        const headers = [
+            '이름', '전화번호', '이메일', '주소', '등록일(YYYY-MM-DD)', 
+            '월회비', '담당코치', '출석목표횟수', '현재출석횟수', 
+            '스케줄1_요일', '스케줄1_시작시간', '스케줄1_종료시간', 
+            '스케줄2_요일', '스케줄2_시작시간', '스케줄2_종료시간',
+            '성별', '생년', '부수(실력)', '수상경력', '기타'
+        ];
+        
+        const wsData = [headers, ...membersData];
+        const ws = XLSX.utils.aoa_to_sheet(wsData);
+        
+        // 열 너비 설정
+        const wscols = [
+            {wch: 10}, {wch: 15}, {wch: 20}, {wch: 25}, {wch: 12},
+            {wch: 10}, {wch: 10}, {wch: 12}, {wch: 12}, {wch: 10},
+            {wch: 10}, {wch: 10}, {wch: 10}, {wch: 10}, {wch: 10},
+            {wch: 8}, {wch: 8}, {wch: 12}, {wch: 30}, {wch: 30}
+        ];
+        ws['!cols'] = wscols;
+        
+        // 설정 데이터 시트
+        const settingsData = [
+            ['구장명', settings.clubName || ''],
+            ['자동 잠금 시간(분)', settings.lockTimeout || 60],
+            ['코치1', settings.coaches[0] || ''],
+            ['코치2', settings.coaches[1] || ''],
+            ['코치3', settings.coaches[2] || ''],
+            ['코치4', settings.coaches[3] || ''],
+            ['월회비 기본값1', settings.feePresets[0] || 0],
+            ['월회비 기본값2', settings.feePresets[1] || 0],
+            ['월회비 기본값3', settings.feePresets[2] || 0],
+            ['월회비 기본값4', settings.feePresets[3] || 0],
+            ['월회비 기본값5', settings.feePresets[4] || 0]
+        ];
+        
+        const wsSettings = XLSX.utils.aoa_to_sheet(settingsData);
+        
+        // 통합 문서 생성
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "회원데이터");
+        XLSX.utils.book_append_sheet(wb, wsSettings, "설정");
+        
+        // 파일 저장
+        const clubName = settings.clubName ? `_${settings.clubName}` : '';
+        const fileName = `회원관리_데이터${clubName}_${new Date().toISOString().split('T')[0]}.xlsx`;
+        XLSX.writeFile(wb, fileName);
+        showAlert(`${members.length}명의 회원 데이터를 엑셀 파일로 내보냈습니다!`);
+        
+    } catch (error) {
+        console.error('엑셀 내보내기 오류:', error);
+        showAlert(`엑셀 내보내기 중 오류가 발생했습니다: ${error.message}`);
+    }
+}
+
+// 엑셀 템플릿 다운로드
+function downloadTemplate() {
+    try {
+        // 템플릿 데이터 생성 (새로운 필드 포함)
+        const templateData = [
+            ['이름', '전화번호', '이메일', '주소', '등록일(YYYY-MM-DD)', '월회비', '담당코치', '출석목표횟수', '현재출석횟수', '스케줄1_요일', '스케줄1_시작시간', '스케줄1_종료시간', '스케줄2_요일', '스케줄2_시작시간', '스케줄2_종료시간', '성별', '생년', '부수(실력)', '수상경력', '기타'],
+            ['홍길동', '010-1234-5678', 'hong@email.com', '서울시 강남구', '2024-01-15', '100000', '김코치', '8', '0', '월', '13:00', '13:20', '수', '15:00', '15:20', '남', '1990', '5부', '2023년 탁구대회 우승; 2022년 개인전 준우승', '특이사항 없음'],
+            ['김영희', '010-8765-4321', 'kim@email.com', '서울시 서초구', '2024-01-20', '70000', '이코치', '12', '3', '화', '14:00', '14:20', '목', '16:00', '16:20', '여', '1995', '3부', '2022년 단체전 우승', '좌손잡이'],
+            ['※ 참고:', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+            ['※ 요일: 월,화,수,목,금,토,일 중 선택', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+            ['※ 시간 형식: 13:00, 14:30 등', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+            ['※ 성별: 남 또는 여', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+            ['※ 부수(실력): 희망, 0부, 1부, 2부, ... 10부 중 선택', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+            ['※ 수상경력: 여러 개일 경우 세미콜론(;)으로 구분', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+            ['※ 이 시트를 수정하지 마세요', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '']
+        ];
+        
+        const ws = XLSX.utils.aoa_to_sheet(templateData);
+        
+        // 열 너비 설정 (새로운 필드 포함)
+        const wscols = [
+            {wch: 10}, {wch: 15}, {wch: 20}, {wch: 25}, {wch: 12},
+            {wch: 10}, {wch: 10}, {wch: 12}, {wch: 12}, {wch: 10},
+            {wch: 10}, {wch: 10}, {wch: 10}, {wch: 10}, {wch: 10},
+            {wch: 8}, {wch: 8}, {wch: 12}, {wch: 30}, {wch: 30}
+        ];
+        ws['!cols'] = wscols;
+        
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "회원등록템플릿");
+        
+        XLSX.writeFile(wb, "회원등록_템플릿_신규.xlsx");
+        showAlert('엑셀 템플릿이 다운로드되었습니다! (새로운 필드 포함)');
+        
+    } catch (error) {
+        console.error('템플릿 생성 오류:', error);
+        showAlert('템플릿 생성 중 오류가 발생했습니다.');
+    }
+}
+
 // 데이터 엑셀 가져오기
 function importData(event) {
     const file = event.target.files[0];
@@ -125,16 +254,44 @@ function importData(event) {
             rows.forEach(row => {
                 if (row.length === 0 || !row[0]) return;
                 
-                // 전화번호를 문자열로 변환 (엑셀에서 숫자로 인식될 수 있음)
+                // 전화번호 처리
                 let phone = row[1] || '';
                 if (typeof phone === 'number') {
                     phone = phone.toString();
-                    // 01012345678 형식을 010-1234-5678 형식으로 변환
                     if (phone.length === 11 && phone.startsWith('010')) {
                         phone = phone.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
                     } else if (phone.length === 10) {
                         phone = phone.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
                     }
+                }
+                
+                // 부수 처리
+                let skillLevel = null;
+                if (row[17] !== undefined && row[17] !== '') {
+                    const skillText = String(row[17]).trim();
+                    if (skillText === '희망') {
+                        skillLevel = -1;
+                    } else if (skillText === '0부' || skillText === '선출') {
+                        skillLevel = 0;
+                    } else if (skillText.endsWith('부')) {
+                        const level = parseInt(skillText.replace('부', ''));
+                        if (!isNaN(level)) {
+                            skillLevel = level;
+                        }
+                    } else {
+                        const level = parseInt(skillText);
+                        if (!isNaN(level)) {
+                            skillLevel = level;
+                        }
+                    }
+                }
+                
+                // 수상경력 처리
+                let awards = [];
+                if (row[18] !== undefined && row[18] !== '') {
+                    const awardsText = String(row[18]);
+                    // 세미콜론으로 구분된 수상경력 분리
+                    awards = awardsText.split(';').map(a => a.trim()).filter(a => a !== '');
                 }
                 
                 const member = {
@@ -153,6 +310,12 @@ function importData(event) {
                     day2: row[12] ? String(row[12]) : null,
                     startTime2: row[13] ? String(row[13]) : null,
                     endTime2: row[14] ? String(row[14]) : null,
+                    // 새로운 필드들
+                    gender: row[15] ? String(row[15]) : '',
+                    birthYear: row[16] ? parseInt(row[16]) : null,
+                    skillLevel: skillLevel,
+                    awards: awards,
+                    etc: row[19] ? String(row[19]) : '',
                     photo: '',
                     attendanceDates: [],
                     attendanceHistory: [],
@@ -229,40 +392,4 @@ function importData(event) {
     };
     
     reader.readAsArrayBuffer(file);
-}
-
-// 엑셀 템플릿 다운로드 기능 추가
-function downloadTemplate() {
-    try {
-        // 템플릿 데이터 생성
-        const templateData = [
-            ['이름', '전화번호', '이메일', '주소', '등록일(YYYY-MM-DD)', '월회비', '담당코치', '출석목표횟수', '현재출석횟수', '스케줄1_요일', '스케줄1_시작시간', '스케줄1_종료시간', '스케줄2_요일', '스케줄2_시작시간', '스케줄2_종료시간'],
-            ['홍길동', '010-1234-5678', 'hong@email.com', '서울시 강남구', '2024-01-15', '100000', '김코치', '8', '0', '월', '13:00', '13:20', '수', '15:00', '15:20'],
-            ['김영희', '010-8765-4321', 'kim@email.com', '서울시 서초구', '2024-01-20', '70000', '이코치', '12', '3', '화', '14:00', '14:20', '목', '16:00', '16:20'],
-            ['※ 참고:', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
-            ['※ 요일: 월,화,수,목,금,토,일 중 선택', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
-            ['※ 시간 형식: 13:00, 14:30 등', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
-            ['※ 이 시트를 수정하지 마세요', '', '', '', '', '', '', '', '', '', '', '', '', '', '']
-        ];
-        
-        const ws = XLSX.utils.aoa_to_sheet(templateData);
-        
-        // 열 너비 설정
-        const wscols = [
-            {wch: 10}, {wch: 15}, {wch: 20}, {wch: 25}, {wch: 12},
-            {wch: 10}, {wch: 10}, {wch: 12}, {wch: 12}, {wch: 10},
-            {wch: 10}, {wch: 10}, {wch: 10}, {wch: 10}, {wch: 10}
-        ];
-        ws['!cols'] = wscols;
-        
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "회원등록템플릿");
-        
-        XLSX.writeFile(wb, "회원등록_템플릿.xlsx");
-        showAlert('엑셀 템플릿이 다운로드되었습니다!');
-        
-    } catch (error) {
-        console.error('템플릿 생성 오류:', error);
-        showAlert('템플릿 생성 중 오류가 발생했습니다.');
-    }
 }
