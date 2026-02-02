@@ -535,26 +535,26 @@
     </div>
 
     <!-- 출석 선택 모달 -->
-    <div id="attendanceSelectModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>출석 체크</h2>
-            </div>
-            <p>어떤 회원의 출석을 체크하시겠습니까?</p>
-            <!-- 검색창 추가 -->
-            <div style="margin: 15px 0;">
-                <input type="text" 
-                       id="attendanceSearchInput" 
-                       placeholder="🔍 이름으로 검색..." 
-                       style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px;"
-                       onkeyup="filterAttendanceMembers()">
-            </div>
-            <div id="memberSelectList" style="max-height: 400px; overflow-y: auto; margin: 20px 0;"></div>
-            <div class="modal-buttons">
-                <button class="btn btn-secondary" onclick="closeAttendanceSelectModal()" style="background:#444;">취소</button>
-            </div>
-        </div>
-    </div>
+	<div id="attendanceSelectModal" class="modal">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h2>출석 체크</h2>
+			</div>
+			<p>어떤 회원의 출석을 체크하시겠습니까?</p>
+			<!-- 검색창 추가 (placeholder 수정) -->
+			<div style="margin: 15px 0;">
+				<input type="text" 
+					   id="attendanceSearchInput" 
+					   placeholder="🔍 이름 또는 전화번호로 검색..." 
+					   style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px;"
+					   onkeyup="filterAttendanceMembers()">
+			</div>
+			<div id="memberSelectList" style="max-height: 400px; overflow-y: auto; margin: 20px 0;"></div>
+			<div class="modal-buttons">
+				<button class="btn btn-secondary" onclick="closeAttendanceSelectModal()" style="background:#444;">취소</button>
+			</div>
+		</div>
+	</div>
 
     <!-- 알림음 오디오 -->
     <audio id="notificationSound" preload="auto">

@@ -240,7 +240,8 @@ function filterAttendanceMembers() {
     
     if (searchTerm) {
         validMembers = validMembers.filter(member => 
-            member.name.toLowerCase().includes(searchTerm)
+            member.name.toLowerCase().includes(searchTerm) ||
+            (member.phone && String(member.phone).includes(searchTerm))
         );
     }
     
