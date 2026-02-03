@@ -66,12 +66,36 @@ self.addEventListener('activate', (event) => {
   );
 });
 
+// 캐시 가능한 요청인지 확인하는 헬퍼 함수
+function isCacheable(request) {
+  const url = new URL(request.url);
+  
+  // 캐시 불가능한 스킴 필터링
+  const unsupportedSchemes = ['chrome-extension', 'chrome', 'about', 'data', 'blob'];
+  if (unsupportedSchemes.includes(url.protocol.replace(':', ''))) {
+    return false;
+  }
+  
+  // Firebase 및 외부 API 제외
+  if (url.hostname.includes('firebasedatabase.app') || 
+      url.hostname.includes('googleapis.com') ||
+      url.hostname.includes('gstatic.com') ||
+      url.hostname.includes('cdnjs.cloudflare.com')) {
+    return false;
+  }
+  
+  // GET 요청만 캐시
+  if (request.method !== 'GET') {
+    return false;
+  }
+  
+  return true;
+}
+
 // Fetch 이벤트 - 네트워크 우선, 캐시 폴백 전략
 self.addEventListener('fetch', (event) => {
-  // Firebase 요청은 캐시하지 않음
-  if (event.request.url.includes('firebasedatabase.app') || 
-      event.request.url.includes('googleapis.com') ||
-      event.request.url.includes('gstatic.com')) {
+  // 캐시 불가능한 요청은 그냥 통과
+  if (!isCacheable(event.request)) {
     return;
   }
 
@@ -79,11 +103,15 @@ self.addEventListener('fetch', (event) => {
     fetch(event.request)
       .then((response) => {
         // 유효한 응답이면 캐시에 저장
-        if (response && response.status === 200) {
+        if (response && response.status === 200 && response.type === 'basic') {
           const responseToCache = response.clone();
+          
           caches.open(CACHE_NAME)
             .then((cache) => {
-              cache.put(event.request, responseToCache);
+              // 캐시 저장 시도 - 실패해도 앱은 계속 작동
+              cache.put(event.request, responseToCache).catch((error) => {
+                console.warn('[Service Worker] 캐시 저장 실패:', event.request.url, error);
+              });
             });
         }
         return response;
@@ -101,6 +129,12 @@ self.addEventListener('fetch', (event) => {
             if (event.request.destination === 'document') {
               return caches.match('./index.html');
             }
+            
+            // 그 외의 경우 에러 반환
+            return new Response('Network error happened', {
+              status: 408,
+              headers: { 'Content-Type': 'text/plain' }
+            });
           });
       })
   );
