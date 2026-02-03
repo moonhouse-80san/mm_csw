@@ -619,3 +619,24 @@ function timesOverlap(s1, e1, s2, e2) {
            (s1 <= s2 && e1 >= e2);
 }
 [file content end]
+
+// 디버깅: 현재 스케줄 데이터 확인
+function debugCurrentSchedules() {
+    const schedulesData = getSchedulesData();
+    console.log('현재 스케줄 데이터:', schedulesData);
+    console.log('스케줄 데이터 타입:', typeof schedulesData);
+    console.log('각 스케줄 항목:', schedulesData.map(s => ({
+        day: s.day,
+        startTime: s.startTime,
+        endTime: s.endTime,
+        id: s.id
+    })));
+}
+
+// 디버깅: 모든 회원의 스케줄 확인
+function debugAllMembersSchedules() {
+    console.log('모든 회원의 스케줄 데이터:');
+    members.forEach((member, index) => {
+        console.log(`회원 ${index} (${member.name}):`, member.schedules);
+    });
+}
