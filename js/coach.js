@@ -196,11 +196,22 @@ function renderCoachMembersList(membersList) {
             `<div><a href="tel:${String(member.phone).replace(/-/g, '')}" class="phone-link">📞 ${member.phone}</a></div>` : '';
 
         let scheduleBadges = '';
-        if (member.day1 && member.startTime1 && member.endTime1) {
-            scheduleBadges += `<span class="schedule-badge">${dayNames[member.day1]} ${member.startTime1}~${member.endTime1}</span>`;
-        }
-        if (member.day2 && member.startTime2 && member.endTime2) {
-            scheduleBadges += `<span class="schedule-badge">${dayNames[member.day2]} ${member.startTime2}~${member.endTime2}</span>`;
+        
+        // 새로운 schedules 배열 형식
+        if (member.schedules && member.schedules.length > 0) {
+            member.schedules.forEach(schedule => {
+                if (schedule.day && schedule.startTime && schedule.endTime) {
+                    scheduleBadges += `<span class="schedule-badge">${dayNames[schedule.day]} ${schedule.startTime}~${schedule.endTime}</span>`;
+                }
+            });
+        } else {
+            // 기존 day1, day2 형식 (하위 호환)
+            if (member.day1 && member.startTime1 && member.endTime1) {
+                scheduleBadges += `<span class="schedule-badge">${dayNames[member.day1]} ${member.startTime1}~${member.endTime1}</span>`;
+            }
+            if (member.day2 && member.startTime2 && member.endTime2) {
+                scheduleBadges += `<span class="schedule-badge">${dayNames[member.day2]} ${member.startTime2}~${member.endTime2}</span>`;
+            }
         }
 
         const currentCount = member.currentCount || 0;

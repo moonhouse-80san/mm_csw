@@ -97,12 +97,6 @@ function addMember() {
     const registerDate = document.getElementById('registerDate').value;
     const feeValue = document.getElementById('fee').value;
     const fee = safeParseInt(feeValue); // 안전한 변환
-    const day1 = document.getElementById('day1').value;
-    const startTime1 = document.getElementById('startTime1').value;
-    const endTime1 = document.getElementById('endTime1').value;
-    const day2 = document.getElementById('day2').value;
-    const startTime2 = document.getElementById('startTime2').value;
-    const endTime2 = document.getElementById('endTime2').value;
     const email = document.getElementById('email').value.trim();
     const address = document.getElementById('address').value.trim();
     const coach = getSelectedCoach();
@@ -114,34 +108,26 @@ function addMember() {
     const etc = document.getElementById('etc').value.trim();
     const awards = [...currentAwards];
 
+    // 스케줄 데이터 가져오기
+    const schedulesData = getSchedulesData();
+
     if (!name) {
         showAlert('이름을 입력해주세요!');
         document.getElementById('name').focus();
         return;
     }
 
-    if (day1 && startTime1 && endTime1) {
-        if (startTime1 >= endTime1) {
-            showAlert('첫 번째 스케줄의 종료시간은 시작시간보다 커야 합니다!');
-            return;
-        }
-    }
-    if (day2 && startTime2 && endTime2) {
-        if (startTime2 >= endTime2) {
-            showAlert('두 번째 스케줄의 종료시간은 시작시간보다 커야 합니다!');
+    // 스케줄 유효성 검사
+    for (let i = 0; i < schedulesData.length; i++) {
+        const schedule = schedulesData[i];
+        if (schedule.startTime >= schedule.endTime) {
+            showAlert(`스케줄 ${i + 1}의 종료시간은 시작시간보다 커야 합니다!`);
             return;
         }
     }
 
-    const conflict = checkTimeConflict(
-        day1 && startTime1 && endTime1 ? day1 : null,
-        day1 && startTime1 && endTime1 ? startTime1 : null,
-        day1 && startTime1 && endTime1 ? endTime1 : null,
-        day2 && startTime2 && endTime2 ? day2 : null,
-        day2 && startTime2 && endTime2 ? startTime2 : null,
-        day2 && startTime2 && endTime2 ? endTime2 : null,
-        coach
-    );
+    // 스케줄 충돌 검사
+    const conflict = checkScheduleConflicts(schedulesData, coach);
     if (conflict.conflict) {
         showAlert(`코치 [${coach}] 시간 충돌!\n${conflict.memberName} 회원이 이미 ${conflict.existingTime}에 등록되어 있습니다.`);
         return;
@@ -162,12 +148,7 @@ function addMember() {
         attendanceDates: [],
         attendanceHistory: [],
         paymentHistory: [],
-        day1: day1 || null,
-        startTime1: startTime1 || null,
-        endTime1: endTime1 || null,
-        day2: day2 || null,
-        startTime2: startTime2 || null,
-        endTime2: endTime2 || null,
+        schedules: schedulesData, // 배열로 저장
         email,
         address,
         // 새로운 필드들
@@ -208,12 +189,6 @@ function updateMember() {
     const registerDate = document.getElementById('registerDate').value;
     const feeValue = document.getElementById('fee').value;
     const fee = safeParseInt(feeValue); // 안전한 변환
-    const day1 = document.getElementById('day1').value;
-    const startTime1 = document.getElementById('startTime1').value;
-    const endTime1 = document.getElementById('endTime1').value;
-    const day2 = document.getElementById('day2').value;
-    const startTime2 = document.getElementById('startTime2').value;
-    const endTime2 = document.getElementById('endTime2').value;
     const email = document.getElementById('email').value.trim();
     const address = document.getElementById('address').value.trim();
     const coach = getSelectedCoach();
@@ -225,35 +200,26 @@ function updateMember() {
     const etc = document.getElementById('etc').value.trim();
     const awards = [...currentAwards];
 
+    // 스케줄 데이터 가져오기
+    const schedulesData = getSchedulesData();
+
     if (!name) {
         showAlert('이름을 입력해주세요!');
         document.getElementById('name').focus();
         return;
     }
 
-    if (day1 && startTime1 && endTime1) {
-        if (startTime1 >= endTime1) {
-            showAlert('첫 번째 스케줄의 종료시간은 시작시간보다 커야 합니다!');
-            return;
-        }
-    }
-    if (day2 && startTime2 && endTime2) {
-        if (startTime2 >= endTime2) {
-            showAlert('두 번째 스케줄의 종료시간은 시작시간보다 커야 합니다!');
+    // 스케줄 유효성 검사
+    for (let i = 0; i < schedulesData.length; i++) {
+        const schedule = schedulesData[i];
+        if (schedule.startTime >= schedule.endTime) {
+            showAlert(`스케줄 ${i + 1}의 종료시간은 시작시간보다 커야 합니다!`);
             return;
         }
     }
 
-    const conflict = checkTimeConflict(
-        day1 && startTime1 && endTime1 ? day1 : null,
-        day1 && startTime1 && endTime1 ? startTime1 : null,
-        day1 && startTime1 && endTime1 ? endTime1 : null,
-        day2 && startTime2 && endTime2 ? day2 : null,
-        day2 && startTime2 && endTime2 ? startTime2 : null,
-        day2 && startTime2 && endTime2 ? endTime2 : null,
-        coach,
-        currentEditIndex
-    );
+    // 스케줄 충돌 검사
+    const conflict = checkScheduleConflicts(schedulesData, coach, currentEditIndex);
     if (conflict.conflict) {
         showAlert(`코치 [${coach}] 시간 충돌!\n${conflict.memberName} 회원이 이미 ${conflict.existingTime}에 등록되어 있습니다.`);
         return;
@@ -293,12 +259,7 @@ function updateMember() {
         attendanceDates: members[currentEditIndex].attendanceDates || [],
         attendanceHistory: existingHistory,
         paymentHistory: paymentHistory,
-        day1: day1 || null,
-        startTime1: startTime1 || null,
-        endTime1: endTime1 || null,
-        day2: day2 || null,
-        startTime2: startTime2 || null,
-        endTime2: endTime2 || null,
+        schedules: schedulesData, // 배열로 저장
         email,
         address,
         // 새로운 필드들
@@ -344,12 +305,6 @@ function editMember(index) {
     document.getElementById('phone').value = member.phone || '';
     document.getElementById('registerDate').value = member.registerDate || '';
     document.getElementById('fee').value = member.fee !== null && member.fee !== undefined ? member.fee : '';
-    document.getElementById('day1').value = member.day1 || '';
-    document.getElementById('startTime1').value = member.startTime1 || '';
-    document.getElementById('endTime1').value = member.endTime1 || '';
-    document.getElementById('day2').value = member.day2 || '';
-    document.getElementById('startTime2').value = member.startTime2 || '';
-    document.getElementById('endTime2').value = member.endTime2 || '';
     document.getElementById('email').value = member.email || '';
     document.getElementById('address').value = member.address || '';
     document.getElementById("targetCount").value = member.targetCount || 0;
@@ -364,6 +319,29 @@ function editMember(index) {
     document.getElementById('skillLevel').value = member.skillLevel || '';
     document.getElementById('etc').value = member.etc || '';
     setAwardsList(member.awards || []);
+
+    // 스케줄 데이터 설정
+    if (member.schedules && member.schedules.length > 0) {
+        setSchedulesData(member.schedules);
+    } else {
+        // 기존 day1, day2 형식 호환
+        const legacySchedules = [];
+        if (member.day1 && member.startTime1 && member.endTime1) {
+            legacySchedules.push({
+                day: member.day1,
+                startTime: member.startTime1,
+                endTime: member.endTime1
+            });
+        }
+        if (member.day2 && member.startTime2 && member.endTime2) {
+            legacySchedules.push({
+                day: member.day2,
+                startTime: member.startTime2,
+                endTime: member.endTime2
+            });
+        }
+        setSchedulesData(legacySchedules.length > 0 ? legacySchedules : null);
+    }
 
     // 회비 입금 내역
     document.getElementById('paymentSection').style.display = 'block';
@@ -407,12 +385,6 @@ function clearForm() {
     document.getElementById('phone').value = '';
     document.getElementById('registerDate').value = '';
     document.getElementById('fee').value = '';
-    document.getElementById('day1').value = '';
-    document.getElementById('startTime1').value = '';
-    document.getElementById('endTime1').value = '';
-    document.getElementById('day2').value = '';
-    document.getElementById('startTime2').value = '';
-    document.getElementById('endTime2').value = '';
     document.getElementById('email').value = '';
     document.getElementById('address').value = '';
     document.getElementById("targetCount").value = "0";
@@ -428,6 +400,9 @@ function clearForm() {
     document.getElementById('etc').value = '';
     currentAwards = [];
     renderAwardsList();
+
+    // 스케줄 초기화
+    resetSchedules();
 
     // 회비 입금 내역 초기화
     document.getElementById('paymentSection').style.display = 'none';
@@ -514,7 +489,61 @@ function renderPaymentList(list) {
     `).join('');
 }
 
-// 스케줄 충돌 체크
+// 스케줄 충돌 체크 (새로운 배열 방식)
+function checkScheduleConflicts(schedulesData, coach, excludeIndex = null) {
+    if (!coach) return { conflict: false };
+
+    for (let i = 0; i < members.length; i++) {
+        if (excludeIndex !== null && i === excludeIndex) continue;
+
+        const member = members[i];
+        if (member.coach !== coach) continue;
+
+        // 회원의 스케줄 가져오기 (새 형식 또는 기존 형식)
+        const memberSchedules = member.schedules || [];
+        
+        // 기존 day1, day2 형식도 체크
+        if (!member.schedules) {
+            if (member.day1 && member.startTime1 && member.endTime1) {
+                memberSchedules.push({
+                    day: member.day1,
+                    startTime: member.startTime1,
+                    endTime: member.endTime1
+                });
+            }
+            if (member.day2 && member.startTime2 && member.endTime2) {
+                memberSchedules.push({
+                    day: member.day2,
+                    startTime: member.startTime2,
+                    endTime: member.endTime2
+                });
+            }
+        }
+
+        // 각 스케줄 비교
+        for (const newSchedule of schedulesData) {
+            for (const existingSchedule of memberSchedules) {
+                if (newSchedule.day === existingSchedule.day) {
+                    if (timesOverlap(
+                        newSchedule.startTime,
+                        newSchedule.endTime,
+                        existingSchedule.startTime,
+                        existingSchedule.endTime
+                    )) {
+                        return {
+                            conflict: true,
+                            memberName: member.name,
+                            existingTime: `${dayNames[existingSchedule.day]} ${existingSchedule.startTime}~${existingSchedule.endTime}`
+                        };
+                    }
+                }
+            }
+        }
+    }
+    return { conflict: false };
+}
+
+// 스케줄 충돌 체크 (기존 방식 - 하위 호환)
 function checkTimeConflict(day1, startTime1, endTime1, day2, startTime2, endTime2, coach, excludeIndex = null) {
     if (!coach) return { conflict: false };
 
