@@ -1,3 +1,5 @@
+[file name]: base.js
+[file content begin]
 // Service Worker 등록 (에러 핸들링 추가)
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
@@ -132,6 +134,14 @@ function saveToFirebase() {
             if (obj[key] !== undefined) {
                 if (obj[key] === null) {
                     cleaned[key] = null;
+                } else if (Array.isArray(obj[key])) {
+                    // 배열 처리: 각 요소를 순회하면서 객체인 경우 재귀적으로 정리
+                    cleaned[key] = obj[key].map(item => {
+                        if (item && typeof item === 'object' && !Array.isArray(item)) {
+                            return cleanObject(item);
+                        }
+                        return item;
+                    });
                 } else if (typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
                     cleaned[key] = cleanObject(obj[key]);
                 } else {
@@ -147,8 +157,18 @@ function saveToFirebase() {
         membersObj[index] = cleanObject(member);
     });
 
+    console.log('Firebase에 저장할 데이터:', membersObj);
+    
     firebaseDb.ref('members').set(membersObj);
     firebaseDb.ref('settings').set(cleanObject(settings));
+    
+    // 저장 후 디버깅
+    setTimeout(() => {
+        console.log('저장 완료, members 배열 확인:');
+        members.forEach((member, index) => {
+            console.log(`멤버 ${index} (${member.name}) 스케줄:`, member.schedules);
+        });
+    }, 1000);
 }
 
 // 회원 정규화 헬퍼
@@ -163,6 +183,14 @@ function normalizeMember(member) {
                 cleaned[key] = String(member[key]);
             } else if (key === 'coach' && member[key] !== null) {
                 cleaned[key] = String(member[key]);
+            } else if (key === 'schedules' && Array.isArray(member[key])) {
+                // 스케줄 배열 정규화
+                cleaned[key] = member[key].map(schedule => ({
+                    id: schedule.id || Date.now() + Math.random(),
+                    day: schedule.day || '',
+                    startTime: schedule.startTime || '',
+                    endTime: schedule.endTime || ''
+                }));
             } else {
                 cleaned[key] = member[key];
             }
@@ -175,6 +203,7 @@ function normalizeMember(member) {
     if (!cleaned.coach) cleaned.coach = '';
     if (!cleaned.paymentHistory) cleaned.paymentHistory = [];
     if (!cleaned.phone) cleaned.phone = '';
+    if (!cleaned.schedules) cleaned.schedules = [];
     
     return cleaned;
 }
@@ -182,6 +211,11 @@ function normalizeMember(member) {
 // 회비 프리셋 버튼 업데이트
 function updateFeePresetButtons() {
     const feePresetsEl = document.getElementById('feePresets');
+    if (!feePresetsEl) {
+        console.warn('feePresets 엘리먼트를 찾을 수 없습니다');
+        return;
+    }
+    
     feePresetsEl.innerHTML = '';
 
     settings.feePresets.forEach((fee, index) => {
@@ -191,7 +225,10 @@ function updateFeePresetButtons() {
             button.className = 'fee-preset-btn';
             button.textContent = `${formatNumber(fee)}원`;
             button.onclick = () => {
-                document.getElementById('fee').value = fee;
+                const feeInput = document.getElementById('fee');
+                if (feeInput) {
+                    feeInput.value = fee;
+                }
             };
             feePresetsEl.appendChild(button);
         }
@@ -219,29 +256,62 @@ function formatDate(dateString) {
     return `${y}.${m}.${d}`;
 }
 
+// 안전한 엘리먼트 값 설정 헬퍼 함수
+function safeSetElementValue(elementId, value) {
+    const element = document.getElementById(elementId);
+    if (element) {
+        element.value = value;
+    } else {
+        console.warn(`엘리먼트 ${elementId}를 찾을 수 없습니다`);
+    }
+}
+
 // 초기화
 document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('registerDate').valueAsDate = new Date();
-    document.getElementById('startTime1').value = "12:00";
-    document.getElementById('endTime1').value = "12:20";
-    document.getElementById('startTime2').value = "12:00";
-    document.getElementById('endTime2').value = "12:20";
-    document.getElementById('targetCount').value = "0";
-    document.getElementById('currentCount').value = "0";
-    
-    updateFeePresetButtons();
-    renderCoachButtons();
-    
-    // 잠금 상태 초기화 및 회원 목록 렌더링
-    updateLockStatus();
-    
-    // Firebase 로딩이 완료되면 회원 목록 렌더링
-    // Firebase 로드가 비동기이므로 약간의 지연 후 실행
+    // DOM이 완전히 로드된 후 실행
     setTimeout(() => {
-        if (members.length > 0) {
-            renderMembers();
-            renderSchedule();
+        // 요소가 존재하는지 확인 후 값 설정
+        safeSetElementValue('registerDate', new Date().toISOString().split('T')[0]);
+        
+        // 기존 설정값이 없을 때만 기본값 설정
+        const targetCount = document.getElementById('targetCount');
+        const currentCount = document.getElementById('currentCount');
+        
+        if (targetCount && targetCount.value === '') {
+            targetCount.value = "0";
         }
+        if (currentCount && currentCount.value === '') {
+            currentCount.value = "0";
+        }
+        
+        updateFeePresetButtons();
+        renderCoachButtons();
+        
+        // 잠금 상태 초기화 및 회원 목록 렌더링
+        updateLockStatus();
+        
+        // Firebase 로딩이 완료되면 회원 목록 렌더링
+        // Firebase 로드가 비동기이므로 약간의 지연 후 실행
+        setTimeout(() => {
+            if (members.length > 0) {
+                renderMembers();
+                renderSchedule();
+            }
+        }, 1000);
     }, 500);
-
 });
+
+// Firebase 데이터 확인을 위한 디버깅 함수
+function debugFirebaseData() {
+    firebaseDb.ref('members').once('value', (snapshot) => {
+        const data = snapshot.val();
+        console.log("Firebase에 저장된 모든 회원 데이터:", data);
+        
+        if (data) {
+            Object.values(data).forEach((member, index) => {
+                console.log(`회원 ${index} (${member.name}) 스케줄:`, member.schedules);
+            });
+        }
+    });
+}
+[file content end]
