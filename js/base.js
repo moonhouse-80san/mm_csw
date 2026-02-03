@@ -6,20 +6,9 @@ if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./sw.js')
             .then(registration => {
                 console.log('✅ Service Worker 등록 성공:', registration.scope);
-                
-                // 업데이트 확인
-                registration.addEventListener('updatefound', () => {
-                    const newWorker = registration.installing;
-                    newWorker.addEventListener('statechange', () => {
-                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                            console.log('🔄 새로운 버전이 있습니다. 페이지를 새로고침하세요.');
-                        }
-                    });
-                });
             })
             .catch(error => {
                 console.log('❌ Service Worker 등록 실패:', error);
-                // 실패해도 앱은 정상 작동
             });
     });
 }
@@ -92,7 +81,10 @@ function loadFromFirebase() {
             settings.lockTimeout = data.lockTimeout !== undefined ? data.lockTimeout : 60;
             settings.coaches = data.coaches !== undefined ? data.coaches : ['', '', '', ''];
 
-            document.getElementById('clubNameDisplay').textContent = settings.clubName || '구장명을 설정하세요';
+            const clubNameDisplay = document.getElementById('clubNameDisplay');
+            if (clubNameDisplay) {
+                clubNameDisplay.textContent = settings.clubName || '구장명을 설정하세요';
+            }
             updateFeePresetButtons();
             renderCoachButtons();
         } else {
@@ -110,7 +102,8 @@ function listenToFirebaseChanges() {
             members = Object.values(data).map(normalizeMember);
 
             // 현재 검색/정렬 상태 보존
-            const currentSearch = document.getElementById('searchInput').value;
+            const searchInput = document.getElementById('searchInput');
+            const currentSearch = searchInput ? searchInput.value : '';
             if (currentSearch) {
                 filteredMembers = members.filter(member => {
                     return member.name.toLowerCase().includes(currentSearch.toLowerCase()) ||
@@ -288,14 +281,18 @@ document.addEventListener('DOMContentLoaded', function() {
         renderCoachButtons();
         
         // 잠금 상태 초기화 및 회원 목록 렌더링
-        updateLockStatus();
+        if (typeof updateLockStatus === 'function') {
+            updateLockStatus();
+        }
         
         // Firebase 로딩이 완료되면 회원 목록 렌더링
         // Firebase 로드가 비동기이므로 약간의 지연 후 실행
         setTimeout(() => {
-            if (members.length > 0) {
+            if (members.length > 0 && typeof renderMembers === 'function') {
                 renderMembers();
-                renderSchedule();
+                if (typeof renderSchedule === 'function') {
+                    renderSchedule();
+                }
             }
         }, 1000);
     }, 500);
@@ -303,6 +300,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Firebase 데이터 확인을 위한 디버깅 함수
 function debugFirebaseData() {
+    if (!firebaseDb) {
+        console.error('Firebase가 초기화되지 않았습니다');
+        return;
+    }
+    
     firebaseDb.ref('members').once('value', (snapshot) => {
         const data = snapshot.val();
         console.log("Firebase에 저장된 모든 회원 데이터:", data);
@@ -313,5 +315,17 @@ function debugFirebaseData() {
             });
         }
     });
+}
+
+// 글로벌 currentSort 변수 정의
+let currentSort = 'name';
+let sortAscending = true;
+
+// sortMembers 함수가 정의되어 있지 않으면 기본 구현 제공
+if (typeof sortMembers === 'undefined') {
+    function sortMembers(sortBy, fromSearch) {
+        // 기본 구현
+        console.log(`정렬: ${sortBy}, 검색에서 호출: ${fromSearch}`);
+    }
 }
 [file content end]
