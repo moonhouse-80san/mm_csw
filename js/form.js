@@ -81,12 +81,22 @@ function setAwardsList(awards) {
     renderAwardsList();
 }
 
+// 안전한 숫자 변환 헬퍼 함수
+function safeParseInt(value) {
+    if (value === null || value === undefined || value === '') {
+        return null;
+    }
+    const parsed = parseInt(value);
+    return isNaN(parsed) ? null : parsed;
+}
+
 // 회원 추가
 function addMember() {
     const name = document.getElementById('name').value.trim();
     const phone = document.getElementById('phone').value.trim();
     const registerDate = document.getElementById('registerDate').value;
-    const fee = document.getElementById('fee').value;
+    const feeValue = document.getElementById('fee').value;
+    const fee = safeParseInt(feeValue); // 안전한 변환
     const day1 = document.getElementById('day1').value;
     const startTime1 = document.getElementById('startTime1').value;
     const endTime1 = document.getElementById('endTime1').value;
@@ -145,7 +155,7 @@ function addMember() {
         phone,
         photo: currentPhotoData || '',
         registerDate: registerDate || new Date().toISOString().split('T')[0],
-        fee: fee ? parseInt(fee) : null,
+        fee: fee, // 안전하게 변환된 값 (null 가능)
         coach: coach,
         targetCount: targetCount,
         currentCount: 0,
@@ -196,7 +206,8 @@ function updateMember() {
     const name = document.getElementById('name').value.trim();
     const phone = document.getElementById('phone').value.trim();
     const registerDate = document.getElementById('registerDate').value;
-    const fee = document.getElementById('fee').value;
+    const feeValue = document.getElementById('fee').value;
+    const fee = safeParseInt(feeValue); // 안전한 변환
     const day1 = document.getElementById('day1').value;
     const startTime1 = document.getElementById('startTime1').value;
     const endTime1 = document.getElementById('endTime1').value;
@@ -275,7 +286,7 @@ function updateMember() {
         phone,
         photo: newPhoto, // 올바르게 처리된 이미지
         registerDate: registerDate || members[currentEditIndex].registerDate,
-        fee: fee ? parseInt(fee) : null,
+        fee: fee, // 안전하게 변환된 값 (null 가능)
         coach: coach,
         targetCount: targetCount,
         currentCount: members[currentEditIndex].currentCount || 0,
@@ -332,7 +343,7 @@ function editMember(index) {
     document.getElementById('name').value = member.name;
     document.getElementById('phone').value = member.phone || '';
     document.getElementById('registerDate').value = member.registerDate || '';
-    document.getElementById('fee').value = member.fee || '';
+    document.getElementById('fee').value = member.fee !== null && member.fee !== undefined ? member.fee : '';
     document.getElementById('day1').value = member.day1 || '';
     document.getElementById('startTime1').value = member.startTime1 || '';
     document.getElementById('endTime1').value = member.endTime1 || '';
@@ -358,7 +369,7 @@ function editMember(index) {
     document.getElementById('paymentSection').style.display = 'block';
     renderPaymentList(member.paymentHistory || []);
     document.getElementById('paymentDate').value = new Date().toISOString().split('T')[0];
-    document.getElementById('paymentAmount').value = member.fee || '';
+    document.getElementById('paymentAmount').value = member.fee !== null && member.fee !== undefined ? member.fee : '';
 
     // 사진
     if (member.photo) {
@@ -472,7 +483,7 @@ function addPaymentEntry() {
 
     dateInput.value = new Date().toISOString().split('T')[0];
     const currentFee = (currentEditIndex !== null && members[currentEditIndex]) ? members[currentEditIndex].fee : null;
-    amountInput.value = currentFee || '';
+    amountInput.value = currentFee !== null && currentFee !== undefined ? currentFee : '';
 }
 
 function deletePaymentEntry(index) {
