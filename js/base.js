@@ -1,19 +1,12 @@
-[file name]: base.js
-[file content begin]
-// Service Worker 등록 (에러 핸들링 추가)
+// Service Worker 등록
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js')
-            .then(registration => {
-                console.log('✅ Service Worker 등록 성공:', registration.scope);
-            })
-            .catch(error => {
-                console.log('❌ Service Worker 등록 실패:', error);
-            });
+            .catch(error => console.log('Service Worker 등록 실패:', error));
     });
 }
 
-// 공유 변수 및 Firebase 설정
+// Firebase 설정
 const firebaseConfig = {
     apiKey: "AIzaSyD4GrNs2Vw9tSxGHSpKp9MvE8hsJwGo34U",
     authDomain: "mmcsw-880ce.firebaseapp.com",
@@ -49,6 +42,10 @@ const dayNames = {
     '일': '일요일'
 };
 
+// 글로벌 변수
+let currentSort = 'name';
+let sortAscending = true;
+
 // Firebase 초기화
 try {
     firebase.initializeApp(firebaseConfig);
@@ -61,29 +58,27 @@ try {
 
 // Firebase 데이터 로드
 function loadFromFirebase() {
+    if (!firebaseDb) return;
+    
     firebaseDb.ref('members').once('value', (snapshot) => {
         const data = snapshot.val();
         if (data) {
             members = Object.values(data).map(normalizeMember);
             filteredMembers = [...members];
-            if (typeof renderMembers === 'function') {
-                renderMembers();
-            }
-            if (typeof renderSchedule === 'function') {
-                renderSchedule();
-            }
+            if (typeof renderMembers === 'function') renderMembers();
+            if (typeof renderSchedule === 'function') renderSchedule();
         }
     });
 
     firebaseDb.ref('settings').once('value', (snapshot) => {
         const data = snapshot.val();
         if (data) {
-            settings.clubName = data.clubName !== undefined ? data.clubName : settings.clubName;
-            settings.feePresets = data.feePresets !== undefined ? data.feePresets : settings.feePresets;
-            settings.adminPassword = data.adminPassword !== undefined ? data.adminPassword : settings.adminPassword;
-            settings.editPassword = data.editPassword !== undefined ? data.editPassword : settings.editPassword;
-            settings.lockTimeout = data.lockTimeout !== undefined ? data.lockTimeout : 60;
-            settings.coaches = data.coaches !== undefined ? data.coaches : ['', '', '', ''];
+            settings.clubName = data.clubName || settings.clubName;
+            settings.feePresets = data.feePresets || settings.feePresets;
+            settings.adminPassword = data.adminPassword || settings.adminPassword;
+            settings.editPassword = data.editPassword || settings.editPassword;
+            settings.lockTimeout = data.lockTimeout || 60;
+            settings.coaches = data.coaches || ['', '', '', ''];
 
             const clubNameDisplay = document.getElementById('clubNameDisplay');
             if (clubNameDisplay) {
@@ -91,15 +86,14 @@ function loadFromFirebase() {
             }
             updateFeePresetButtons();
             renderCoachButtons();
-        } else {
-            settings.lockTimeout = 60;
-            settings.coaches = ['', '', '', ''];
         }
     });
 }
 
 // Firebase 변경 감지
 function listenToFirebaseChanges() {
+    if (!firebaseDb) return;
+    
     firebaseDb.ref('members').on('value', (snapshot) => {
         const data = snapshot.val();
         if (data) {
@@ -116,7 +110,7 @@ function listenToFirebaseChanges() {
                 filteredMembers = [...members];
             }
 
-            if (typeof currentSort !== 'undefined') {
+            if (typeof sortMembers === 'function') {
                 sortMembers(currentSort, true);
             }
             if (typeof renderSchedule === 'function') {
@@ -128,6 +122,8 @@ function listenToFirebaseChanges() {
 
 // Firebase에 저장
 function saveToFirebase() {
+    if (!firebaseDb) return;
+    
     function cleanObject(obj) {
         const cleaned = {};
         for (const key in obj) {
@@ -160,13 +156,6 @@ function saveToFirebase() {
     
     firebaseDb.ref('members').set(membersObj);
     firebaseDb.ref('settings').set(cleanObject(settings));
-    
-    setTimeout(() => {
-        console.log('저장 완료, members 배열 확인:');
-        members.forEach((member, index) => {
-            console.log(`멤버 ${index} (${member.name}) 스케줄:`, member.schedules);
-        });
-    }, 1000);
 }
 
 // 회원 정규화 헬퍼
@@ -206,10 +195,7 @@ function normalizeMember(member) {
 // 회비 프리셋 버튼 업데이트
 function updateFeePresetButtons() {
     const feePresetsEl = document.getElementById('feePresets');
-    if (!feePresetsEl) {
-        console.warn('feePresets 엘리먼트를 찾을 수 없습니다');
-        return;
-    }
+    if (!feePresetsEl) return;
     
     feePresetsEl.innerHTML = '';
 
@@ -257,14 +243,14 @@ document.addEventListener('DOMContentLoaded', function() {
             registerDateInput.value = new Date().toISOString().split('T')[0];
         }
         
-        const targetCount = document.getElementById('targetCount');
-        const currentCount = document.getElementById('currentCount');
+        const targetCountInput = document.getElementById('targetCount');
+        const currentCountInput = document.getElementById('currentCount');
         
-        if (targetCount && targetCount.value === '') {
-            targetCount.value = "0";
+        if (targetCountInput && targetCountInput.value === '') {
+            targetCountInput.value = "0";
         }
-        if (currentCount && currentCount.value === '') {
-            currentCount.value = "0";
+        if (currentCountInput && currentCountInput.value === '') {
+            currentCountInput.value = "0";
         }
         
         updateFeePresetButtons();
@@ -275,17 +261,65 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         setTimeout(() => {
-            if (members.length > 0 && typeof renderMembers === 'function') {
-                renderMembers();
-                if (typeof renderSchedule === 'function') {
-                    renderSchedule();
-                }
+            if (members.length > 0) {
+                if (typeof renderMembers === 'function') renderMembers();
+                if (typeof renderSchedule === 'function') renderSchedule();
             }
         }, 1000);
     }, 500);
 });
 
-// 글로벌 currentSort 변수 정의
-let currentSort = 'name';
-let sortAscending = true;
-[file content end]
+// 코치 버튼 렌더링
+function renderCoachButtons() {
+    const container = document.getElementById('coachBtnGroup');
+    if (!container) return;
+
+    const activeCoaches = settings.coaches.filter(name => name && name.trim() !== '');
+
+    if (activeCoaches.length === 0) {
+        container.innerHTML = '<div style="font-size: 13px; color: #999; padding: 8px 0;">코치가 등록되지 않았습니다. 관리자 설정에서 코치를 추가해주세요.</div>';
+        return;
+    }
+
+    const noneBtn = document.createElement('button');
+    noneBtn.type = 'button';
+    noneBtn.className = 'coach-btn active';
+    noneBtn.dataset.value = '';
+    noneBtn.textContent = '미선택';
+    noneBtn.onclick = () => selectCoachBtn(noneBtn);
+    container.appendChild(noneBtn);
+
+    activeCoaches.forEach((name) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'coach-btn';
+        btn.dataset.value = name;
+        btn.textContent = name;
+        btn.onclick = () => selectCoachBtn(btn);
+        container.appendChild(btn);
+    });
+}
+
+// 코치 버튼 선택 처리
+function selectCoachBtn(clickedBtn) {
+    document.querySelectorAll('.coach-btn').forEach(btn => btn.classList.remove('active'));
+    clickedBtn.classList.add('active');
+}
+
+// 선택된 코치 값 가져오기
+function getSelectedCoach() {
+    const active = document.querySelector('.coach-btn.active');
+    return active ? active.dataset.value : '';
+}
+
+// 코치 버튼에 값 설정
+function setSelectedCoach(coachName) {
+    document.querySelectorAll('.coach-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.value === coachName);
+    });
+    const hasMatch = document.querySelector(`.coach-btn[data-value="${coachName}"]`);
+    if (!hasMatch) {
+        const noneBtn = document.querySelector('.coach-btn[data-value=""]');
+        if (noneBtn) noneBtn.classList.add('active');
+    }
+}
