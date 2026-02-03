@@ -287,10 +287,10 @@
 }
 
 .attendance-date-badge {
-    padding: 6px;
+    padding: 6px 12px;
     background: #e3f2fd;
     color: #1976d2;
-    border-radius: 4px;
+    border-radius: 6px;
     font-size: 13px;
 }
 
@@ -497,68 +497,6 @@
 /* 추가: 잠금 상태에서 버튼 숨김 */
 .btn-hidden {
     display: none !important;
-}
-
-/* 코치별 섹션 스타일 */
-.coach-section {
-    margin-bottom: 25px;
-    border: 2px solid #e0e0e0;
-    border-radius: 12px;
-    overflow: hidden;
-    background: white;
-}
-
-.coach-section-header {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    padding: 12px 15px;
-    border-bottom: 2px solid #5a67d8;
-}
-
-.coach-title {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.coach-title .coach-badge {
-    font-size: 16px;
-    font-weight: 700;
-    padding: 6px 12px;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 20px;
-    color: white;
-}
-
-.coach-count {
-    font-size: 14px;
-    color: white;
-    font-weight: 600;
-    background: rgba(0, 0, 0, 0.2);
-    padding: 4px 10px;
-    border-radius: 12px;
-}
-
-.coach-members-list {
-    padding: 10px;
-}
-
-.coach-members-list .member-card {
-    border: 1px solid #e0e0e0;
-    margin-bottom: 8px;
-    border-radius: 8px;
-}
-
-.coach-members-list .member-card:last-child {
-    margin-bottom: 0;
-}
-
-/* 미선택 섹션 스타일 */
-.coach-section:nth-last-child(1) .coach-section-header {
-    background: linear-gradient(135deg, #9E9E9E, #757575);
-}
-
-.coach-section:nth-last-child(1) .coach-title .coach-badge {
-    background: rgba(255, 255, 255, 0.15);
 }
 
 /* 수상경력 상세 스타일 */

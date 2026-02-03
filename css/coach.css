@@ -1,3 +1,4 @@
+/* 코치 배지 스타일 */
 .coach-badge {
    display: inline-flex;
     padding: 4px 10px;
@@ -9,43 +10,44 @@
     white-space: nowrap;
 }
 
+/* 코치 선택 버튼 */
 .coach-btn {
-    padding: 10px 20px; /* 5px 12px에서 10px 20px로 증가 */
+    padding: 10px 20px;
     border: 2px solid #e0e0e0;
-    border-radius: 20px; /* 16px에서 20px로 증가 */
+    border-radius: 20px;
     background: white;
-    font-size: 18px; /* 16px에서 18px로 증가 */
+    font-size: 18px;
     color: #333;
     cursor: pointer;
     transition: all 0.2s;
-    font-weight: 600; /* 500에서 600으로 증가 (더 굵게) */
+    font-weight: 600;
     line-height: 1.4;
-    margin-right: 12px; /* 10px에서 12px로 증가 */
-    margin-bottom: 8px; /* 아래쪽 여백 추가 */
-    min-height: 44px; /* 터치 영역 확보 (접근성) */
+    margin-right: 12px;
+    margin-bottom: 8px;
+    min-height: 44px;
 }
 
 .coach-btn:hover {
     border-color: #2196F3;
     background: #e3f2fd;
     color: #1976d2;
-    transform: translateY(-2px); /* 호버 시 살짝 올라가는 효과 */
-    box-shadow: 0 2px 8px rgba(33, 150, 243, 0.2); /* 그림자 효과 추가 */
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(33, 150, 243, 0.2);
 }
 
 .coach-btn.active {
     background: #2196F3;
     color: white;
     border-color: #2196F3;
-    font-weight: 700; /* 활성화 시 더 굵게 */
-    box-shadow: 0 2px 12px rgba(33, 150, 243, 0.3); /* 활성화 시 그림자 강화 */
+    font-weight: 700;
+    box-shadow: 0 2px 12px rgba(33, 150, 243, 0.3);
 }
 
-/* 코치 버튼 그룼 컨테이너 */
+/* 코치 버튼 그룹 컨테이너 */
 .coach-btn-group {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px; /* 버튼 사이 간격 통일 */
+    gap: 10px;
     margin-top: 8px;
 }
 
@@ -56,6 +58,7 @@
     border-radius: 24px;
 }
 
+/* 코치 설정 그리드 */
 .coach-settings-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -90,4 +93,76 @@
 
 .coach-setting-item input::placeholder {
     color: #bbb;
+}
+
+/* 코치별 섹션 스타일 */
+.coach-section {
+    margin-bottom: 25px;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    overflow: hidden;
+    background: white;
+}
+
+.coach-section-header {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    padding: 12px 15px;
+    border-bottom: 2px solid #5a67d8;
+}
+
+.coach-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.coach-title .coach-badge {
+    font-size: 16px;
+    font-weight: 700;
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    color: white;
+}
+
+.coach-count {
+    font-size: 14px;
+    color: white;
+    font-weight: 600;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 4px 10px;
+    border-radius: 12px;
+}
+
+.coach-members-list {
+    padding: 10px;
+}
+
+.coach-members-list .member-card {
+    border: 1px solid #e0e0e0;
+    margin-bottom: 8px;
+    border-radius: 8px;
+}
+
+.coach-members-list .member-card:last-child {
+    margin-bottom: 0;
+}
+
+/* 미선택 섹션 스타일 */
+.coach-section:nth-last-child(1) .coach-section-header {
+    background: linear-gradient(135deg, #9E9E9E, #757575);
+}
+
+.coach-section:nth-last-child(1) .coach-title .coach-badge {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* 스케줄 내 코치 태그 */
+.time-member-coach {
+    font-size: 11px;
+    color: #666;
+    background: #f0f0f0;
+    padding: 1px 4px;
+    border-radius: 3px;
+    margin-left: 5px;
 }
