@@ -239,7 +239,7 @@ function renderCoachMembersList(membersList) {
                 <div class="member-info">
                     <div class="phone-fee-row">
                         ${phoneLink}
-                        <span class="member-fee">💰 월회비:${formatNumber(member.fee)}원</span>
+                        ${member.fee ? `<span class="member-fee">💰 월회비:${formatNumber(member.fee)}원</span>` : ''}
                     </div>
                     <div class="member-meta-row">
                         ${scheduleBadges ? `<div class="schedule-container">${scheduleBadges}</div>` : ''}

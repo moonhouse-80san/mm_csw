@@ -198,9 +198,18 @@ function updateFeePresetButtons() {
     });
 }
 
-// 숫자 포맷팅
+// 숫자 포맷팅 (안전성 추가)
 function formatNumber(num) {
-    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    // null, undefined, 빈 문자열 체크
+    if (num === null || num === undefined || num === '') {
+        return '0';
+    }
+    // 숫자로 변환
+    const number = typeof num === 'number' ? num : parseFloat(num);
+    if (isNaN(number)) {
+        return '0';
+    }
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 // 날짜 포맷팅
