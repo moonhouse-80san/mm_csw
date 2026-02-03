@@ -1,3 +1,5 @@
+[file name]: form.js
+[file content begin]
 // 전역 변수
 let currentEditIndex = null;
 let deleteIndex = null;
@@ -159,6 +161,10 @@ function addMember() {
         etc: etc
     };
 
+    // 디버깅: 저장 전 데이터 확인
+    console.log('저장할 회원 데이터:', member);
+    console.log('스케줄 데이터 확인:', schedulesData);
+
     members.push(member);
     saveToFirebase();
     filteredMembers = [...members];
@@ -246,7 +252,7 @@ function updateMember() {
         newPhoto = members[currentEditIndex].photo || '';
     }
 
-    members[currentEditIndex] = {
+    const updatedMember = {
         ...members[currentEditIndex],
         name,
         phone,
@@ -269,6 +275,12 @@ function updateMember() {
         awards: awards,
         etc: etc
     };
+
+    // 디버깅: 수정된 데이터 확인
+    console.log('수정된 회원 데이터:', updatedMember);
+    console.log('스케줄 데이터 확인:', schedulesData);
+
+    members[currentEditIndex] = updatedMember;
 
     saveToFirebase();
     filteredMembers = [...members];
@@ -322,6 +334,7 @@ function editMember(index) {
 
     // 스케줄 데이터 설정
     if (member.schedules && member.schedules.length > 0) {
+        console.log('편집할 회원의 스케줄 데이터:', member.schedules);
         setSchedulesData(member.schedules);
     } else {
         // 기존 day1, day2 형식 호환
@@ -340,6 +353,7 @@ function editMember(index) {
                 endTime: member.endTime2
             });
         }
+        console.log('레거시 스케줄 데이터:', legacySchedules);
         setSchedulesData(legacySchedules.length > 0 ? legacySchedules : null);
     }
 
@@ -604,3 +618,4 @@ function timesOverlap(s1, e1, s2, e2) {
            (e1 > s2 && e1 <= e2) ||
            (s1 <= s2 && e1 >= e2);
 }
+[file content end]
