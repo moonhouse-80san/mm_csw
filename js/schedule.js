@@ -77,8 +77,14 @@ function updateScheduleData(event) {
     const schedule = schedules.find(s => s.id === scheduleId);
     if (schedule) {
         schedule[field] = value;
-        // 디버깅용 로그 (문제 해결 후 제거 가능)
-        console.log('스케줄 업데이트:', { id: scheduleId, field, value, allSchedules: schedules });
+        // 디버깅용 로그
+        console.log('✅ 스케줄 업데이트:', { 
+            id: scheduleId, 
+            field, 
+            value, 
+            현재스케줄: schedule,
+            전체스케줄: schedules 
+        });
     }
 }
 
@@ -115,27 +121,50 @@ function removeSchedule(scheduleId) {
     }
 }
 
-// 스케줄 데이터 가져오기 (회원 추가/수정 시 사용)
+// ⭐ 핵심 수정: 스케줄 데이터 가져오기 (회원 추가/수정 시 사용)
 function getSchedulesData() {
-    // 폼에서 직접 최신 값을 읽어옴 (안전장치)
-    schedules.forEach(schedule => {
+    console.log('📋 getSchedulesData 호출됨');
+    
+    // 1. 폼에서 직접 최신 값을 읽어옴 (안전장치)
+    const freshSchedules = schedules.map(schedule => {
         const dayEl = document.getElementById(`day${schedule.id}`);
         const startTimeEl = document.getElementById(`startTime${schedule.id}`);
         const endTimeEl = document.getElementById(`endTime${schedule.id}`);
         
-        if (dayEl) schedule.day = dayEl.value;
-        if (startTimeEl) schedule.startTime = startTimeEl.value;
-        if (endTimeEl) schedule.endTime = endTimeEl.value;
+        return {
+            day: dayEl ? dayEl.value : schedule.day,
+            startTime: startTimeEl ? startTimeEl.value : schedule.startTime,
+            endTime: endTimeEl ? endTimeEl.value : schedule.endTime
+        };
     });
     
-    // 유효한 스케줄만 반환 (요일, 시작시간, 종료시간이 모두 있는 것)
-    const validSchedules = schedules.filter(s => s.day && s.startTime && s.endTime);
-    console.log('저장할 스케줄 데이터:', validSchedules);
+    console.log('📝 폼에서 읽은 스케줄:', freshSchedules);
+    
+    // 2. 유효한 스케줄만 필터링 (요일, 시작시간, 종료시간이 모두 있는 것)
+    const validSchedules = freshSchedules.filter(s => {
+        const isValid = s.day && s.day !== '' && s.startTime && s.endTime;
+        if (!isValid) {
+            console.log('❌ 유효하지 않은 스케줄:', s);
+        }
+        return isValid;
+    });
+    
+    console.log('✅ 유효한 스케줄:', validSchedules);
+    
+    // 3. 빈 배열이면 null 반환 (Firebase가 빈 배열을 저장하지 않는 문제 방지)
+    if (validSchedules.length === 0) {
+        console.log('⚠️ 유효한 스케줄이 없어서 null 반환');
+        return null;
+    }
+    
+    console.log('💾 저장할 스케줄 데이터:', validSchedules);
     return validSchedules;
 }
 
 // 스케줄 데이터 설정 (회원 편집 시 사용)
 function setSchedulesData(memberSchedules) {
+    console.log('📥 setSchedulesData 호출:', memberSchedules);
+    
     if (!memberSchedules || memberSchedules.length === 0) {
         schedules = [
             { id: 1, day: '', startTime: '12:00', endTime: '12:20' },
@@ -156,6 +185,7 @@ function setSchedulesData(memberSchedules) {
 
 // 스케줄 초기화 (폼 초기화 시 사용)
 function resetSchedules() {
+    console.log('🔄 스케줄 초기화');
     schedules = [
         { id: 1, day: '', startTime: '12:00', endTime: '12:20' },
         { id: 2, day: '', startTime: '12:00', endTime: '12:20' }
@@ -166,5 +196,6 @@ function resetSchedules() {
 
 // 페이지 로드 시 초기화
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 schedule.js 로드됨');
     renderSchedules();
 });
