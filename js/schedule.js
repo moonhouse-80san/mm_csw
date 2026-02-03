@@ -1,7 +1,7 @@
 // 스케줄 관리 전역 변수
 let schedules = [
-    { id: 1, day: '', startTime: '', endTime: '' },
-    { id: 2, day: '', startTime: '', endTime: '' }
+    { id: 1, day: '', startTime: '12:00', endTime: '12:20' },
+    { id: 2, day: '', startTime: '12:00', endTime: '12:20' }
 ];
 let nextScheduleId = 3;
 
@@ -61,12 +61,14 @@ function attachScheduleEventListeners() {
     // 모든 스케줄 입력 필드에 이벤트 리스너 추가
     document.querySelectorAll('[data-schedule-id]').forEach(element => {
         if (element.tagName === 'SELECT' || element.tagName === 'INPUT') {
+            // change와 input 이벤트 모두 처리
             element.addEventListener('change', updateScheduleData);
+            element.addEventListener('input', updateScheduleData);
         }
     });
 }
 
-// 스케줄 데이터 업데이트
+// 스케줄 데이터 업데이트 (즉시 schedules 배열에 반영)
 function updateScheduleData(event) {
     const scheduleId = parseInt(event.target.dataset.scheduleId);
     const field = event.target.dataset.field;
@@ -75,6 +77,8 @@ function updateScheduleData(event) {
     const schedule = schedules.find(s => s.id === scheduleId);
     if (schedule) {
         schedule[field] = value;
+        // 디버깅용 로그 (문제 해결 후 제거 가능)
+        console.log('스케줄 업데이트:', { id: scheduleId, field, value, allSchedules: schedules });
     }
 }
 
@@ -113,7 +117,21 @@ function removeSchedule(scheduleId) {
 
 // 스케줄 데이터 가져오기 (회원 추가/수정 시 사용)
 function getSchedulesData() {
-    return schedules.filter(s => s.day && s.startTime && s.endTime);
+    // 폼에서 직접 최신 값을 읽어옴 (안전장치)
+    schedules.forEach(schedule => {
+        const dayEl = document.getElementById(`day${schedule.id}`);
+        const startTimeEl = document.getElementById(`startTime${schedule.id}`);
+        const endTimeEl = document.getElementById(`endTime${schedule.id}`);
+        
+        if (dayEl) schedule.day = dayEl.value;
+        if (startTimeEl) schedule.startTime = startTimeEl.value;
+        if (endTimeEl) schedule.endTime = endTimeEl.value;
+    });
+    
+    // 유효한 스케줄만 반환 (요일, 시작시간, 종료시간이 모두 있는 것)
+    const validSchedules = schedules.filter(s => s.day && s.startTime && s.endTime);
+    console.log('저장할 스케줄 데이터:', validSchedules);
+    return validSchedules;
 }
 
 // 스케줄 데이터 설정 (회원 편집 시 사용)
