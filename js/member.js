@@ -133,7 +133,8 @@ function renderMembers() {
         let attendanceCount = '';
         if (targetCount > 0) {
             attendanceCount = `
-                <span class="attendance-count" style="margin-left: 8px;">
+                <span class="attendance-count" style="display: inline-flex; align-items: center; gap: 3px; padding: 2px 6px; background: 
+				#fff; color: #ff6600; border-radius: 2px; font-size: 14px; font-weight: 500; margin-left: 5px; white-space: nowrap;">
                     📊 ${currentCount}/${targetCount}회
                 </span>
             `;

@@ -145,11 +145,11 @@
     padding: 4px 8px;
     background: #f0f4ff;
     color: #4a6bff;
-    border-radius: 6px; 
-    font-size: 12px;
+    border-radius: 1px; 
+    font-size: 14px;
     border-left: 3px solid #4a6bff;
     white-space: nowrap;
-    margin: 2px 0; 
+    margin: 2px 3px; 
     max-width: 100%;
     box-sizing: border-box;
 }

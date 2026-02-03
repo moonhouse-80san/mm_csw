@@ -2,7 +2,7 @@
 .coach-badge {
    display: inline-flex;
     padding: 4px 10px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: #444;
     color: white;
     border-radius: 12px;
     font-size: 13px;
