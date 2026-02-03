@@ -3,7 +3,7 @@ let currentEditIndex = null;
 let deleteIndex = null;
 let currentPaymentList = [];
 let currentAwards = [];
-let isPhotoRemoved = false; // 이미지 삭제 플래그 추가
+let isPhotoRemoved = false;
 
 // DOM 로드 시 초기화
 document.addEventListener('DOMContentLoaded', function() {
@@ -98,28 +98,42 @@ function safeParseInt(value) {
 
 // 회원 추가
 function addMember() {
-    const name = document.getElementById('name')?.value.trim();
-    const phone = document.getElementById('phone')?.value.trim();
-    const registerDate = document.getElementById('registerDate')?.value;
-    const feeValue = document.getElementById('fee')?.value;
-    const fee = safeParseInt(feeValue); // 안전한 변환
-    const email = document.getElementById('email')?.value.trim();
-    const address = document.getElementById('address')?.value.trim();
-    const coach = getSelectedCoach();
+    const nameInput = document.getElementById('name');
+    const phoneInput = document.getElementById('phone');
+    const registerDateInput = document.getElementById('registerDate');
+    const feeInput = document.getElementById('fee');
+    const emailInput = document.getElementById('email');
+    const addressInput = document.getElementById('address');
+    const targetCountInput = document.getElementById('targetCount');
+    const birthYearInput = document.getElementById('birthYear');
+    const skillLevelInput = document.getElementById('skillLevel');
+    const etcInput = document.getElementById('etc');
     
-    // 새로운 필드들
+    if (!nameInput) {
+        showAlert('이름 입력창을 찾을 수 없습니다!');
+        return;
+    }
+    
+    const name = nameInput.value.trim();
+    const phone = phoneInput ? phoneInput.value.trim() : '';
+    const registerDate = registerDateInput ? registerDateInput.value : '';
+    const feeValue = feeInput ? feeInput.value : '';
+    const fee = safeParseInt(feeValue);
+    const email = emailInput ? emailInput.value.trim() : '';
+    const address = addressInput ? addressInput.value.trim() : '';
+    const coach = getSelectedCoach();
     const gender = getSelectedGender();
-    const birthYear = document.getElementById('birthYear')?.value ? parseInt(document.getElementById('birthYear').value) : null;
-    const skillLevel = document.getElementById('skillLevel')?.value ? parseInt(document.getElementById('skillLevel').value) : null;
-    const etc = document.getElementById('etc')?.value.trim();
+    const birthYear = birthYearInput && birthYearInput.value ? parseInt(birthYearInput.value) : null;
+    const skillLevel = skillLevelInput && skillLevelInput.value ? parseInt(skillLevelInput.value) : null;
+    const etc = etcInput ? etcInput.value.trim() : '';
     const awards = [...currentAwards];
-
+    
     // 스케줄 데이터 가져오기
     const schedulesData = getSchedulesData ? getSchedulesData() : [];
 
     if (!name) {
         showAlert('이름을 입력해주세요!');
-        document.getElementById('name')?.focus();
+        nameInput.focus();
         return;
     }
 
@@ -139,33 +153,31 @@ function addMember() {
         return;
     }
 
-    const targetCountInput = document.getElementById('targetCount')?.value;
-    const targetCount = targetCountInput === "" ? 0 : parseInt(targetCountInput) || 0;
+    const targetCount = targetCountInput && targetCountInput.value ? 
+                       parseInt(targetCountInput.value) || 0 : 0;
 
     const member = {
-        name,
-        phone: phone || '',
+        name: name,
+        phone: phone,
         photo: currentPhotoData || '',
         registerDate: registerDate || new Date().toISOString().split('T')[0],
-        fee: fee, // 안전하게 변환된 값 (null 가능)
+        fee: fee,
         coach: coach || '',
         targetCount: targetCount,
         currentCount: 0,
         attendanceDates: [],
         attendanceHistory: [],
         paymentHistory: [],
-        schedules: schedulesData, // 배열로 저장
-        email: email || '',
-        address: address || '',
-        // 새로운 필드들
+        schedules: schedulesData,
+        email: email,
+        address: address,
         gender: gender || '',
         birthYear: birthYear,
         skillLevel: skillLevel,
         awards: awards,
-        etc: etc || ''
+        etc: etc
     };
 
-    // 디버깅: 저장 전 데이터 확인
     console.log('저장할 회원 데이터:', member);
     console.log('스케줄 데이터 확인:', schedulesData);
 
@@ -177,13 +189,11 @@ function addMember() {
     clearForm();
     showAlert('회원이 추가되었습니다!');
     
-    // 수정 모드 클래스 제거
     const formSection = document.querySelector('.form-section');
     if (formSection) {
         formSection.classList.remove('form-edit-mode');
     }
     
-    // 상단으로 스크롤 이동
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -194,28 +204,42 @@ function updateMember() {
         return;
     }
 
-    const name = document.getElementById('name')?.value.trim();
-    const phone = document.getElementById('phone')?.value.trim();
-    const registerDate = document.getElementById('registerDate')?.value;
-    const feeValue = document.getElementById('fee')?.value;
-    const fee = safeParseInt(feeValue); // 안전한 변환
-    const email = document.getElementById('email')?.value.trim();
-    const address = document.getElementById('address')?.value.trim();
-    const coach = getSelectedCoach();
+    const nameInput = document.getElementById('name');
+    const phoneInput = document.getElementById('phone');
+    const registerDateInput = document.getElementById('registerDate');
+    const feeInput = document.getElementById('fee');
+    const emailInput = document.getElementById('email');
+    const addressInput = document.getElementById('address');
+    const targetCountInput = document.getElementById('targetCount');
+    const birthYearInput = document.getElementById('birthYear');
+    const skillLevelInput = document.getElementById('skillLevel');
+    const etcInput = document.getElementById('etc');
     
-    // 새로운 필드들
+    if (!nameInput) {
+        showAlert('이름 입력창을 찾을 수 없습니다!');
+        return;
+    }
+    
+    const name = nameInput.value.trim();
+    const phone = phoneInput ? phoneInput.value.trim() : '';
+    const registerDate = registerDateInput ? registerDateInput.value : '';
+    const feeValue = feeInput ? feeInput.value : '';
+    const fee = safeParseInt(feeValue);
+    const email = emailInput ? emailInput.value.trim() : '';
+    const address = addressInput ? addressInput.value.trim() : '';
+    const coach = getSelectedCoach();
     const gender = getSelectedGender();
-    const birthYear = document.getElementById('birthYear')?.value ? parseInt(document.getElementById('birthYear').value) : null;
-    const skillLevel = document.getElementById('skillLevel')?.value ? parseInt(document.getElementById('skillLevel').value) : null;
-    const etc = document.getElementById('etc')?.value.trim();
+    const birthYear = birthYearInput && birthYearInput.value ? parseInt(birthYearInput.value) : null;
+    const skillLevel = skillLevelInput && skillLevelInput.value ? parseInt(skillLevelInput.value) : null;
+    const etc = etcInput ? etcInput.value.trim() : '';
     const awards = [...currentAwards];
-
+    
     // 스케줄 데이터 가져오기
     const schedulesData = getSchedulesData ? getSchedulesData() : [];
 
     if (!name) {
         showAlert('이름을 입력해주세요!');
-        document.getElementById('name')?.focus();
+        nameInput.focus();
         return;
     }
 
@@ -235,52 +259,46 @@ function updateMember() {
         return;
     }
 
-    const targetCountInput = document.getElementById('targetCount')?.value;
-    const targetCount = targetCountInput === "" ? 
-                       members[currentEditIndex].targetCount || 0 : 
-                       parseInt(targetCountInput) || 0;
+    const targetCount = targetCountInput && targetCountInput.value !== "" ? 
+                       parseInt(targetCountInput.value) || 0 : 
+                       members[currentEditIndex].targetCount || 0;
 
     const existingHistory = members[currentEditIndex].attendanceHistory || [];
     const paymentHistory = currentPaymentList || [];
 
-    // 이미지 처리: isPhotoRemoved 플래그 확인
+    // 이미지 처리
     let newPhoto = '';
     if (isPhotoRemoved) {
-        // 이미지가 명시적으로 삭제된 경우
         newPhoto = '';
     } else if (currentPhotoData !== null) {
-        // 새 이미지가 업로드된 경우
         newPhoto = currentPhotoData;
     } else {
-        // 이미지가 변경되지 않았으면 기존 이미지 유지
         newPhoto = members[currentEditIndex].photo || '';
     }
 
     const updatedMember = {
         ...members[currentEditIndex],
-        name,
-        phone: phone || '',
-        photo: newPhoto, // 올바르게 처리된 이미지
+        name: name,
+        phone: phone,
+        photo: newPhoto,
         registerDate: registerDate || members[currentEditIndex].registerDate,
-        fee: fee, // 안전하게 변환된 값 (null 가능)
+        fee: fee,
         coach: coach || '',
         targetCount: targetCount,
         currentCount: members[currentEditIndex].currentCount || 0,
         attendanceDates: members[currentEditIndex].attendanceDates || [],
         attendanceHistory: existingHistory,
         paymentHistory: paymentHistory,
-        schedules: schedulesData, // 배열로 저장
-        email: email || '',
-        address: address || '',
-        // 새로운 필드들
+        schedules: schedulesData,
+        email: email,
+        address: address,
         gender: gender || '',
         birthYear: birthYear,
         skillLevel: skillLevel,
         awards: awards,
-        etc: etc || ''
+        etc: etc
     };
 
-    // 디버깅: 수정된 데이터 확인
     console.log('수정된 회원 데이터:', updatedMember);
     console.log('스케줄 데이터 확인:', schedulesData);
 
@@ -294,48 +312,53 @@ function updateMember() {
     showAlert('회원 정보가 수정되었습니다!');
     resetLockTimer();
     
-    // 수정 모드 클래스 제거
     const formSection = document.querySelector('.form-section');
     if (formSection) {
         formSection.classList.remove('form-edit-mode');
     }
     
-    // 상단으로 스크롤 이동
     window.scrollTo({ top: 0, behavior: 'smooth' });
     
-    // 삭제 플래그 초기화
     isPhotoRemoved = false;
     
-    return true; // 성공적으로 수정됨
+    return true;
 }
 
 // 회원 편집 폼 채우기
 function editMember(index) {
     const member = members[index];
     
-    // 폼 섹션에 수정 모드 클래스 추가
     const formSection = document.querySelector('.form-section');
     if (formSection) {
         formSection.classList.add('form-edit-mode');
     }
     
-    document.getElementById('name').value = member.name || '';
-    document.getElementById('phone').value = member.phone || '';
-    document.getElementById('registerDate').value = member.registerDate || '';
-    document.getElementById('fee').value = member.fee !== null && member.fee !== undefined ? member.fee : '';
-    document.getElementById('email').value = member.email || '';
-    document.getElementById('address').value = member.address || '';
-    document.getElementById("targetCount").value = member.targetCount || 0;
-    document.getElementById("currentCount").value = member.currentCount || 0;
+    const nameInput = document.getElementById('name');
+    const phoneInput = document.getElementById('phone');
+    const registerDateInput = document.getElementById('registerDate');
+    const feeInput = document.getElementById('fee');
+    const emailInput = document.getElementById('email');
+    const addressInput = document.getElementById('address');
+    const targetCountInput = document.getElementById('targetCount');
+    const currentCountInput = document.getElementById('currentCount');
+    const birthYearInput = document.getElementById('birthYear');
+    const skillLevelInput = document.getElementById('skillLevel');
+    const etcInput = document.getElementById('etc');
+    
+    if (nameInput) nameInput.value = member.name || '';
+    if (phoneInput) phoneInput.value = member.phone || '';
+    if (registerDateInput) registerDateInput.value = member.registerDate || '';
+    if (feeInput) feeInput.value = member.fee !== null && member.fee !== undefined ? member.fee : '';
+    if (emailInput) emailInput.value = member.email || '';
+    if (addressInput) addressInput.value = member.address || '';
+    if (targetCountInput) targetCountInput.value = member.targetCount || 0;
+    if (currentCountInput) currentCountInput.value = member.currentCount || 0;
+    if (birthYearInput) birthYearInput.value = member.birthYear || '';
+    if (skillLevelInput) skillLevelInput.value = member.skillLevel || '';
+    if (etcInput) etcInput.value = member.etc || '';
 
-    // 코치 설정
     setSelectedCoach(member.coach || '');
-
-    // 새로운 필드들 채우기
     setSelectedGender(member.gender || '');
-    document.getElementById('birthYear').value = member.birthYear || '';
-    document.getElementById('skillLevel').value = member.skillLevel || '';
-    document.getElementById('etc').value = member.etc || '';
     setAwardsList(member.awards || []);
 
     // 스케줄 데이터 설정
@@ -343,7 +366,6 @@ function editMember(index) {
         console.log('편집할 회원의 스케줄 데이터:', member.schedules);
         setSchedulesData(member.schedules);
     } else {
-        // 기존 day1, day2 형식 호환
         const legacySchedules = [];
         if (member.day1 && member.startTime1 && member.endTime1) {
             legacySchedules.push({
@@ -363,7 +385,6 @@ function editMember(index) {
         setSchedulesData(legacySchedules.length > 0 ? legacySchedules : null);
     }
 
-    // 회비 입금 내역
     document.getElementById('paymentSection').style.display = 'block';
     renderPaymentList(member.paymentHistory || []);
     document.getElementById('paymentDate').value = new Date().toISOString().split('T')[0];
@@ -372,7 +393,6 @@ function editMember(index) {
         paymentAmount.value = member.fee !== null && member.fee !== undefined ? member.fee : '';
     }
 
-    // 사진
     if (member.photo) {
         currentPhotoData = member.photo;
         displayPhotoPreview();
@@ -381,60 +401,58 @@ function editMember(index) {
         displayPhotoPreview();
     }
 
-    // 삭제 플래그 초기화
     isPhotoRemoved = false;
-
     currentEditIndex = index;
     
-    // 상단으로 스크롤 이동
     window.scrollTo({ top: 0, behavior: 'smooth' });
     
-    // 이름 입력란에 포커스 이동 (스크롤 완료 후)
     setTimeout(() => {
         const nameInput = document.getElementById('name');
         if (nameInput) {
             nameInput.focus();
-            // 텍스트 선택 (편집 용이성)
             nameInput.select();
         }
-    }, 300); // 스크롤 애니메이션 시간 고려
+    }, 300);
     
     resetLockTimer();
 }
 
 // 폼 초기화
 function clearForm() {
-    document.getElementById('name').value = '';
-    document.getElementById('phone').value = '';
-    document.getElementById('registerDate').value = '';
-    document.getElementById('fee').value = '';
-    document.getElementById('email').value = '';
-    document.getElementById('address').value = '';
-    document.getElementById("targetCount").value = "0";
-    document.getElementById("currentCount").value = "0";
+    const nameInput = document.getElementById('name');
+    const phoneInput = document.getElementById('phone');
+    const registerDateInput = document.getElementById('registerDate');
+    const feeInput = document.getElementById('fee');
+    const emailInput = document.getElementById('email');
+    const addressInput = document.getElementById('address');
+    const targetCountInput = document.getElementById('targetCount');
+    const currentCountInput = document.getElementById('currentCount');
+    const birthYearInput = document.getElementById('birthYear');
+    const skillLevelInput = document.getElementById('skillLevel');
+    const etcInput = document.getElementById('etc');
+    
+    if (nameInput) nameInput.value = '';
+    if (phoneInput) phoneInput.value = '';
+    if (registerDateInput) registerDateInput.value = '';
+    if (feeInput) feeInput.value = '';
+    if (emailInput) emailInput.value = '';
+    if (addressInput) addressInput.value = '';
+    if (targetCountInput) targetCountInput.value = '0';
+    if (currentCountInput) currentCountInput.value = '0';
+    if (birthYearInput) birthYearInput.value = '';
+    if (skillLevelInput) skillLevelInput.value = '';
+    if (etcInput) etcInput.value = '';
 
-    // 코치 초기화
     setSelectedCoach('');
-
-    // 새로운 필드들 초기화
     setSelectedGender('');
-    document.getElementById('birthYear').value = '';
-    document.getElementById('skillLevel').value = '';
-    document.getElementById('etc').value = '';
     currentAwards = [];
     renderAwardsList();
-
-    // 스케줄 초기화
     resetSchedules();
-
-    // 회비 입금 내역 초기화
     document.getElementById('paymentSection').style.display = 'none';
     document.getElementById('paymentDate').value = '';
     document.getElementById('paymentAmount').value = '';
     currentPaymentList = [];
     renderPaymentList([]);
-
-    // 사진 초기화
     currentPhotoData = null;
     isPhotoRemoved = false;
     displayPhotoPreview();
@@ -442,7 +460,6 @@ function clearForm() {
     
     currentEditIndex = null;
     
-    // 수정 모드 클래스 제거
     const formSection = document.querySelector('.form-section');
     if (formSection) {
         formSection.classList.remove('form-edit-mode');
@@ -450,13 +467,11 @@ function clearForm() {
     
     resetLockTimer();
     
-    // 이름 입력란에 포커스
-    const nameInput = document.getElementById('name');
-    if (nameInput) {
-        nameInput.focus();
+    const focusName = document.getElementById('name');
+    if (focusName) {
+        focusName.focus();
     }
     
-    // 상단으로 스크롤 이동
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -515,7 +530,7 @@ function renderPaymentList(list) {
     `).join('');
 }
 
-// 스케줄 충돌 체크 (새로운 배열 방식)
+// 스케줄 충돌 체크
 function checkScheduleConflicts(schedulesData, coach, excludeIndex = null) {
     if (!coach) return { conflict: false };
 
@@ -525,10 +540,8 @@ function checkScheduleConflicts(schedulesData, coach, excludeIndex = null) {
         const member = members[i];
         if (member.coach !== coach) continue;
 
-        // 회원의 스케줄 가져오기 (새 형식 또는 기존 형식)
         const memberSchedules = member.schedules || [];
         
-        // 기존 day1, day2 형식도 체크
         if (!member.schedules) {
             if (member.day1 && member.startTime1 && member.endTime1) {
                 memberSchedules.push({
@@ -546,7 +559,6 @@ function checkScheduleConflicts(schedulesData, coach, excludeIndex = null) {
             }
         }
 
-        // 각 스케줄 비교
         for (const newSchedule of schedulesData) {
             for (const existingSchedule of memberSchedules) {
                 if (newSchedule.day === existingSchedule.day) {
@@ -562,61 +574,6 @@ function checkScheduleConflicts(schedulesData, coach, excludeIndex = null) {
                             existingTime: `${dayNames[existingSchedule.day]} ${existingSchedule.startTime}~${existingSchedule.endTime}`
                         };
                     }
-                }
-            }
-        }
-    }
-    return { conflict: false };
-}
-
-// 스케줄 충돌 체크 (기존 방식 - 하위 호환)
-function checkTimeConflict(day1, startTime1, endTime1, day2, startTime2, endTime2, coach, excludeIndex = null) {
-    if (!coach) return { conflict: false };
-
-    for (let i = 0; i < members.length; i++) {
-        if (excludeIndex !== null && i === excludeIndex) continue;
-
-        const member = members[i];
-        if (member.coach !== coach) continue;
-
-        if (day1 && startTime1 && endTime1) {
-            if (member.day1 === day1 && member.startTime1 && member.endTime1) {
-                if (timesOverlap(startTime1, endTime1, member.startTime1, member.endTime1)) {
-                    return {
-                        conflict: true,
-                        memberName: member.name,
-                        existingTime: `${dayNames[member.day1]} ${member.startTime1}~${member.endTime1}`
-                    };
-                }
-            }
-            if (member.day2 === day1 && member.startTime2 && member.endTime2) {
-                if (timesOverlap(startTime1, endTime1, member.startTime2, member.endTime2)) {
-                    return {
-                        conflict: true,
-                        memberName: member.name,
-                        existingTime: `${dayNames[member.day2]} ${member.startTime2}~${member.endTime2}`
-                    };
-                }
-            }
-        }
-
-        if (day2 && startTime2 && endTime2) {
-            if (member.day1 === day2 && member.startTime1 && member.endTime1) {
-                if (timesOverlap(startTime2, endTime2, member.startTime1, member.endTime1)) {
-                    return {
-                        conflict: true,
-                        memberName: member.name,
-                        existingTime: `${dayNames[member.day1]} ${member.startTime1}~${member.endTime1}`
-                    };
-                }
-            }
-            if (member.day2 === day2 && member.startTime2 && member.endTime2) {
-                if (timesOverlap(startTime2, endTime2, member.startTime2, member.endTime2)) {
-                    return {
-                        conflict: true,
-                        memberName: member.name,
-                        existingTime: `${dayNames[member.day2]} ${member.startTime2}~${member.endTime2}`
-                    };
                 }
             }
         }

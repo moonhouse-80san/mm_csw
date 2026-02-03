@@ -66,8 +66,12 @@ function loadFromFirebase() {
         if (data) {
             members = Object.values(data).map(normalizeMember);
             filteredMembers = [...members];
-            renderMembers();
-            renderSchedule();
+            if (typeof renderMembers === 'function') {
+                renderMembers();
+            }
+            if (typeof renderSchedule === 'function') {
+                renderSchedule();
+            }
         }
     });
 
@@ -101,7 +105,6 @@ function listenToFirebaseChanges() {
         if (data) {
             members = Object.values(data).map(normalizeMember);
 
-            // 현재 검색/정렬 상태 보존
             const searchInput = document.getElementById('searchInput');
             const currentSearch = searchInput ? searchInput.value : '';
             if (currentSearch) {
@@ -113,8 +116,12 @@ function listenToFirebaseChanges() {
                 filteredMembers = [...members];
             }
 
-            sortMembers(currentSort, true);
-            renderSchedule();
+            if (typeof currentSort !== 'undefined') {
+                sortMembers(currentSort, true);
+            }
+            if (typeof renderSchedule === 'function') {
+                renderSchedule();
+            }
         }
     });
 }
@@ -128,7 +135,6 @@ function saveToFirebase() {
                 if (obj[key] === null) {
                     cleaned[key] = null;
                 } else if (Array.isArray(obj[key])) {
-                    // 배열 처리: 각 요소를 순회하면서 객체인 경우 재귀적으로 정리
                     cleaned[key] = obj[key].map(item => {
                         if (item && typeof item === 'object' && !Array.isArray(item)) {
                             return cleanObject(item);
@@ -155,7 +161,6 @@ function saveToFirebase() {
     firebaseDb.ref('members').set(membersObj);
     firebaseDb.ref('settings').set(cleanObject(settings));
     
-    // 저장 후 디버깅
     setTimeout(() => {
         console.log('저장 완료, members 배열 확인:');
         members.forEach((member, index) => {
@@ -169,7 +174,6 @@ function normalizeMember(member) {
     const cleaned = {};
     for (const key in member) {
         if (member[key] !== undefined) {
-            // 특정 필드의 데이터 타입 보장
             if (key === 'phone' && member[key] !== null) {
                 cleaned[key] = String(member[key]);
             } else if (key === 'name' && member[key] !== null) {
@@ -177,7 +181,6 @@ function normalizeMember(member) {
             } else if (key === 'coach' && member[key] !== null) {
                 cleaned[key] = String(member[key]);
             } else if (key === 'schedules' && Array.isArray(member[key])) {
-                // 스케줄 배열 정규화
                 cleaned[key] = member[key].map(schedule => ({
                     id: schedule.id || Date.now() + Math.random(),
                     day: schedule.day || '',
@@ -190,7 +193,6 @@ function normalizeMember(member) {
         }
     }
     
-    // 필수 필드 기본값 설정
     if (!cleaned.photo) cleaned.photo = '';
     if (!cleaned.attendanceHistory) cleaned.attendanceHistory = [];
     if (!cleaned.coach) cleaned.coach = '';
@@ -228,13 +230,11 @@ function updateFeePresetButtons() {
     });
 }
 
-// 숫자 포맷팅 (안전성 추가)
+// 숫자 포맷팅
 function formatNumber(num) {
-    // null, undefined, 빈 문자열 체크
     if (num === null || num === undefined || num === '') {
         return '0';
     }
-    // 숫자로 변환
     const number = typeof num === 'number' ? num : parseFloat(num);
     if (isNaN(number)) {
         return '0';
@@ -249,24 +249,14 @@ function formatDate(dateString) {
     return `${y}.${m}.${d}`;
 }
 
-// 안전한 엘리먼트 값 설정 헬퍼 함수
-function safeSetElementValue(elementId, value) {
-    const element = document.getElementById(elementId);
-    if (element) {
-        element.value = value;
-    } else {
-        console.warn(`엘리먼트 ${elementId}를 찾을 수 없습니다`);
-    }
-}
-
 // 초기화
 document.addEventListener('DOMContentLoaded', function() {
-    // DOM이 완전히 로드된 후 실행
     setTimeout(() => {
-        // 요소가 존재하는지 확인 후 값 설정
-        safeSetElementValue('registerDate', new Date().toISOString().split('T')[0]);
+        const registerDateInput = document.getElementById('registerDate');
+        if (registerDateInput) {
+            registerDateInput.value = new Date().toISOString().split('T')[0];
+        }
         
-        // 기존 설정값이 없을 때만 기본값 설정
         const targetCount = document.getElementById('targetCount');
         const currentCount = document.getElementById('currentCount');
         
@@ -280,13 +270,10 @@ document.addEventListener('DOMContentLoaded', function() {
         updateFeePresetButtons();
         renderCoachButtons();
         
-        // 잠금 상태 초기화 및 회원 목록 렌더링
         if (typeof updateLockStatus === 'function') {
             updateLockStatus();
         }
         
-        // Firebase 로딩이 완료되면 회원 목록 렌더링
-        // Firebase 로드가 비동기이므로 약간의 지연 후 실행
         setTimeout(() => {
             if (members.length > 0 && typeof renderMembers === 'function') {
                 renderMembers();
@@ -298,34 +285,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 500);
 });
 
-// Firebase 데이터 확인을 위한 디버깅 함수
-function debugFirebaseData() {
-    if (!firebaseDb) {
-        console.error('Firebase가 초기화되지 않았습니다');
-        return;
-    }
-    
-    firebaseDb.ref('members').once('value', (snapshot) => {
-        const data = snapshot.val();
-        console.log("Firebase에 저장된 모든 회원 데이터:", data);
-        
-        if (data) {
-            Object.values(data).forEach((member, index) => {
-                console.log(`회원 ${index} (${member.name}) 스케줄:`, member.schedules);
-            });
-        }
-    });
-}
-
 // 글로벌 currentSort 변수 정의
 let currentSort = 'name';
 let sortAscending = true;
-
-// sortMembers 함수가 정의되어 있지 않으면 기본 구현 제공
-if (typeof sortMembers === 'undefined') {
-    function sortMembers(sortBy, fromSearch) {
-        // 기본 구현
-        console.log(`정렬: ${sortBy}, 검색에서 호출: ${fromSearch}`);
-    }
-}
 [file content end]
