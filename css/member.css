@@ -705,3 +705,26 @@ select:focus {
     outline: none;
     border-color: #2196F3;
 }
+
+/* 비밀글 섹션 스타일 (잠금 해제시 표시) */
+.private-memo-section {
+    margin-top: 5px;
+}
+
+.private-memo-section textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #FF9800;
+    border-radius: 10px;
+    font-size: 16px;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 80px;
+    background: #fff8e1;
+}
+
+.private-memo-section textarea:focus {
+    outline: none;
+    border-color: #F57C00;
+    box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.2);
+}

@@ -21,6 +21,15 @@ document.addEventListener('DOMContentLoaded', function() {
             addAward();
         }
     });
+    
+    // 현재 출석 횟수 입력란 초기 상태 설정
+    const currentCountInput = document.getElementById('currentCount');
+    if (currentCountInput) {
+        if (!isUnlocked) {
+            currentCountInput.setAttribute('readonly', true);
+            currentCountInput.style.background = '#f0f0f0';
+        }
+    }
 });
 
 // 선택된 성별 값 가져오기
@@ -113,7 +122,12 @@ function addMember() {
     const birthYear = document.getElementById('birthYear').value ? parseInt(document.getElementById('birthYear').value) : null;
     const skillLevel = document.getElementById('skillLevel').value ? parseInt(document.getElementById('skillLevel').value) : null;
     const etc = document.getElementById('etc').value.trim();
+    const privateMemo = document.getElementById('privateMemo').value.trim(); // 비밀글 추가
     const awards = [...currentAwards];
+
+    // 현재 출석 횟수
+    const currentCountInput = document.getElementById('currentCount').value;
+    const currentCount = currentCountInput === "" ? 0 : parseInt(currentCountInput) || 0;
 
     // 스케줄 데이터 가져오기
     const schedulesData = getSchedulesData();
@@ -152,7 +166,7 @@ function addMember() {
         fee: fee,
         coach: coach,
         targetCount: targetCount,
-        currentCount: 0,
+        currentCount: currentCount,
         attendanceDates: [],
         attendanceHistory: [],
         paymentHistory: [],
@@ -163,7 +177,8 @@ function addMember() {
         birthYear: birthYear,
         skillLevel: skillLevel,
         awards: awards,
-        etc: etc
+        etc: etc,
+        privateMemo: privateMemo // 비밀글 저장
     };
 
     console.log('addMember - 저장할 회원 데이터:', member);
@@ -211,7 +226,14 @@ function updateMember() {
     const birthYear = document.getElementById('birthYear').value ? parseInt(document.getElementById('birthYear').value) : null;
     const skillLevel = document.getElementById('skillLevel').value ? parseInt(document.getElementById('skillLevel').value) : null;
     const etc = document.getElementById('etc').value.trim();
+    const privateMemo = document.getElementById('privateMemo').value.trim(); // 비밀글 추가
     const awards = [...currentAwards];
+
+    // 현재 출석 횟수
+    const currentCountInput = document.getElementById('currentCount').value;
+    const currentCount = currentCountInput === "" ? 
+                       members[currentEditIndex].currentCount || 0 : 
+                       parseInt(currentCountInput) || 0;
 
     // 스케줄 데이터 가져오기
     const schedulesData = getSchedulesData();
@@ -265,7 +287,7 @@ function updateMember() {
         fee: fee,
         coach: coach,
         targetCount: targetCount,
-        currentCount: members[currentEditIndex].currentCount || 0,
+        currentCount: currentCount,
         attendanceDates: members[currentEditIndex].attendanceDates || [],
         attendanceHistory: existingHistory,
         paymentHistory: paymentHistory,
@@ -276,7 +298,8 @@ function updateMember() {
         birthYear: birthYear,
         skillLevel: skillLevel,
         awards: awards,
-        etc: etc
+        etc: etc,
+        privateMemo: privateMemo // 비밀글 저장
     };
 
     console.log('updateMember - 수정된 회원 데이터:', members[currentEditIndex]);
@@ -314,14 +337,39 @@ function editMember(index) {
     document.getElementById('fee').value = member.fee !== null && member.fee !== undefined ? member.fee : '';
     document.getElementById('email').value = member.email || '';
     document.getElementById('address').value = member.address || '';
+    
+    // 현재 출석 횟수 입력란 - 잠금 해제 상태에 따라 readonly 설정
+    const currentCountInput = document.getElementById("currentCount");
+    currentCountInput.value = member.currentCount || 0;
+    
+    // 잠금 해제 상태에 따라 읽기전용 설정
+    if (isUnlocked) {
+        currentCountInput.removeAttribute('readonly');
+        currentCountInput.style.background = '#ffffff'; // 하얀색 배경
+    } else {
+        currentCountInput.setAttribute('readonly', true);
+        currentCountInput.style.background = '#f0f0f0'; // 회색 배경
+    }
+    
     document.getElementById("targetCount").value = member.targetCount || 0;
-    document.getElementById("currentCount").value = member.currentCount || 0;
 
     setSelectedCoach(member.coach || '');
     setSelectedGender(member.gender || '');
     document.getElementById('birthYear').value = member.birthYear || '';
     document.getElementById('skillLevel').value = member.skillLevel || '';
     document.getElementById('etc').value = member.etc || '';
+    
+    // 비밀글 - 잠금 해제 상태에 따라 표시
+    const privateMemoSection = document.getElementById('privateMemoSection');
+    const privateMemoInput = document.getElementById('privateMemo');
+    if (isUnlocked) {
+        privateMemoSection.style.display = 'block';
+        privateMemoInput.value = member.privateMemo || '';
+    } else {
+        privateMemoSection.style.display = 'none';
+        privateMemoInput.value = '';
+    }
+    
     setAwardsList(member.awards || []);
 
     // 스케줄 데이터 설정
@@ -386,13 +434,35 @@ function clearForm() {
     document.getElementById('email').value = '';
     document.getElementById('address').value = '';
     document.getElementById("targetCount").value = "0";
-    document.getElementById("currentCount").value = "0";
+    
+    // 현재 출석 횟수 입력란 초기화
+    const currentCountInput = document.getElementById("currentCount");
+    currentCountInput.value = "0";
+    if (isUnlocked) {
+        currentCountInput.removeAttribute('readonly');
+        currentCountInput.style.background = '#ffffff';
+    } else {
+        currentCountInput.setAttribute('readonly', true);
+        currentCountInput.style.background = '#f0f0f0';
+    }
 
     setSelectedCoach('');
     setSelectedGender('');
     document.getElementById('birthYear').value = '';
     document.getElementById('skillLevel').value = '';
     document.getElementById('etc').value = '';
+    
+    // 비밀글 초기화
+    const privateMemoSection = document.getElementById('privateMemoSection');
+    const privateMemoInput = document.getElementById('privateMemo');
+    if (isUnlocked) {
+        privateMemoSection.style.display = 'block';
+        privateMemoInput.value = '';
+    } else {
+        privateMemoSection.style.display = 'none';
+        privateMemoInput.value = '';
+    }
+    
     currentAwards = [];
     renderAwardsList();
 

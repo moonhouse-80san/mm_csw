@@ -32,6 +32,8 @@ document.addEventListener('DOMContentLoaded', function() {
 function updateLockStatus() {
     const updateBtn = document.getElementById('updateBtn');
     const unlockBtn = document.querySelector('.unlock-btn');
+    const currentCountInput = document.getElementById('currentCount');
+    const privateMemoSection = document.getElementById('privateMemoSection');
     const tooltip = document.getElementById('lockTooltip');
     const tooltipText = document.getElementById('lockTooltipText');
 
@@ -41,10 +43,21 @@ function updateLockStatus() {
         updateBtn.classList.add('btn-update');
         updateBtn.textContent = '수정';
         
+        // 현재 출석 횟수 입력란 활성화
+        if (currentCountInput) {
+            currentCountInput.removeAttribute('readonly');
+            currentCountInput.style.background = '#ffffff';
+        }
+        
+        // 비밀글 섹션 표시
+        if (privateMemoSection) {
+            privateMemoSection.style.display = 'block';
+        }
+        
         // 잠금 해제 버튼 텍스트 변경
         if (unlockBtn) {
             unlockBtn.textContent = '🔓 잠금';
-            unlockBtn.style.background = '#FF9800'; // 주황색으로 변경
+            unlockBtn.style.background = '#FF9800';
         }
         
         showMemberButtons();
@@ -55,10 +68,21 @@ function updateLockStatus() {
         updateBtn.classList.add('btn-disabled');
         updateBtn.textContent = '수정';
         
+        // 현재 출석 횟수 입력란 비활성화
+        if (currentCountInput) {
+            currentCountInput.setAttribute('readonly', true);
+            currentCountInput.style.background = '#f0f0f0';
+        }
+        
+        // 비밀글 섹션 숨기기
+        if (privateMemoSection) {
+            privateMemoSection.style.display = 'none';
+        }
+        
         // 잠금 해제 버튼 텍스트 변경
         if (unlockBtn) {
             unlockBtn.textContent = '🔓 잠금 해제';
-            unlockBtn.style.background = '#2196F3'; // 파란색으로 복원
+            unlockBtn.style.background = '#2196F3';
         }
         
         hideMemberButtons();

@@ -134,7 +134,7 @@ function renderMembers() {
         if (targetCount > 0) {
             attendanceCount = `
                 <span class="attendance-count" style="display: inline-flex; align-items: center; gap: 3px; padding: 2px 6px; background: 
-				#fff; color: #ff6600; border-radius: 2px; font-size: 14px; font-weight: 500; margin-left: 5px; white-space: nowrap;">
+                #fff; color: #ff6600; border-radius: 2px; font-size: 14px; font-weight: 500; margin-left: 5px; white-space: nowrap;">
                     📊 ${currentCount}/${targetCount}회
                 </span>
             `;
@@ -255,7 +255,7 @@ function showMemberDetails(index) {
         }
         detailsHTML += `<tr><td>🏓 부수 (실력):</td><td>${skillText}</td></tr>`;
     }
-	
+    
     const targetCount = member.targetCount || 0;
     const currentCount = member.currentCount || 0;
     if (targetCount > 0) {
@@ -267,6 +267,18 @@ function showMemberDetails(index) {
         </div>
     `;
 
+    // 잠금 해제 상태에서만 비밀글 표시
+    if (isUnlocked && member.privateMemo) {
+        detailsHTML += `
+            <div class="member-details-section">
+                <h3>📝 비밀글 (관리자용)</h3>
+                <div class="etc-details" style="background: #fff8e1; border-left: 4px solid #FF9800;">
+                    ${member.privateMemo.replace(/\n/g, '<br>')}
+                </div>
+            </div>
+        `;
+    }
+    
     // 입금 내역은 잠금 해제 시에만 표시
     if (isUnlocked) {
         const payments = member.paymentHistory || [];
