@@ -5,9 +5,15 @@ let sortAscending = true;
 // 검색 함수
 function searchMembers() {
     const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    const searchBar = document.getElementById('searchInput'); // 검색바 요소 가져오기
     
-    // 검색 시 화면 최상단으로 이동
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // 검색 시 검색바가 보이는 위치로 스크롤
+    if (searchBar) {
+        searchBar.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start' // 'start', 'center', 'end', 'nearest' 중 선택
+        });
+    }
     
     if (searchTerm === '') {
         filteredMembers = [...members];
