@@ -278,38 +278,7 @@
                 <label for="address">주소</label>
                 <input type="text" id="address" placeholder="주소 입력">
             </div>
-<!-- 임시 마이그레이션 버튼 -->
-<button onclick="migrateOldMembers()" style="
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    padding: 10px 15px;
-    background: #FF5722;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    z-index: 9999;
-    cursor: pointer;
-">
-    🔄 데이터 변환
-</button>
 
-<script>
-function migrateOldMembers() {
-    // 위의 마이그레이션 코드를 여기에 붙여넣기
-    console.log('🔄 마이그레이션 시작...');
-    let updatedCount = 0;
-    
-    // ... 전체 마이그레이션 코드 ...
-    
-    if (updatedCount > 0) {
-        saveToFirebase();
-        alert(`${updatedCount}명 변환 완료! 새로고침하세요.`);
-    } else {
-        alert('이미 최신 형식입니다.');
-    }
-}
-</script>
             <!-- 추가/수정/초기화 버튼 -->
             <div class="button-group">
                 <button class="btn btn-add" onclick="addMember()" style="font-size:20px; padding:3px 5px;">추가</button>

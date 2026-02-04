@@ -1,0 +1,1481 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	min-height: 100vh;
+	padding: 10px;
+	overflow-x: hidden;
+}
+
+.container {
+	max-width: 900px;
+	margin: 0 auto;
+	background: white;
+	border-radius: 20px;
+	box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+	overflow: hidden;
+}
+
+/* 수정: 암호 입력 섹션을 좀 더 작게 */
+.password-section {
+	background: linear-gradient(135deg, #FF9800, #F57C00);
+	padding: 10px 15px;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	border-bottom: 2px solid #e0e0e0;
+}
+
+.password-input-group {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+}
+
+.password-input {
+	flex: 1;
+	padding: 10px 12px;
+	border: 2px solid rgba(255,255,255,0.5);
+	border-radius: 8px;
+	font-size: 14px;
+	background: rgba(255,255,255,0.9);
+	color: #333;
+	min-width: 0;
+}
+
+.password-input:focus {
+	outline: none;
+	border-color: white;
+	background: white;
+}
+
+.unlock-btn {
+	padding: 10px 15px;
+	background: #2196F3;
+	color: white;
+	border: none;
+	border-radius: 8px;
+	font-size: 14px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.3s;
+	white-space: nowrap;
+}
+
+.unlock-btn:hover {
+	background: #1976D2;
+	transform: translateY(-2px);
+}
+
+
+.header {
+	background: linear-gradient(135deg, #2196F3, #1976D2);
+	color: white;
+	padding: 20px;
+	text-align: center;
+	position: relative;
+}
+
+.header h1 {
+	font-size: 20px;
+	margin-bottom: 5px;
+}
+
+.club-name {
+	font-size: 24px;
+	font-weight: bold;
+	margin-bottom: 5px;
+}
+
+.member-count {
+	font-size: 14px;
+	opacity: 0.9;
+}
+
+.sync-status {
+	position: absolute;
+	top: 20px;
+	left: 20px;
+	font-size: 12px;
+	background: rgba(255,255,255,0.2);
+	padding: 5px 10px;
+	border-radius: 15px;
+}
+
+.settings-icon {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	width: 30px;
+	height: 30px;
+	cursor: pointer;
+	background: rgba(255,255,255,0.2);
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: all 0.3s;
+}
+
+.settings-icon:hover {
+	background: rgba(255,255,255,0.3);
+	transform: rotate(90deg);
+}
+
+.settings-icon svg {
+	width: 20px;
+	height: 20px;
+	fill: white;
+}
+
+.search-section {
+	padding: 15px 20px;
+	background: #f8f9fa;
+	border-bottom: 2px solid #e0e0e0;
+}
+
+.search-box {
+	display: flex;
+	gap: 10px;
+	margin-bottom: 10px;
+}
+
+.search-box input {
+	flex: 1;
+	padding: 10px 15px;
+	border: 2px solid #e0e0e0;
+	border-radius: 10px;
+	font-size: 14px;
+}
+
+.search-box input:focus {
+	outline: none;
+	border-color: #2196F3;
+}
+
+.filter-buttons {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+
+.filter-btn {
+	padding: 6px 12px;
+	border: 2px solid #e0e0e0;
+	border-radius: 20px;
+	background: white;
+	font-size: 12px;
+	cursor: pointer;
+	transition: all 0.3s;
+}
+
+.filter-btn.active {
+	background: #2196F3;
+	color: white;
+	border-color: #2196F3;
+}
+
+.form-section {
+	padding: 20px;
+	background: #f8f9fa;
+}
+
+.form-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 15px;
+}
+
+.form-group {
+	margin-bottom: 0;
+}
+
+.form-group.full-width {
+	grid-column: 1 / -1;
+}
+
+.form-group label {
+	display: block;
+	margin-bottom: 5px;
+	color: #333;
+	font-weight: 500;
+	font-size: 14px;
+}
+
+.form-group input, 
+.form-group select {
+	width: 100%;
+	padding: 12px;
+	border: 2px solid #e0e0e0;
+	border-radius: 10px;
+	font-size: 16px;
+	transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+	outline: none;
+	border-color: #2196F3;
+}
+
+.photo-btn {
+	padding: 12px;
+	background: linear-gradient(135deg, #2196F3, #1976D2);
+	color: white;
+	border: none;
+	border-radius: 10px;
+	font-size: 16px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.3s;
+}
+
+.photo-btn:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+}
+
+.photo-preview-container {
+	margin-top: 10px;
+	display: none;
+	text-align: center;
+}
+
+.photo-preview {
+	position: relative;
+	width: 400px;
+	height: 400px;
+	max-width: 100%;
+	border-radius: 10px;
+	overflow: hidden;
+	border: 2px solid #e0e0e0;
+	margin: 0 auto;
+	background: #f0f0f0;
+}
+
+.photo-preview img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.remove-photo-btn {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	width: 40px;
+	height: 40px;
+	background: #f44336;
+	color: white;
+	border: none;
+	border-radius: 50%;
+	cursor: pointer;
+	font-size: 20px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+	z-index: 10;
+}
+
+.time-group {
+	display: grid;
+	grid-template-columns: 1fr auto 1fr;
+	gap: 10px;
+	align-items: center;
+}
+
+.time-group span {
+	text-align: center;
+	font-weight: bold;
+	color: #666;
+}
+
+.schedule-section-header {
+	font-size: 14px;
+	font-weight: 600;
+	color: #2196F3;
+	margin: 15px 0 10px 0;
+	padding-bottom: 5px;
+	border-bottom: 2px solid #e0e0e0;
+}
+
+.fee-presets {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 5px;
+	margin-top: 5px;
+}
+
+.fee-preset-btn {
+	padding: 6px 12px;
+	background: #f0f0f0;
+	border: 2px solid #e0e0e0;
+	border-radius: 6px;
+	font-size: 12px;
+	cursor: pointer;
+	transition: all 0.3s;
+}
+
+.fee-preset-btn:hover {
+	background: #e0e0e0;
+}
+
+.phone-link {
+	color: #1976D2;
+	text-decoration: none;
+	cursor: pointer;
+	transition: color 0.3s;
+}
+
+.phone-link:hover {
+	color: #0d47a1;
+	text-decoration: underline;
+}
+
+/* 수정: 추가/수정/초기화 버튼을 모바일에서 한 줄로 */
+.button-group {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 10px;
+	margin-top: 15px;
+}
+
+.btn {
+	padding: 12px;
+	border: none;
+	border-radius: 10px;
+	font-size: 16px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: transform 0.2s, box-shadow 0.2s;
+	color: white;
+}
+
+.btn:active {
+	transform: scale(0.95);
+}
+
+.btn-add {
+	background: linear-gradient(135deg, #4CAF50, #45a049);
+}
+
+.btn-update {
+	background: linear-gradient(135deg, #2196F3, #1976D2);
+}
+
+.btn-clear {
+	background: linear-gradient(135deg, #FF9800, #F57C00);
+}
+
+/* 잠금 상태에서 비활성화된 버튼 */
+.btn-disabled {
+	background: linear-gradient(135deg, #9E9E9E, #757575) !important;
+	cursor: not-allowed;
+	opacity: 0.6;
+	position: relative;
+}
+
+.btn-disabled::after {
+	content: "🔒 잠금 해제 필요";
+	position: absolute;
+	top: -30px;
+	left: 50%;
+	transform: translateX(-50%);
+	background: #333;
+	color: white;
+	padding: 5px 10px;
+	border-radius: 5px;
+	font-size: 12px;
+	white-space: nowrap;
+	opacity: 0;
+	transition: opacity 0.3s;
+	pointer-events: none;
+	z-index: 1000;
+}
+
+.btn-disabled:hover::after {
+	opacity: 1;
+}
+
+.tab-section {
+	padding: 0 20px;
+	background: #f8f9fa;
+	border-bottom: 2px solid #e0e0e0;
+}
+
+.tabs {
+	display: flex;
+	gap: 5px;
+}
+
+.tab-btn {
+	padding: 10px 20px;
+	background: white;
+	border: 2px solid #e0e0e0;
+	border-bottom: none;
+	border-radius: 10px 10px 0 0;
+	cursor: pointer;
+	font-weight: 500;
+	transition: all 0.3s;
+}
+
+.tab-btn.active {
+	background: #2196F3;
+	color: white;
+	border-color: #2196F3;
+}
+
+.content-section {
+	max-height: 500px;
+	overflow-y: auto;
+	padding: 20px;
+}
+
+/* 수정: 회원 카드 레이아웃 - 사진 우측에 이름과 버튼 */
+.member-card {
+	background: white;
+	border: 2px solid #e0e0e0;
+	border-radius: 12px;
+	padding: 15px;
+	margin-bottom: 10px;
+	box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* 회원 이름 호버 효과 */
+.member-name:hover {
+	color: #0d47a1 !important;
+	text-decoration: underline !important;
+}
+
+.member-content {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+}
+
+.member-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 10px;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+
+.member-name {
+	font-size: 18px;
+	font-weight: 600;
+	color: #333;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+
+.member-name .attendance-count {
+	font-size: 12px;
+	font-weight: 500;
+	padding: 3px 8px;
+	background: #e3f2fd;
+	color: #1976d2;
+	border-radius: 12px;
+	white-space: nowrap;
+}
+
+.member-actions {
+	display: flex;
+	gap: 5px;
+}
+
+.btn-edit, .btn-delete {
+	padding: 8px 15px;
+	border: none;
+	border-radius: 6px;
+	font-size: 14px;
+	cursor: pointer;
+	color: white;
+	font-weight: 600;
+	transition: all 0.3s;
+}
+
+.btn-edit {
+	background: #2196F3;
+}
+
+.btn-delete {
+	background: #f44336;
+}
+
+/* 잠금 상태에서 비활성화된 수정/삭제 버튼 */
+.btn-edit-disabled, .btn-delete-disabled {
+	background: #9E9E9E !important;
+	cursor: not-allowed;
+	opacity: 0.6;
+	position: relative;
+}
+
+.btn-edit-disabled::after,
+.btn-delete-disabled::after {
+	content: "🔒 잠금 해제 필요";
+	position: absolute;
+	top: -30px;
+	left: 50%;
+	transform: translateX(-50%);
+	background: #333;
+	color: white;
+	padding: 5px 10px;
+	border-radius: 5px;
+	font-size: 12px;
+	white-space: nowrap;
+	opacity: 0;
+	transition: opacity 0.3s;
+	pointer-events: none;
+	z-index: 1000;
+}
+
+.btn-edit-disabled:hover::after,
+.btn-delete-disabled:hover::after {
+	opacity: 1;
+}
+
+/* 추가: 잠금 상태에서 버튼 숨김 */
+.btn-hidden {
+	display: none !important;
+}
+
+.member-info {
+	font-size: 14px;
+	color: #666;
+	line-height: 1.8;
+}
+
+.member-info div {
+	margin-bottom: 3px;
+}
+
+
+.schedule-badge {
+	display: inline-block;
+	padding: 3px 8px;
+	background: #f0f4ff;
+	color: #4a6bff;
+	border-radius: 4px;
+	font-size: 12px;
+	margin-right: 5px;
+	margin-top: 5px;
+	border-left: 3px solid #4a6bff;
+}
+
+.empty-state {
+	text-align: center;
+	padding: 40px 20px;
+	color: #999;
+}
+
+.empty-state svg {
+	width: 80px;
+	height: 80px;
+	margin-bottom: 15px;
+	opacity: 0.3;
+}
+
+.schedule-section {
+	display: none;
+}
+
+.schedule-section.active {
+	display: block;
+}
+
+.day-schedule {
+	margin-bottom: 25px;
+}
+
+.day-header {
+	font-size: 18px;
+	font-weight: bold;
+	color: #333;
+	margin-bottom: 10px;
+	padding-bottom: 8px;
+	border-bottom: 2px solid #e0e0e0;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.day-name {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.day-count {
+	background: #2196F3;
+	color: white;
+	padding: 2px 8px;
+	border-radius: 10px;
+	font-size: 12px;
+}
+
+.time-slot {
+	background: white;
+	border: 2px solid #e0e0e0;
+	border-radius: 8px;
+	padding: 10px;
+	margin-bottom: 8px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.time-range {
+	font-weight: 500;
+	color: #333;
+}
+
+.time-members {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 5px;
+}
+
+.time-member {
+	background: #e3f2fd;
+	padding: 4px 8px;
+	border-radius: 4px;
+	font-size: 12px;
+}
+
+.no-schedule {
+	color: #999;
+	font-style: italic;
+	text-align: center;
+	padding: 20px;
+	background: #f8f9fa;
+	border-radius: 8px;
+}
+
+.modal {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0,0,0,0.5);
+	z-index: 1000;
+	justify-content: center;
+	align-items: center;
+}
+
+.modal.active {
+	display: flex;
+}
+
+.modal-content {
+	background: white;
+	padding: 30px;
+	border-radius: 15px;
+	max-width: 400px;
+	width: 90%;
+	max-height: 90vh;
+	overflow-y: auto;
+}
+
+.modal-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 20px;
+}
+
+.modal-header h2 {
+	font-size: 20px;
+}
+
+.close-btn {
+	width: 30px;
+	height: 30px;
+	border: none;
+	background: #f0f0f0;
+	border-radius: 50%;
+	cursor: pointer;
+	font-size: 20px;
+	line-height: 1;
+}
+
+.modal-content p {
+	margin-bottom: 20px;
+	font-size: 16px;
+}
+
+.modal-buttons {
+	display: flex;
+	gap: 10px;
+	justify-content: center;
+}
+
+.modal-buttons button {
+	padding: 10px 20px;
+	border: none;
+	border-radius: 8px;
+	cursor: pointer;
+	font-weight: 600;
+	color: white;
+}
+
+.password-input {
+	margin-bottom: 15px;
+}
+
+.password-input input {
+	width: 100%;
+	padding: 10px;
+	border: 2px solid #e0e0e0;
+	border-radius: 8px;
+	font-size: 14px;
+}
+
+/* 카메라 모달 전용 스타일 */
+#cameraModal .modal-content {
+	max-width: 500px !important;
+	width: 95%;
+	padding: 20px;
+}
+
+.camera-controls {
+	display: flex;
+	gap: 10px;
+	margin-bottom: 15px;
+	justify-content: center;
+}
+
+.camera-btn {
+	padding: 10px 20px;
+	border: none;
+	border-radius: 8px;
+	background: #4CAF50;
+	color: white;
+	font-weight: 600;
+	cursor: pointer;
+	flex: 1;
+}
+
+.camera-btn.active {
+	background: #2196F3;
+	box-shadow: 0 0 0 2px #fff, 0 0 0 4px #2196F3;
+}
+
+.camera-btn:last-child {
+	background: #2196F3;
+}
+
+#cameraVideo {
+	width: 100%;
+	height: auto;
+	max-height: 60vh;
+	border-radius: 10px;
+	background: #000;
+	object-fit: cover;
+}
+
+.capture-btn {
+	width: 70px;
+	height: 70px;
+	border-radius: 50%;
+	background: white;
+	border: 4px solid #f0f0f0;
+	margin: 20px auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	transition: all 0.2s;
+}
+
+.capture-btn:active {
+	transform: scale(0.95);
+	background: #f0f0f0;
+}
+
+.capture-inner {
+	width: 60px;
+	height: 60px;
+	border-radius: 50%;
+	background: #f44336;
+	border: 2px solid white;
+}
+
+.content-section::-webkit-scrollbar {
+	width: 8px;
+}
+
+.content-section::-webkit-scrollbar-track {
+	background: #f1f1f1;
+}
+
+.content-section::-webkit-scrollbar-thumb {
+	background: #888;
+	border-radius: 4px;
+}
+
+@keyframes slideIn {
+	from {
+		opacity: 0;
+		transform: translateY(10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.member-card {
+	animation: slideIn 0.3s ease;
+}
+
+.time-slot {
+	animation: slideIn 0.3s ease;
+}
+
+/* ========== 출석 관리 추가 스타일 ========== */
+.attendance-count {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	padding: 4px 10px;
+	background: linear-gradient(135deg, #667eea, #764ba2);
+	color: white;
+	border-radius: 12px;
+	font-size: 13px;
+	font-weight: 600;
+}
+
+
+.calendar-container {
+	background: white;
+	border-radius: 15px;
+	padding: 15px;
+	margin-top: 10px;
+	box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.calendar-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 15px;
+}
+
+.calendar-header h3 {
+	font-size: 18px;
+	color: #333;
+	margin: 0;
+}
+
+.calendar-nav {
+	display: flex;
+	gap: 8px;
+}
+
+.calendar-nav-btn {
+	padding: 6px 12px;
+	background: #2196F3;
+	color: white;
+	border: none;
+	border-radius: 6px;
+	cursor: pointer;
+	font-size: 12px;
+	font-weight: 600;
+	transition: all 0.3s;
+}
+
+.calendar-nav-btn:hover {
+	background: #1976D2;
+}
+
+.calendar-grid {
+	display: grid;
+	grid-template-columns: repeat(7, 1fr);
+	gap: 4px;
+}
+
+.calendar-day-header {
+	text-align: center;
+	padding: 8px;
+	font-weight: 600;
+	color: #666;
+	font-size: 12px;
+}
+
+.calendar-day {
+	aspect-ratio: 1;
+	border: 2px solid #e0e0e0;
+	border-radius: 6px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	transition: all 0.3s;
+	position: relative;
+	padding: 4px;
+}
+
+.calendar-day:hover {
+	background: #e3f2fd;
+	border-color: #2196F3;
+}
+
+.calendar-day.other-month {
+	opacity: 0.3;
+	cursor: not-allowed;
+}
+
+.calendar-day.today {
+	background: #fff3e0;
+	border-color: #FF9800;
+}
+
+.calendar-day-number {
+	font-size: 13px;
+	font-weight: 600;
+	color: #333;
+}
+
+.calendar-day.has-attendance {
+	background: linear-gradient(135deg, #4CAF50, #45a049);
+	border-color: #4CAF50;
+}
+
+.calendar-day.has-attendance .calendar-day-number {
+	color: white;
+}
+
+.calendar-attendance-dot {
+	width: 5px;
+	height: 5px;
+	background: #4CAF50;
+	border-radius: 50%;
+	margin-top: 2px;
+}
+
+.calendar-day.has-attendance .calendar-attendance-dot {
+	background: white;
+}
+
+.attendance-alert-modal .modal-content {
+	text-align: center;
+	max-width: 400px;
+}
+
+.attendance-alert-icon {
+	font-size: 60px;
+	margin-bottom: 20px;
+}
+
+.attendance-alert-modal h2 {
+	color: #FF9800;
+	font-size: 28px;
+	margin-bottom: 15px;
+}
+
+.attendance-alert-modal p {
+	font-size: 18px;
+	color: #666;
+	margin-bottom: 25px;
+	line-height: 1.6;
+}
+
+/* 회원 상세 정보 팝업 스타일 */
+.member-details-modal {
+	background: white;
+	border-radius: 15px;
+	padding: 25px;
+	max-width: 500px;
+	width: 90%;
+	max-height: 80vh;
+	overflow-y: auto;
+	box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+}
+
+.member-details-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 25px;
+	border-bottom: 2px solid #e0e0e0;
+	padding-bottom: 15px;
+}
+
+.member-details-header h2 {
+	font-size: 24px;
+	color: #333;
+	margin: 0;
+}
+
+.member-details-content {
+	margin-bottom: 25px;
+}
+
+.member-details-photo {
+	text-align: center;
+}
+
+.member-details-section {
+	margin-bottom: 25px;
+}
+
+.member-details-section h3 {
+	font-size: 18px;
+	color: #2196F3;
+	margin-bottom: 15px;
+	padding-bottom: 8px;
+	border-bottom: 1px solid #e0e0e0;
+}
+
+.member-details-table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.member-details-table tr {
+	border-bottom: 1px solid #f0f0f0;
+}
+
+.member-details-table td {
+	padding: 12px 0;
+}
+
+.member-details-table td:first-child {
+	font-weight: 600;
+	color: #555;
+	width: 120px;
+}
+
+.member-details-table a {
+	color: #2196F3;
+	text-decoration: none;
+}
+
+.member-details-table a:hover {
+	text-decoration: underline;
+}
+
+.attendance-dates {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.attendance-date-badge {
+	padding: 6px 12px;
+	background: #e3f2fd;
+	color: #1976d2;
+	border-radius: 6px;
+	font-size: 13px;
+}
+
+.member-details-footer {
+	display: flex;
+	justify-content: center;
+	gap: 15px;
+	padding-top: 20px;
+	border-top: 2px solid #e0e0e0;
+}
+
+.member-details-footer .btn {
+	padding: 10px 25px;
+	font-size: 16px;
+}
+
+.member-details-footer .btn-edit {
+	background: #2196F3;
+	color: white;
+	border: none;
+	border-radius: 8px;
+	cursor: pointer;
+}
+
+.member-details-footer .btn-secondary {
+	background: #9E9E9E;
+	color: white;
+	border: none;
+	border-radius: 8px;
+	cursor: pointer;
+}
+
+
+/* ========== 코치 버튼 ========== */
+.coach-radio-group {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	padding: 8px 0;
+}
+
+/* 코치 배지 */
+.coach-badge {
+	display: inline-block;
+	padding: 3px 8px;
+	background: linear-gradient(135deg, #667eea, #764ba2);
+	color: white;
+	border-radius: 12px;
+	font-size: 12px;
+	font-weight: 600;
+	white-space: nowrap;
+}
+
+.coach-btn {
+	padding: 5px 12px;
+	border: 2px solid #e0e0e0;
+	border-radius: 16px;
+	background: white;
+	font-size: 16px;
+	color: #333;
+	cursor: pointer;
+	transition: all 0.2s;
+	font-weight: 500;
+	line-height: 1.4;
+	margin-right:10px;
+}
+
+.coach-btn:hover {
+	border-color: #2196F3;
+	background: #e3f2fd;
+	color: #1976d2;
+}
+
+.coach-btn.active {
+	background: #2196F3;
+	color: white;
+	border-color: #2196F3;
+	font-weight: 600;
+}
+
+/* ========== 설정 모달 코치 설정 ========== */
+.coach-settings-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 10px;
+	margin-top: 8px;
+}
+
+.coach-setting-item {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.coach-setting-label {
+	font-size: 12px;
+	color: #888;
+	font-weight: 600;
+}
+
+.coach-setting-item input {
+	padding: 8px 10px;
+	border: 2px solid #e0e0e0;
+	border-radius: 8px;
+	font-size: 14px;
+	transition: border-color 0.3s;
+}
+
+.coach-setting-item input:focus {
+	outline: none;
+	border-color: #2196F3;
+}
+
+.coach-setting-item input::placeholder {
+	color: #bbb;
+}
+
+@media (max-width: 600px) {
+	.form-grid {
+		grid-template-columns: 1fr;
+	}
+
+	/* 수정: 추가/수정/초기화 버튼을 모바일에서 한 줄로 유지 */
+	.button-group {
+		grid-template-columns: repeat(3, 1fr);
+		gap: 8px;
+	}
+
+	.button-group .btn {
+		padding: 10px;
+		font-size: 14px;
+	}
+
+	.filter-buttons {
+		font-size: 11px;
+	}
+
+	.time-group {
+		grid-template-columns: 1fr;
+		grid-template-rows: auto auto auto;
+	}
+
+	.time-group span {
+		order: 2;
+	}
+
+	.member-card {
+		display: flex;
+		gap: 14px;
+		align-items: flex-start;
+	}
+
+	/* 오른쪽 전체 정보 영역 */
+	.member-info-container {
+		flex: 1;
+	}
+
+	/* 상단: 이름 + 수정/삭제 버튼 (같은 줄) */
+	.member-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 6px;
+	}
+
+	/* 이름 강조 */
+	.member-name {
+		font-weight: bold;
+		font-size: 17px;
+	}
+
+	.member-name .attendance-count {
+		font-size: 11px;
+		padding: 2px 6px;
+	}
+
+	/* 버튼 그룹 */
+	.member-actions {
+		display: flex;
+		gap: 6px;
+	}
+
+	/* 하단: 전화번호 + 기타 정보 (이름 아래) */
+	.member-info {
+		font-size: 14px;
+		color: #555;
+		line-height: 1.5;
+	}
+
+	.photo-preview {
+		width: 300px;
+		height: 300px;
+	}
+
+	#cameraModal .modal-content {
+		padding: 15px;
+		margin: 10px;
+	}
+
+	.camera-controls {
+		flex-direction: column;
+	}
+
+	.camera-btn {
+		width: 100%;
+	}
+
+	/* 암호 입력 섹션 모바일 최적화 */
+	.password-input-group {
+		flex-direction: column;
+	}
+
+	.password-input {
+		width: 100%;
+	}
+
+	.unlock-btn {
+		width: 100%;
+	}
+
+	.password-section {
+		padding: 8px 12px;
+	}
+	
+	.unlock-btn {
+		padding: 8px 12px;
+		font-size: 13px;
+	}
+
+    /* 코치 버튼 모바일 최적화 */
+	.coach-radio-group {
+		gap: 5px;
+	}
+
+	.coach-btn {
+		padding: 5px 10px;
+		font-size: 13px;
+	}
+
+	/* 코치 설정 모바일 최적화 */
+	.coach-settings-grid {
+		grid-template-columns: 1fr 1fr;
+		gap: 8px;
+	}
+
+	/* 모바일 달력 최적화 */
+	.calendar-container {
+		padding: 10px;
+		margin-top: 10px;
+	}
+
+	.calendar-header {
+		flex-direction: column;
+		gap: 10px;
+		margin-bottom: 10px;
+	}
+
+	.calendar-header h3 {
+		font-size: 16px;
+		text-align: center;
+	}
+
+	.calendar-nav {
+		width: 100%;
+		justify-content: center;
+	}
+
+	.calendar-nav-btn {
+		flex: 1;
+		max-width: 120px;
+		padding: 8px 10px;
+		font-size: 13px;
+	}
+
+	.calendar-grid {
+		gap: 2px;
+	}
+
+	.calendar-day-header {
+		padding: 6px 2px;
+		font-size: 11px;
+	}
+
+	.calendar-day {
+		border-width: 1px;
+		padding: 2px;
+		min-height: 40px;
+	}
+
+	.calendar-day-number {
+		font-size: 12px;
+	}
+
+	.calendar-attendance-dot {
+		width: 4px;
+		height: 4px;
+		margin-top: 1px;
+	}
+
+	.tab-section {
+		width: 100%;
+		padding: 0;
+	}
+
+	.tabs {
+		display: flex;
+		gap: 0;
+		width: 100%;
+	}
+
+	.tab-btn {
+		flex: 1;
+		padding: 10px 5px;
+		font-size: 14px;
+	}
+
+	.content-section {
+		width: 100%;
+		padding: 15px;
+	}
+}
+
+@media (max-width: 400px) {
+	.photo-preview {
+		width: 250px;
+		height: 250px;
+	}
+	
+	/* 작은 화면에서 버튼 텍스트 줄이기 */
+	.button-group .btn {
+		font-size: 12px;
+		padding: 8px 5px;
+	}
+	
+	.btn-edit, .btn-delete {
+		padding: 6px 10px;
+		font-size: 12px;
+	}
+
+	.member-name {
+		font-size: 16px;
+	}
+
+	.member-name .attendance-count {
+		font-size: 10px;
+		padding: 1px 4px;
+	}
+	
+	/* 코치 버튼 초소형 최적화 */
+	.coach-btn {
+		padding: 4px 8px;
+		font-size: 12px;
+	}
+
+	/* 코치 설정 초소형 */
+	.coach-settings-grid {
+		grid-template-columns: 1fr 1fr;
+		gap: 6px;
+	}
+
+	.coach-setting-item input {
+		padding: 6px 8px;
+		font-size: 13px;
+	}	
+}
+
+.schedule-container {
+	display: flex;         /* 가로로 나열 */
+	flex-wrap: nowrap;     /* 줄 바꿈 방지 (공간이 부족해도 한 줄 유지) */
+	gap: 5px;              /* 배지 사이 간격 */
+	margin-top: 5px;
+	overflow-x: auto;      /* 혹시 화면보다 길어질 경우 가로 스크롤 허용 */
+}
+
+.schedule-badge {
+	display: inline-block;
+	padding: 3px;
+	background: #f0f4ff;
+	color: #4a6bff;
+	border-radius: 4px;
+	font-size: 12px;
+	border-left: 3px solid #4a6bff;
+	white-space: nowrap;   /* 배지 안의 텍스트가 줄 바꿈되지 않도록 설정 */
+	margin-right: 0;       /* gap을 사용하므로 기존 margin 제거 가능 */
+	margin-top: 0;         /* 컨테이너에서 제어하므로 제거 */
+}
+
+/* 가로 정렬을 위한 컨테이너 */
+.phone-fee-row {
+    display: flex;
+    align-items: center; /* 세로 중앙 정렬 */
+    gap: 8px;            /* 전화번호와 금액 사이 간격 */
+}
+
+/* 금액 스타일 (작게 표시) */
+.member-fee {
+	font-size: 0.85em;    /* 기존보다 작게 */
+    color: #666;          /* 약간 흐리게 처리하여 전화번호와 구분 */
+    font-weight: normal;
+}
