@@ -1,6 +1,6 @@
 let currentPhotoData = null;
 let cameraStream = null;
-let currentCameraType = 'user';
+let currentCameraType = 'environment'; // 'user'에서 'environment'로 변경 (후면 카메라 우선)
 
 function switchCamera(cameraType) {
     currentCameraType = cameraType;
@@ -46,7 +46,7 @@ async function openCamera() {
     try {
         const constraints = {
             video: {
-                facingMode: currentCameraType,
+                facingMode: currentCameraType, // 기본값이 후면 카메라
                 width: { ideal: 1280 },
                 height: { ideal: 1280 }
             },
