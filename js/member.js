@@ -239,7 +239,7 @@ function showMemberDetails(index) {
     }
     
     // 생년 정보 추가
-    if (member.birthYear) {
+    if (isUnlocked && member.birthYear) {
         detailsHTML += `<tr><td>🎂 생년:</td><td>${member.birthYear}년생</td></tr>`;
     }
     
