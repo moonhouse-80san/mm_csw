@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// 잠금 상태 업데이트 (버튼 텍스트도 변경)
+// 잠금 상태 업데이트 함수 수정
 function updateLockStatus() {
     const updateBtn = document.getElementById('updateBtn');
     const unlockBtn = document.querySelector('.unlock-btn');
@@ -54,6 +54,9 @@ function updateLockStatus() {
             privateMemoSection.style.display = 'block';
         }
         
+        // 정보 필드 버튼 활성화
+        updateInfoFieldsForLock();
+        
         // 잠금 해제 버튼 텍스트 변경
         if (unlockBtn) {
             unlockBtn.textContent = '🔓 잠금';
@@ -78,6 +81,9 @@ function updateLockStatus() {
         if (privateMemoSection) {
             privateMemoSection.style.display = 'none';
         }
+        
+        // 정보 필드 숨기기 및 버튼 비활성화
+        updateInfoFieldsForLock();
         
         // 잠금 해제 버튼 텍스트 변경
         if (unlockBtn) {

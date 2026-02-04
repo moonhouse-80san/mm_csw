@@ -202,6 +202,27 @@ function showMemberDetails(index) {
     `;
     
     if (member.photo) {
+        // showMemberDetails 함수 수정 - 정보 필드 표시 조건 추가
+function showMemberDetails(index) {
+    const member = members[index];
+    
+    // 잠금 툴팁이 표시되어 있다면 숨기기
+    const lockTooltip = document.getElementById('lockTooltip');
+    if (lockTooltip) {
+        lockTooltip.classList.remove('visible');
+    }
+    
+    let detailsHTML = `
+        <div class="member-details-modal">
+            <div class="member-details-header">
+                <h2>${member.name}</h2>
+                <button class="close-btn" onclick="closeMemberDetails()">×</button>
+            </div>
+            
+            <div class="member-details-content">
+    `;
+    
+    if (member.photo) {
         detailsHTML += `
             <div class="member-details-photo">
                 <img src="${member.photo}" alt="${member.name}" style="width: 200px; height: 200px; border-radius: 10px; object-fit: cover; margin-bottom: 20px;">
@@ -218,12 +239,15 @@ function showMemberDetails(index) {
     if (member.phone) {
         detailsHTML += `<tr><td>📞 전화번호:</td><td><a href="tel:${String(member.phone).replace(/-/g, '')}">${member.phone}</a></td></tr>`;
     }
-    if (member.email) {
+    
+    // 이메일, 주소, 생년은 잠금 해제 상태에서만 표시
+    if (isUnlocked && member.email) {
         detailsHTML += `<tr><td>📧 이메일:</td><td>${member.email}</td></tr>`;
     }
-    if (member.address) {
+    if (isUnlocked && member.address) {
         detailsHTML += `<tr><td>📍 주소:</td><td>${member.address}</td></tr>`;
     }
+    
     if (member.registerDate) {
         detailsHTML += `<tr><td>📅 등록일:</td><td>${formatDate(member.registerDate)}</td></tr>`;
     }
@@ -233,13 +257,14 @@ function showMemberDetails(index) {
     if (member.coach) {
         detailsHTML += `<tr><td>🏋️ 담당 코치:</td><td><strong>${member.coach}</strong></td></tr>`;
     }
+    
     // 성별 정보 추가
     if (member.gender) {
         detailsHTML += `<tr><td>⚤ 성별:</td><td>${member.gender}</td></tr>`;
     }
     
-    // 생년 정보 추가
-    if (member.birthYear) {
+    // 생년 정보 - 잠금 해제 상태에서만 표시
+    if (isUnlocked && member.birthYear) {
         detailsHTML += `<tr><td>🎂 생년:</td><td>${member.birthYear}년생</td></tr>`;
     }
     
