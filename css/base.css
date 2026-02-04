@@ -538,3 +538,38 @@ body {
 .time-slot {
     animation: slideIn 0.3s ease;
 }
+
+/* 추가: 표시 설정 스타일 */
+.display-settings {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 10px;
+}
+
+.display-setting-item {
+    margin-bottom: 10px;
+}
+
+.display-setting-item:last-child {
+    margin-bottom: 0;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 14px;
+    color: #333;
+}
+
+.checkbox-label input[type="checkbox"] {
+    margin-right: 10px;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.checkbox-label span {
+    flex: 1;
+}

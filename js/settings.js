@@ -32,6 +32,10 @@ function openSettingsDialog() {
     document.getElementById('coachName2').value = settings.coaches[1] || '';
     document.getElementById('coachName3').value = settings.coaches[2] || '';
     document.getElementById('coachName4').value = settings.coaches[3] || '';
+    
+    // 추가: 이메일/생년 표시 설정
+    document.getElementById('showEmailCheckbox').checked = settings.showEmail !== false;
+    document.getElementById('showBirthYearCheckbox').checked = settings.showBirthYear !== false;
 
     document.getElementById('settingsModal').classList.add('active');
 }
@@ -74,6 +78,10 @@ function saveSettings() {
     if (newPassword) {
         settings.adminPassword = newPassword;
     }
+    
+    // 추가: 이메일/생년 표시 설정 저장
+    settings.showEmail = document.getElementById('showEmailCheckbox').checked;
+    settings.showBirthYear = document.getElementById('showBirthYearCheckbox').checked;
 
     saveToFirebase();
     if (settings.clubName) {
@@ -81,6 +89,8 @@ function saveSettings() {
     }
     updateFeePresetButtons();
     renderCoachButtons();
+    // 추가: 폼 표시 여부 업데이트
+    updateFormVisibility();
     closeSettings();
     showAlert('설정이 저장되었습니다!');
 
@@ -139,10 +149,14 @@ function exportData() {
                 );
             }
             
+            // 이메일과 생년 데이터는 설정에 따라 처리
+            const emailData = settings.showEmail ? (member.email || '') : '';
+            const birthYearData = settings.showBirthYear ? (member.birthYear || '') : '';
+            
             return [
                 member.name || '',
                 member.phone || '',
-                member.email || '',
+                emailData,
                 member.address || '',
                 member.registerDate || '',
                 member.fee || '',
@@ -151,7 +165,7 @@ function exportData() {
                 member.currentCount || 0,
                 ...scheduleData,
                 member.gender || '',
-                member.birthYear || '',
+                birthYearData,
                 member.skillLevel !== undefined && member.skillLevel !== null ? 
                     (member.skillLevel === -1 ? '희망' : 
                      member.skillLevel === 0 ? '0부' : 
@@ -161,43 +175,75 @@ function exportData() {
             ];
         });
         
+        // 헤더 구성 (설정에 따라 다름)
         const headers = [
-            '이름', '전화번호', '이메일', '주소', '등록일(YYYY-MM-DD)', 
-            '월회비', '담당코치', '출석목표횟수', '현재출석횟수',
-            // 스케줄 1-7
-            '스케줄1_요일', '스케줄1_시작시간', '스케줄1_종료시간',
-            '스케줄2_요일', '스케줄2_시작시간', '스케줄2_종료시간',
-            '스케줄3_요일', '스케줄3_시작시간', '스케줄3_종료시간',
-            '스케줄4_요일', '스케줄4_시작시간', '스케줄4_종료시간',
-            '스케줄5_요일', '스케줄5_시작시간', '스케줄5_종료시간',
-            '스케줄6_요일', '스케줄6_시작시간', '스케줄6_종료시간',
-            '스케줄7_요일', '스케줄7_시작시간', '스케줄7_종료시간',
-            '성별', '생년', '부수(실력)', '수상경력', '기타'
+            '이름', '전화번호'
         ];
+        
+        // 이메일 헤더 추가 (설정에 따라)
+        if (settings.showEmail) {
+            headers.push('이메일');
+        }
+        
+        headers.push(
+            '주소', '등록일(YYYY-MM-DD)', '월회비', '담당코치', '출석목표횟수', '현재출석횟수'
+        );
+        
+        // 스케줄 헤더 추가
+        for (let i = 1; i <= 7; i++) {
+            headers.push(
+                `스케줄${i}_요일`, `스케줄${i}_시작시간`, `스케줄${i}_종료시간`
+            );
+        }
+        
+        headers.push('성별');
+        
+        // 생년 헤더 추가 (설정에 따라)
+        if (settings.showBirthYear) {
+            headers.push('생년');
+        }
+        
+        headers.push('부수(실력)', '수상경력', '기타');
         
         const wsData = [headers, ...membersData];
         const ws = XLSX.utils.aoa_to_sheet(wsData);
         
         // 열 너비 설정
         const wscols = [
-            {wch: 10}, {wch: 15}, {wch: 20}, {wch: 25}, {wch: 12},
-            {wch: 10}, {wch: 10}, {wch: 12}, {wch: 12},
-            // 스케줄 1-7 (각 3칸)
-            {wch: 10}, {wch: 10}, {wch: 10},
-            {wch: 10}, {wch: 10}, {wch: 10},
-            {wch: 10}, {wch: 10}, {wch: 10},
-            {wch: 10}, {wch: 10}, {wch: 10},
-            {wch: 10}, {wch: 10}, {wch: 10},
-            {wch: 10}, {wch: 10}, {wch: 10},
-            {wch: 10}, {wch: 10}, {wch: 10},
-            {wch: 8}, {wch: 8}, {wch: 12}, {wch: 30}, {wch: 30}
+            {wch: 10}, {wch: 15}
         ];
+        
+        // 이메일 열 너비 (설정에 따라)
+        if (settings.showEmail) {
+            wscols.push({wch: 20});
+        }
+        
+        wscols.push(
+            {wch: 25}, {wch: 12}, {wch: 10}, {wch: 10}, {wch: 12}, {wch: 12}
+        );
+        
+        // 스케줄 1-7 (각 3칸)
+        for (let i = 0; i < 7; i++) {
+            wscols.push({wch: 10}, {wch: 10}, {wch: 10});
+        }
+        
+        wscols.push({wch: 8});
+        
+        // 생년 열 너비 (설정에 따라)
+        if (settings.showBirthYear) {
+            wscols.push({wch: 8});
+        }
+        
+        wscols.push({wch: 12}, {wch: 30}, {wch: 30});
+        
         ws['!cols'] = wscols;
         
         // 설정 데이터 시트
         const settingsData = [
             ['구장명', settings.clubName || ''],
             ['자동 잠금 시간(분)', settings.lockTimeout || 60],
+            ['이메일 표시 여부', settings.showEmail ? '표시' : '숨김'],
+            ['생년 표시 여부', settings.showBirthYear ? '표시' : '숨김'],
             ['코치1', settings.coaches[0] || ''],
             ['코치2', settings.coaches[1] || ''],
             ['코치3', settings.coaches[2] || ''],
@@ -345,9 +391,28 @@ function importData(event) {
                     }
                 }
                 
+                // 이메일 처리 (열 인덱스 조정 필요)
+                let email = '';
+                let emailIndex = 2; // 기본 이메일 위치
+                if (!settings.showEmail) {
+                    // 이메일이 숨겨진 경우, 데이터 구조가 다름
+                    emailIndex = 1; // 전화번호 다음이 주소
+                }
+                email = row[emailIndex] ? String(row[emailIndex]) : '';
+                
+                // 주소 인덱스 조정
+                let addressIndex = emailIndex + 1;
+                if (!settings.showEmail) {
+                    addressIndex = 2;
+                }
+                
                 // 부수 처리
                 let skillLevel = null;
-                const skillColumnIndex = 9 + (7 * 3) + 2; // 스케줄 7개 후의 부수 위치
+                // 스케줄 7개 + 설정에 따라 변하는 열 위치 계산
+                let skillColumnIndex = addressIndex + 4 + (7 * 3) + 1; // 기본 위치
+                if (!settings.showEmail) {
+                    skillColumnIndex -= 1; // 이메일 열이 없으므로 1칸 앞당김
+                }
                 if (row[skillColumnIndex] !== undefined && row[skillColumnIndex] !== '') {
                     const skillText = String(row[skillColumnIndex]).trim();
                     if (skillText === '희망') {
@@ -375,10 +440,20 @@ function importData(event) {
                     awards = awardsText.split(';').map(a => a.trim()).filter(a => a !== '');
                 }
                 
+                // 생년 처리
+                let birthYear = null;
+                let birthYearIndex = skillColumnIndex - 1; // 부수 앞이 생년
+                if (!settings.showBirthYear) {
+                    birthYearIndex = skillColumnIndex; // 생년이 없으면 부수가 앞당겨짐
+                }
+                if (row[birthYearIndex] !== undefined && row[birthYearIndex] !== '') {
+                    birthYear = parseInt(row[birthYearIndex]);
+                }
+                
                 // 스케줄 처리 (최대 7개)
                 const schedules = [];
                 for (let i = 0; i < 7; i++) {
-                    const baseIndex = 9 + (i * 3);
+                    const baseIndex = addressIndex + 4 + (i * 3);
                     const day = row[baseIndex] ? String(row[baseIndex]) : '';
                     const startTime = row[baseIndex + 1] ? String(row[baseIndex + 1]) : '';
                     const endTime = row[baseIndex + 2] ? String(row[baseIndex + 2]) : '';
@@ -397,16 +472,16 @@ function importData(event) {
                 const member = {
                     name: String(row[0] || ''),
                     phone: phone,
-                    email: String(row[2] || ''),
-                    address: String(row[3] || ''),
-                    registerDate: row[4] ? String(row[4]) : new Date().toISOString().split('T')[0],
-                    fee: row[5] ? parseInt(row[5]) : null,
-                    coach: String(row[6] || ''),
-                    targetCount: row[7] ? parseInt(row[7]) : 0,
-                    currentCount: row[8] ? parseInt(row[8]) : 0,
+                    email: email,
+                    address: row[addressIndex] ? String(row[addressIndex]) : '',
+                    registerDate: row[addressIndex + 1] ? String(row[addressIndex + 1]) : new Date().toISOString().split('T')[0],
+                    fee: row[addressIndex + 2] ? parseInt(row[addressIndex + 2]) : null,
+                    coach: row[addressIndex + 3] ? String(row[addressIndex + 3]) : '',
+                    targetCount: row[addressIndex + 4] ? parseInt(row[addressIndex + 4]) : 0,
+                    currentCount: row[addressIndex + 5] ? parseInt(row[addressIndex + 5]) : 0,
                     schedules: schedules, // 새로운 배열 형식
-                    gender: row[9 + (7 * 3)] ? String(row[9 + (7 * 3)]) : '',
-                    birthYear: row[9 + (7 * 3) + 1] ? parseInt(row[9 + (7 * 3) + 1]) : null,
+                    gender: row[addressIndex + 4 + (7 * 3)] ? String(row[addressIndex + 4 + (7 * 3)]) : '',
+                    birthYear: birthYear,
                     skillLevel: skillLevel,
                     awards: awards,
                     etc: row[etcColumnIndex] ? String(row[etcColumnIndex]) : '',
@@ -437,6 +512,12 @@ function importData(event) {
                         else if (key === '자동 잠금 시간(분)') {
                             settings.lockTimeout = parseInt(value) || 60;
                         }
+                        else if (key === '이메일 표시 여부') {
+                            settings.showEmail = value === '표시' || value === true || value === 'true';
+                        }
+                        else if (key === '생년 표시 여부') {
+                            settings.showBirthYear = value === '표시' || value === true || value === 'true';
+                        }
                         else if (key === '코치1') settings.coaches[0] = String(value || '');
                         else if (key === '코치2') settings.coaches[1] = String(value || '');
                         else if (key === '코치3') settings.coaches[2] = String(value || '');
@@ -451,6 +532,7 @@ function importData(event) {
                 
                 updateFeePresetButtons();
                 renderCoachButtons();
+                updateFormVisibility();
             }
             
             // 데이터 적용

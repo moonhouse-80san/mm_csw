@@ -278,6 +278,7 @@
                 </div>
             </div>
 
+            <!-- 이메일 필드 (설정에 따라 표시) -->
             <div class="form-group">
                 <label for="email">이메일</label>
                 <input type="email" id="email" placeholder="example@email.com">
@@ -391,6 +392,28 @@
                 </div>
                 <div style="font-size: 12px; color: #666; margin-top: 8px;">
                     ※ 비어있는 코치는 회원 폼에서 표시되지 않습니다.
+                </div>
+            </div>
+
+            <!-- 추가: 이메일/생년 표시 설정 -->
+            <div class="form-group">
+                <label>항목 표시 설정</label>
+                <div class="display-settings">
+                    <div class="display-setting-item">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="showEmailCheckbox" checked>
+                            <span>이메일 항목 표시</span>
+                        </label>
+                    </div>
+                    <div class="display-setting-item">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="showBirthYearCheckbox" checked>
+                            <span>생년 항목 표시</span>
+                        </label>
+                    </div>
+                </div>
+                <div style="font-size: 12px; color: #666; margin-top: 8px;">
+                    ※ 체크 해제 시 해당 항목이 회원 폼, 상세 정보, 엑셀 내보내기에서 숨겨집니다.
                 </div>
             </div>
 
