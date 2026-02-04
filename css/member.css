@@ -134,24 +134,21 @@
 /* 스케줄 배지 컨테이너 */
 .schedule-container {
     display: flex;
-    flex-wrap: wrap; 
+    flex-wrap: nowrap;
     gap: 5px;
     margin-top: 5px;
-    overflow-x: visible;
+    overflow-x: auto;
 }
 
 .schedule-badge {
     display: inline-block;
-    padding: 4px 8px;
+    padding: 3px;
     background: #f0f4ff;
     color: #4a6bff;
-    border-radius: 1px; 
-    font-size: 14px;
+    border-radius: 4px;
+    font-size: 12px;
     border-left: 3px solid #4a6bff;
     white-space: nowrap;
-    margin: 2px 3px; 
-    max-width: 100%;
-    box-sizing: border-box;
 }
 
 /* 전화번호와 금액 한 줄 표시 */

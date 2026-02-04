@@ -6,7 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#2196F3">
-    <title>부기 탁구클럽 회원 관리 앱</title>
+    <title>회원 관리 앱</title>
     <link rel="manifest" href="./etc/manifest.json">
     <link rel="apple-touch-icon" href="icon-192x192.png">
     <link rel="stylesheet" href="css/base.css">
@@ -16,7 +16,6 @@
     <link rel="stylesheet" href="css/calendar.css">
     <link rel="stylesheet" href="css/coach.css">
     <link rel="stylesheet" href="css/responsive.css">
-	<link rel="stylesheet" href="css/schedule.css">
 </head>
 
 <body>
@@ -173,16 +172,59 @@
                     </div>
                 </div>
 
-				<!-- 동적 스케줄 섹션 -->
-				<div class="form-group full-width">
-					<div class="schedule-section-header">📅 수업 스케줄</div>
-					<div id="schedulesContainer" class="schedules-container">
-						<!-- JavaScript로 동적 생성됩니다 -->
-					</div>
-					<button type="button" class="schedule-add-btn" onclick="addSchedule()">
-						➕ 스케줄 추가
-					</button>
-				</div>
+                <!-- 첫 번째 스케줄 -->
+                <div class="form-group full-width">
+                    <div class="schedule-section-header">📅 스케줄 1</div>
+                    <div class="form-grid" style="grid-template-columns: 1fr 2fr; margin-bottom: 10px;">
+                        <div class="form-group">
+                            <label for="day1">요일</label>
+                            <select id="day1">
+                                <option value="">요일 선택</option>
+                                <option value="월">월요일</option>
+                                <option value="화">화요일</option>
+                                <option value="수">수요일</option>
+                                <option value="목">목요일</option>
+                                <option value="금">금요일</option>
+                                <option value="토">토요일</option>
+                                <option value="일">일요일</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>시간</label>
+                            <div class="time-group">
+                                <input type="time" id="startTime1" step="300">
+                                <input type="time" id="endTime1" step="300">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 두 번째 스케줄 -->
+                <div class="form-group full-width">
+                    <div class="schedule-section-header">📅 스케줄 2</div>
+                    <div class="form-grid" style="grid-template-columns: 1fr 2fr; margin-bottom: 10px;">
+                        <div class="form-group">
+                            <label for="day2">요일</label>
+                            <select id="day2">
+                                <option value="">요일 선택</option>
+                                <option value="월">월요일</option>
+                                <option value="화">화요일</option>
+                                <option value="수">수요일</option>
+                                <option value="목">목요일</option>
+                                <option value="금">금요일</option>
+                                <option value="토">토요일</option>
+                                <option value="일">일요일</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>시간</label>
+                            <div class="time-group">
+                                <input type="time" id="startTime2" step="300">
+                                <input type="time" id="endTime2" step="300">
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
 				<!-- 기존 회원등록일 위에 새로운 필드들 추가 -->
 				<div class="form-row1">
@@ -475,7 +517,6 @@
     <script src="js/modal.js"></script>
     <script src="js/camera.js"></script>
     <script src="js/member.js"></script>
-    <script src="js/schedule.js"></script>
     <script src="js/form.js"></script>
     <script src="js/calendar.js"></script>
     <script src="js/coach.js"></script>

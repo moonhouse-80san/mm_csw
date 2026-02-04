@@ -22,15 +22,15 @@ if ('serviceWorker' in navigator) {
     });
 }
 
-// Firebase 설정
+// 공유 변수 및 Firebase 설정
 const firebaseConfig = {
-    apiKey: "AIzaSyD4GrNs2Vw9tSxGHSpKp9MvE8hsJwGo34U",
-    authDomain: "mmcsw-880ce.firebaseapp.com",
-    databaseURL: "https://mmcsw-880ce-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "mmcsw-880ce",
-    storageBucket: "mmcsw-880ce.firebasestorage.app",
-    messagingSenderId: "78114283532",
-    appId: "1:78114283532:web:7d32e87fae15796e684e29"
+  apiKey: "AIzaSyCqtpxdFCmGkpaEiKP1RKz0ktgcRfLmGzo",
+  authDomain: "cmcsw-a1901.firebaseapp.com",
+  databaseURL: "https://cmcsw-a1901-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "cmcsw-a1901",
+  storageBucket: "cmcsw-a1901.firebasestorage.app",
+  messagingSenderId: "659809381864",
+  appId: "1:659809381864:web:2fc78e455081ceea76885d"
 };
 
 // 전역 변수
