@@ -95,7 +95,7 @@ function saveSettings() {
     }
 }
 
-// 데이터 엑셀 내보내기
+// 데이터 엑셀 내보내기 - 개선된 버전
 function exportData() {
     if (members.length === 0) {
         showAlert('내보낼 회원 데이터가 없습니다!');
@@ -104,37 +104,74 @@ function exportData() {
     
     try {
         // 회원 데이터 시트
-        const membersData = members.map(member => [
-            member.name || '',
-            member.phone || '',
-            member.email || '',
-            member.address || '',
-            member.registerDate || '',
-            member.fee || '',
-            member.coach || '',
-            member.targetCount || 0,
-            member.currentCount || 0,
-            member.day1 || '',
-            member.startTime1 || '',
-            member.endTime1 || '',
-            member.day2 || '',
-            member.startTime2 || '',
-            member.endTime2 || '',
-            member.gender || '',
-            member.birthYear || '',
-            member.skillLevel !== undefined && member.skillLevel !== null ? 
-                (member.skillLevel === -1 ? '희망' : 
-                 member.skillLevel === 0 ? '0부' : 
-                 `${member.skillLevel}부`) : '',
-            member.awards ? member.awards.join('; ') : '',
-            member.etc || ''
-        ]);
+        const membersData = members.map(member => {
+            // 스케줄 데이터 처리 (최대 7개까지 지원)
+            const scheduleData = [];
+            
+            if (member.schedules && member.schedules.length > 0) {
+                // 새로운 schedules 배열 형식
+                for (let i = 0; i < 7; i++) {
+                    if (i < member.schedules.length) {
+                        const schedule = member.schedules[i];
+                        scheduleData.push(
+                            schedule.day || '',
+                            schedule.startTime || '',
+                            schedule.endTime || ''
+                        );
+                    } else {
+                        scheduleData.push('', '', '');
+                    }
+                }
+            } else {
+                // 기존 day1, day2 형식 (하위 호환)
+                scheduleData.push(
+                    member.day1 || '',
+                    member.startTime1 || '',
+                    member.endTime1 || '',
+                    member.day2 || '',
+                    member.startTime2 || '',
+                    member.endTime2 || '',
+                    '', '', '', // 스케줄 3
+                    '', '', '', // 스케줄 4
+                    '', '', '', // 스케줄 5
+                    '', '', '', // 스케줄 6
+                    '', '', ''  // 스케줄 7
+                );
+            }
+            
+            return [
+                member.name || '',
+                member.phone || '',
+                member.email || '',
+                member.address || '',
+                member.registerDate || '',
+                member.fee || '',
+                member.coach || '',
+                member.targetCount || 0,
+                member.currentCount || 0,
+                ...scheduleData,
+                member.gender || '',
+                member.birthYear || '',
+                member.skillLevel !== undefined && member.skillLevel !== null ? 
+                    (member.skillLevel === -1 ? '희망' : 
+                     member.skillLevel === 0 ? '0부' : 
+                     `${member.skillLevel}부`) : '',
+                member.awards ? member.awards.join('; ') : '',
+                member.etc || ''
+            ];
+        });
         
         const headers = [
             '이름', '전화번호', '이메일', '주소', '등록일(YYYY-MM-DD)', 
-            '월회비', '담당코치', '출석목표횟수', '현재출석횟수', 
-            '스케줄1_요일', '스케줄1_시작시간', '스케줄1_종료시간', 
+            '월회비', '담당코치', '출석목표횟수', '현재출석횟수',
+            // 스케줄 1-7
+            '스케줄1_요일', '스케줄1_시작시간', '스케줄1_종료시간',
             '스케줄2_요일', '스케줄2_시작시간', '스케줄2_종료시간',
+            '스케줄3_요일', '스케줄3_시작시간', '스케줄3_종료시간',
+            '스케줄4_요일', '스케줄4_시작시간', '스케줄4_종료시간',
+            '스케줄5_요일', '스케줄5_시작시간', '스케줄5_종료시간',
+            '스케줄6_요일', '스케줄6_시작시간', '스케줄6_종료시간',
+            '스케줄7_요일', '스케줄7_시작시간', '스케줄7_종료시간',
             '성별', '생년', '부수(실력)', '수상경력', '기타'
         ];
         
@@ -144,8 +181,15 @@ function exportData() {
         // 열 너비 설정
         const wscols = [
             {wch: 10}, {wch: 15}, {wch: 20}, {wch: 25}, {wch: 12},
-            {wch: 10}, {wch: 10}, {wch: 12}, {wch: 12}, {wch: 10},
-            {wch: 10}, {wch: 10}, {wch: 10}, {wch: 10}, {wch: 10},
+            {wch: 10}, {wch: 10}, {wch: 12}, {wch: 12},
+            // 스케줄 1-7 (각 3칸)
+            {wch: 10}, {wch: 10}, {wch: 10},
+            {wch: 10}, {wch: 10}, {wch: 10},
+            {wch: 10}, {wch: 10}, {wch: 10},
+            {wch: 10}, {wch: 10}, {wch: 10},
+            {wch: 10}, {wch: 10}, {wch: 10},
+            {wch: 10}, {wch: 10}, {wch: 10},
+            {wch: 10}, {wch: 10}, {wch: 10},
             {wch: 8}, {wch: 8}, {wch: 12}, {wch: 30}, {wch: 30}
         ];
         ws['!cols'] = wscols;
@@ -184,30 +228,66 @@ function exportData() {
     }
 }
 
-// 엑셀 템플릿 다운로드
+// 엑셀 템플릿 다운로드 - 스케줄 7개 지원
 function downloadTemplate() {
     try {
-        // 템플릿 데이터 생성 (새로운 필드 포함)
+        // 템플릿 데이터 생성 (스케줄 7개)
         const templateData = [
-            ['이름', '전화번호', '이메일', '주소', '등록일(YYYY-MM-DD)', '월회비', '담당코치', '출석목표횟수', '현재출석횟수', '스케줄1_요일', '스케줄1_시작시간', '스케줄1_종료시간', '스케줄2_요일', '스케줄2_시작시간', '스케줄2_종료시간', '성별', '생년', '부수(실력)', '수상경력', '기타'],
-            ['홍길동', '010-1234-5678', 'hong@email.com', '서울시 강남구', '2024-01-15', '100000', '김코치', '8', '0', '월', '13:00', '13:20', '수', '15:00', '15:20', '남', '1990', '5부', '2023년 탁구대회 우승; 2022년 개인전 준우승', '특이사항 없음'],
-            ['김영희', '010-8765-4321', 'kim@email.com', '서울시 서초구', '2024-01-20', '70000', '이코치', '12', '3', '화', '14:00', '14:20', '목', '16:00', '16:20', '여', '1995', '3부', '2022년 단체전 우승', '좌손잡이'],
-            ['※ 참고:', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
-            ['※ 요일: 월,화,수,목,금,토,일 중 선택', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
-            ['※ 시간 형식: 13:00, 14:30 등', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
-            ['※ 성별: 남 또는 여', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
-            ['※ 부수(실력): 희망, 0부, 1부, 2부, ... 10부 중 선택', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
-            ['※ 수상경력: 여러 개일 경우 세미콜론(;)으로 구분', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
-            ['※ 이 시트를 수정하지 마세요', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '']
+            [
+                '이름', '전화번호', '이메일', '주소', '등록일(YYYY-MM-DD)', '월회비', '담당코치', '출석목표횟수', '현재출석횟수',
+                '스케줄1_요일', '스케줄1_시작시간', '스케줄1_종료시간',
+                '스케줄2_요일', '스케줄2_시작시간', '스케줄2_종료시간',
+                '스케줄3_요일', '스케줄3_시작시간', '스케줄3_종료시간',
+                '스케줄4_요일', '스케줄4_시작시간', '스케줄4_종료시간',
+                '스케줄5_요일', '스케줄5_시작시간', '스케줄5_종료시간',
+                '스케줄6_요일', '스케줄6_시작시간', '스케줄6_종료시간',
+                '스케줄7_요일', '스케줄7_시작시간', '스케줄7_종료시간',
+                '성별', '생년', '부수(실력)', '수상경력', '기타'
+            ],
+            [
+                '홍길동', '010-1234-5678', 'hong@email.com', '서울시 강남구', '2024-01-15', '100000', '김코치', '8', '0',
+                '월', '13:00', '13:20',
+                '수', '15:00', '15:20',
+                '', '', '',
+                '', '', '',
+                '', '', '',
+                '', '', '',
+                '', '', '',
+                '남', '1990', '5부', '2023년 탁구대회 우승; 2022년 개인전 준우승', '특이사항 없음'
+            ],
+            [
+                '김영희', '010-8765-4321', 'kim@email.com', '서울시 서초구', '2024-01-20', '70000', '이코치', '12', '3',
+                '화', '14:00', '14:20',
+                '목', '16:00', '16:20',
+                '토', '10:00', '10:20',
+                '', '', '',
+                '', '', '',
+                '', '', '',
+                '', '', '',
+                '여', '1995', '3부', '2022년 단체전 우승', '좌손잡이'
+            ],
+            ['※ 참고:', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+            ['※ 요일: 월,화,수,목,금,토,일 중 선택', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+            ['※ 시간 형식: 13:00, 14:30 등', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+            ['※ 성별: 남 또는 여', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+            ['※ 부수(실력): 희망, 0부, 1부, 2부, ... 10부 중 선택', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+            ['※ 수상경력: 여러 개일 경우 세미콜론(;)으로 구분', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+            ['※ 스케줄은 최대 7개까지 입력 가능', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '']
         ];
         
         const ws = XLSX.utils.aoa_to_sheet(templateData);
         
-        // 열 너비 설정 (새로운 필드 포함)
+        // 열 너비 설정
         const wscols = [
             {wch: 10}, {wch: 15}, {wch: 20}, {wch: 25}, {wch: 12},
-            {wch: 10}, {wch: 10}, {wch: 12}, {wch: 12}, {wch: 10},
-            {wch: 10}, {wch: 10}, {wch: 10}, {wch: 10}, {wch: 10},
+            {wch: 10}, {wch: 10}, {wch: 12}, {wch: 12},
+            {wch: 10}, {wch: 10}, {wch: 10},
+            {wch: 10}, {wch: 10}, {wch: 10},
+            {wch: 10}, {wch: 10}, {wch: 10},
+            {wch: 10}, {wch: 10}, {wch: 10},
+            {wch: 10}, {wch: 10}, {wch: 10},
+            {wch: 10}, {wch: 10}, {wch: 10},
+            {wch: 10}, {wch: 10}, {wch: 10},
             {wch: 8}, {wch: 8}, {wch: 12}, {wch: 30}, {wch: 30}
         ];
         ws['!cols'] = wscols;
@@ -215,8 +295,8 @@ function downloadTemplate() {
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "회원등록템플릿");
         
-        XLSX.writeFile(wb, "회원등록_템플릿_신규.xlsx");
-        showAlert('엑셀 템플릿이 다운로드되었습니다! (새로운 필드 포함)');
+        XLSX.writeFile(wb, "회원등록_템플릿_스케줄7개.xlsx");
+        showAlert('엑셀 템플릿이 다운로드되었습니다! (스케줄 최대 7개 지원)');
         
     } catch (error) {
         console.error('템플릿 생성 오류:', error);
@@ -224,7 +304,7 @@ function downloadTemplate() {
     }
 }
 
-// 데이터 엑셀 가져오기
+// 데이터 엑셀 가져오기 - 스케줄 7개 지원
 function importData(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -267,8 +347,9 @@ function importData(event) {
                 
                 // 부수 처리
                 let skillLevel = null;
-                if (row[17] !== undefined && row[17] !== '') {
-                    const skillText = String(row[17]).trim();
+                const skillColumnIndex = 9 + (7 * 3) + 2; // 스케줄 7개 후의 부수 위치
+                if (row[skillColumnIndex] !== undefined && row[skillColumnIndex] !== '') {
+                    const skillText = String(row[skillColumnIndex]).trim();
                     if (skillText === '희망') {
                         skillLevel = -1;
                     } else if (skillText === '0부' || skillText === '선출') {
@@ -288,11 +369,30 @@ function importData(event) {
                 
                 // 수상경력 처리
                 let awards = [];
-                if (row[18] !== undefined && row[18] !== '') {
-                    const awardsText = String(row[18]);
-                    // 세미콜론으로 구분된 수상경력 분리
+                const awardsColumnIndex = skillColumnIndex + 1;
+                if (row[awardsColumnIndex] !== undefined && row[awardsColumnIndex] !== '') {
+                    const awardsText = String(row[awardsColumnIndex]);
                     awards = awardsText.split(';').map(a => a.trim()).filter(a => a !== '');
                 }
+                
+                // 스케줄 처리 (최대 7개)
+                const schedules = [];
+                for (let i = 0; i < 7; i++) {
+                    const baseIndex = 9 + (i * 3);
+                    const day = row[baseIndex] ? String(row[baseIndex]) : '';
+                    const startTime = row[baseIndex + 1] ? String(row[baseIndex + 1]) : '';
+                    const endTime = row[baseIndex + 2] ? String(row[baseIndex + 2]) : '';
+                    
+                    if (day && startTime && endTime) {
+                        schedules.push({
+                            day: day,
+                            startTime: startTime,
+                            endTime: endTime
+                        });
+                    }
+                }
+                
+                const etcColumnIndex = awardsColumnIndex + 1;
                 
                 const member = {
                     name: String(row[0] || ''),
@@ -304,18 +404,12 @@ function importData(event) {
                     coach: String(row[6] || ''),
                     targetCount: row[7] ? parseInt(row[7]) : 0,
                     currentCount: row[8] ? parseInt(row[8]) : 0,
-                    day1: row[9] ? String(row[9]) : null,
-                    startTime1: row[10] ? String(row[10]) : null,
-                    endTime1: row[11] ? String(row[11]) : null,
-                    day2: row[12] ? String(row[12]) : null,
-                    startTime2: row[13] ? String(row[13]) : null,
-                    endTime2: row[14] ? String(row[14]) : null,
-                    // 새로운 필드들
-                    gender: row[15] ? String(row[15]) : '',
-                    birthYear: row[16] ? parseInt(row[16]) : null,
+                    schedules: schedules, // 새로운 배열 형식
+                    gender: row[9 + (7 * 3)] ? String(row[9 + (7 * 3)]) : '',
+                    birthYear: row[9 + (7 * 3) + 1] ? parseInt(row[9 + (7 * 3) + 1]) : null,
                     skillLevel: skillLevel,
                     awards: awards,
-                    etc: row[19] ? String(row[19]) : '',
+                    etc: row[etcColumnIndex] ? String(row[etcColumnIndex]) : '',
                     photo: '',
                     attendanceDates: [],
                     attendanceHistory: [],
