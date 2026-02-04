@@ -221,13 +221,20 @@ function formatDate(dateString) {
 
 // 초기화
 document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('registerDate').valueAsDate = new Date();
-    document.getElementById('startTime1').value = "12:00";
-    document.getElementById('endTime1').value = "12:20";
-    document.getElementById('startTime2').value = "12:00";
-    document.getElementById('endTime2').value = "12:20";
-    document.getElementById('targetCount').value = "0";
-    document.getElementById('currentCount').value = "0";
+    const registerDateEl = document.getElementById('registerDate');
+    const targetCountEl = document.getElementById('targetCount');
+    const currentCountEl = document.getElementById('currentCount');
+    
+    // 요소가 존재하는 경우에만 값 설정
+    if (registerDateEl) {
+        registerDateEl.valueAsDate = new Date();
+    }
+    if (targetCountEl) {
+        targetCountEl.value = "0";
+    }
+    if (currentCountEl) {
+        currentCountEl.value = "0";
+    }
     
     updateFeePresetButtons();
     renderCoachButtons();
