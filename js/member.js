@@ -6,6 +6,9 @@ let sortAscending = true;
 function searchMembers() {
     const searchTerm = document.getElementById('searchInput').value.toLowerCase();
     
+    // 검색 시 화면 최상단으로 이동
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
     if (searchTerm === '') {
         filteredMembers = [...members];
     } else {
