@@ -42,9 +42,7 @@ let settings = {
     adminPassword: '0000',
     editPassword: '0000',
     lockTimeout: 60,
-    coaches: ['', '', '', ''],
-    showEmail: true,  // 추가: 이메일 표시 여부
-    showBirthYear: true  // 추가: 생년 표시 여부
+    coaches: ['', '', '', '']
 };
 let firebaseDb = null;
 
@@ -91,20 +89,13 @@ function loadFromFirebase() {
             settings.editPassword = data.editPassword !== undefined ? data.editPassword : settings.editPassword;
             settings.lockTimeout = data.lockTimeout !== undefined ? data.lockTimeout : 60;
             settings.coaches = data.coaches !== undefined ? data.coaches : ['', '', '', ''];
-            // 추가: 이메일/생년 표시 설정 로드
-            settings.showEmail = data.showEmail !== undefined ? data.showEmail : true;
-            settings.showBirthYear = data.showBirthYear !== undefined ? data.showBirthYear : true;
 
             document.getElementById('clubNameDisplay').textContent = settings.clubName || '구장명을 설정하세요';
             updateFeePresetButtons();
             renderCoachButtons();
-            // 추가: 설정에 따른 UI 업데이트
-            updateFormVisibility();
         } else {
             settings.lockTimeout = 60;
             settings.coaches = ['', '', '', ''];
-            settings.showEmail = true;
-            settings.showBirthYear = true;
         }
     });
 }
@@ -296,20 +287,6 @@ function formatDate(dateString) {
     return `${y}.${m}.${d}`;
 }
 
-// 폼 표시 여부 업데이트 함수
-function updateFormVisibility() {
-    const emailField = document.querySelector('.form-group:nth-child(8)'); // 이메일 필드
-    const birthYearField = document.querySelector('.form-group1:nth-child(2)'); // 생년 필드
-    
-    if (emailField) {
-        emailField.style.display = settings.showEmail ? 'block' : 'none';
-    }
-    
-    if (birthYearField) {
-        birthYearField.style.display = settings.showBirthYear ? 'block' : 'none';
-    }
-}
-
 // 초기화
 document.addEventListener('DOMContentLoaded', function() {
     const registerDateEl = document.getElementById('registerDate');
@@ -340,7 +317,6 @@ document.addEventListener('DOMContentLoaded', function() {
             renderMembers();
             renderSchedule();
         }
-        // 추가: 설정에 따른 UI 업데이트
-        updateFormVisibility();
     }, 500);
+
 });
