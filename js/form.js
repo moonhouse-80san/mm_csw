@@ -5,13 +5,6 @@ let currentPaymentList = [];
 let currentAwards = [];
 let isPhotoRemoved = false; // 이미지 삭제 플래그 추가
 
-// 정보 필드 표시 상태
-let infoFieldsVisibility = {
-    birthYear: false,
-    email: false,
-    address: false
-};
-
 // DOM 로드 시 초기화
 document.addEventListener('DOMContentLoaded', function() {
     // 성별 버튼 이벤트 리스너
@@ -37,84 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
             currentCountInput.style.background = '#f0f0f0';
         }
     }
-    
-    // 정보 필드 토글 버튼 초기화
-    updateInfoFieldsForLock();
 });
-
-// 정보 필드 토글 함수
-function toggleInfoField(fieldId) {
-    if (!isUnlocked) {
-        showAlert('정보 필드를 표시하려면 먼저 잠금을 해제해주세요!');
-        document.getElementById('lockPassword').focus();
-        return;
-    }
-    
-    infoFieldsVisibility[fieldId] = !infoFieldsVisibility[fieldId];
-    updateInfoFieldDisplay(fieldId);
-    resetLockTimer();
-}
-
-// 개별 정보 필드 표시 업데이트
-function updateInfoFieldDisplay(fieldId) {
-    const field = document.getElementById(fieldId);
-    const btn = document.querySelector(`.info-toggle-btn[data-field="${fieldId}"]`);
-    
-    if (!field || !btn) return;
-    
-    if (infoFieldsVisibility[fieldId]) {
-        // 표시 상태
-        field.style.display = 'block';
-        field.style.opacity = '1';
-        btn.innerHTML = '👁️';
-        btn.style.background = '#4CAF50';
-        btn.title = '숨기기';
-    } else {
-        // 숨김 상태
-        field.style.display = 'none';
-        field.style.opacity = '0';
-        btn.innerHTML = '⚙️';
-        btn.style.background = '#2196F3';
-        btn.title = '보이기';
-    }
-}
-
-// 모든 정보 필드 표시 상태 업데이트
-function updateInfoFieldsVisibility() {
-    Object.keys(infoFieldsVisibility).forEach(fieldId => {
-        updateInfoFieldDisplay(fieldId);
-    });
-}
-
-// 잠금 상태에 따른 정보 필드 업데이트
-function updateInfoFieldsForLock() {
-    Object.keys(infoFieldsVisibility).forEach(fieldId => {
-        const field = document.getElementById(fieldId);
-        const btn = document.querySelector(`.info-toggle-btn[data-field="${fieldId}"]`);
-        
-        if (!isUnlocked) {
-            // 잠금 상태: 필드 숨기기, 버튼 비활성화
-            if (field) {
-                field.style.display = 'none';
-                field.value = ''; // 값 초기화
-            }
-            if (btn) {
-                btn.innerHTML = '🔒';
-                btn.style.background = '#9E9E9E';
-                btn.disabled = true;
-                btn.title = '잠금 해제 필요';
-            }
-            infoFieldsVisibility[fieldId] = false;
-        } else {
-            // 잠금 해제 상태: 버튼 활성화, 저장된 표시 상태 적용
-            if (btn) {
-                btn.disabled = false;
-                btn.title = infoFieldsVisibility[fieldId] ? '숨기기' : '보이기';
-            }
-            updateInfoFieldDisplay(fieldId);
-        }
-    });
-}
 
 // 선택된 성별 값 가져오기
 function getSelectedGender() {
@@ -197,27 +113,16 @@ function addMember() {
     const registerDate = document.getElementById('registerDate').value;
     const feeValue = document.getElementById('fee').value;
     const fee = safeParseInt(feeValue);
-    
-    // 정보 필드 값 가져오기 (표시된 경우만)
-    let email = '';
-    let address = '';
-    let birthYear = null;
-    
-    if (infoFieldsVisibility.email) {
-        email = document.getElementById('email').value.trim();
-    }
-    if (infoFieldsVisibility.address) {
-        address = document.getElementById('address').value.trim();
-    }
-    if (infoFieldsVisibility.birthYear && document.getElementById('birthYear').value) {
-        birthYear = parseInt(document.getElementById('birthYear').value);
-    }
-    
+    const email = document.getElementById('email').value.trim();
+    const address = document.getElementById('address').value.trim();
     const coach = getSelectedCoach();
+    
+    // 새로운 필드들
     const gender = getSelectedGender();
+    const birthYear = document.getElementById('birthYear').value ? parseInt(document.getElementById('birthYear').value) : null;
     const skillLevel = document.getElementById('skillLevel').value ? parseInt(document.getElementById('skillLevel').value) : null;
     const etc = document.getElementById('etc').value.trim();
-    const privateMemo = document.getElementById('privateMemo').value.trim();
+    const privateMemo = document.getElementById('privateMemo').value.trim(); // 비밀글 추가
     const awards = [...currentAwards];
 
     // 현재 출석 횟수
@@ -240,7 +145,7 @@ function addMember() {
         }
     }
 
-    // 스케줄 충돌 검사
+    // 스케줄 충돌 검사 (유효한 스케줄만)
     const validSchedules = schedulesData.filter(s => s.day && s.startTime && s.endTime);
     if (validSchedules.length > 0 && coach) {
         const conflict = checkScheduleConflicts(validSchedules, coach);
@@ -265,7 +170,7 @@ function addMember() {
         attendanceDates: [],
         attendanceHistory: [],
         paymentHistory: [],
-        schedules: validSchedules,
+        schedules: validSchedules, // 유효한 스케줄만 저장
         email,
         address,
         gender: gender || '',
@@ -273,8 +178,7 @@ function addMember() {
         skillLevel: skillLevel,
         awards: awards,
         etc: etc,
-        privateMemo: privateMemo,
-        infoFieldsVisibility: { ...infoFieldsVisibility } // 필드 표시 상태 저장
+        privateMemo: privateMemo // 비밀글 저장
     };
 
     console.log('addMember - 저장할 회원 데이터:', member);
@@ -314,27 +218,15 @@ function updateMember() {
     const registerDate = document.getElementById('registerDate').value;
     const feeValue = document.getElementById('fee').value;
     const fee = safeParseInt(feeValue);
-    
-    // 정보 필드 값 가져오기 (표시된 경우만)
-    let email = members[currentEditIndex].email || '';
-    let address = members[currentEditIndex].address || '';
-    let birthYear = members[currentEditIndex].birthYear || null;
-    
-    if (infoFieldsVisibility.email) {
-        email = document.getElementById('email').value.trim();
-    }
-    if (infoFieldsVisibility.address) {
-        address = document.getElementById('address').value.trim();
-    }
-    if (infoFieldsVisibility.birthYear) {
-        birthYear = document.getElementById('birthYear').value ? parseInt(document.getElementById('birthYear').value) : null;
-    }
-    
+    const email = document.getElementById('email').value.trim();
+    const address = document.getElementById('address').value.trim();
     const coach = getSelectedCoach();
+    
     const gender = getSelectedGender();
+    const birthYear = document.getElementById('birthYear').value ? parseInt(document.getElementById('birthYear').value) : null;
     const skillLevel = document.getElementById('skillLevel').value ? parseInt(document.getElementById('skillLevel').value) : null;
     const etc = document.getElementById('etc').value.trim();
-    const privateMemo = document.getElementById('privateMemo').value.trim();
+    const privateMemo = document.getElementById('privateMemo').value.trim(); // 비밀글 추가
     const awards = [...currentAwards];
 
     // 현재 출석 횟수
@@ -399,7 +291,7 @@ function updateMember() {
         attendanceDates: members[currentEditIndex].attendanceDates || [],
         attendanceHistory: existingHistory,
         paymentHistory: paymentHistory,
-        schedules: validSchedules,
+        schedules: validSchedules, // 유효한 스케줄만 저장
         email,
         address,
         gender: gender || '',
@@ -407,8 +299,7 @@ function updateMember() {
         skillLevel: skillLevel,
         awards: awards,
         etc: etc,
-        privateMemo: privateMemo,
-        infoFieldsVisibility: { ...infoFieldsVisibility } // 필드 표시 상태 저장
+        privateMemo: privateMemo // 비밀글 저장
     };
 
     console.log('updateMember - 수정된 회원 데이터:', members[currentEditIndex]);
@@ -444,11 +335,8 @@ function editMember(index) {
     document.getElementById('phone').value = member.phone || '';
     document.getElementById('registerDate').value = member.registerDate || '';
     document.getElementById('fee').value = member.fee !== null && member.fee !== undefined ? member.fee : '';
-    
-    // 이메일, 주소, 생년 - 저장된 값 설정
     document.getElementById('email').value = member.email || '';
     document.getElementById('address').value = member.address || '';
-    document.getElementById('birthYear').value = member.birthYear || '';
     
     // 현재 출석 횟수 입력란 - 잠금 해제 상태에 따라 readonly 설정
     const currentCountInput = document.getElementById("currentCount");
@@ -467,6 +355,7 @@ function editMember(index) {
 
     setSelectedCoach(member.coach || '');
     setSelectedGender(member.gender || '');
+    document.getElementById('birthYear').value = member.birthYear || '';
     document.getElementById('skillLevel').value = member.skillLevel || '';
     document.getElementById('etc').value = member.etc || '';
     
@@ -482,12 +371,6 @@ function editMember(index) {
     }
     
     setAwardsList(member.awards || []);
-    
-    // 정보 필드 상태 복원
-    if (member.infoFieldsVisibility) {
-        infoFieldsVisibility = { ...infoFieldsVisibility, ...member.infoFieldsVisibility };
-    }
-    updateInfoFieldsForLock();
 
     // 스케줄 데이터 설정
     console.log('editMember - member.schedules:', member.schedules);
@@ -548,11 +431,9 @@ function clearForm() {
     document.getElementById('phone').value = '';
     document.getElementById('registerDate').value = '';
     document.getElementById('fee').value = '';
-    
-    // 정보 필드 초기화
     document.getElementById('email').value = '';
     document.getElementById('address').value = '';
-    document.getElementById('birthYear').value = '';
+    document.getElementById("targetCount").value = "0";
     
     // 현재 출석 횟수 입력란 초기화
     const currentCountInput = document.getElementById("currentCount");
@@ -565,10 +446,9 @@ function clearForm() {
         currentCountInput.style.background = '#f0f0f0';
     }
 
-    document.getElementById("targetCount").value = "0";
-
     setSelectedCoach('');
     setSelectedGender('');
+    document.getElementById('birthYear').value = '';
     document.getElementById('skillLevel').value = '';
     document.getElementById('etc').value = '';
     
@@ -585,16 +465,6 @@ function clearForm() {
     
     currentAwards = [];
     renderAwardsList();
-    
-    // 정보 필드 표시 상태 초기화 (잠금 해제 상태에서만)
-    if (isUnlocked) {
-        infoFieldsVisibility = {
-            birthYear: false,
-            email: false,
-            address: false
-        };
-        updateInfoFieldsForLock();
-    }
 
     resetSchedules();
 
