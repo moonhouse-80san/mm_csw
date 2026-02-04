@@ -14,6 +14,97 @@ function closeAttendanceAlert() {
     document.getElementById('attendanceAlertModal').classList.remove('active');
 }
 
+// 출석 완료 SMS 발송 (네이티브 SMS 앱 실행)
+function sendAttendanceCompleteSMS(memberName, memberPhone, targetCount) {
+    if (!memberPhone) {
+        showAlert('회원의 전화번호가 등록되어 있지 않습니다.');
+        return;
+    }
+    
+    // 전화번호에서 하이픈 제거
+    const phoneNumber = String(memberPhone).replace(/-/g, '');
+    
+    // SMS 메시지 내용
+    const clubName = settings.clubName || '탁구클럽';
+    const message = `${memberName}회원님 출석 횟수가 완료 되었습니다.\n다음 레슨 까지 회비 납부를 부탁드립니다.\n감사합니다.\n\n- ${clubName}`;
+    
+    // 모바일 환경 체크
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
+    if (isMobile) {
+        // 모바일: SMS 앱 열기
+        const smsUrl = `sms:${phoneNumber}?body=${encodeURIComponent(message)}`;
+        window.location.href = smsUrl;
+    } else {
+        // PC: 전화번호와 메시지를 클립보드에 복사
+        const textToCopy = `전화번호: ${phoneNumber}\n\n메시지:\n${message}`;
+        
+        // 클립보드 복사 시도
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                showAlert('전화번호와 메시지가 클립보드에 복사되었습니다!\n\n핸드폰으로 문자를 보내주세요.');
+            }).catch(() => {
+                // 클립보드 복사 실패 시 텍스트 표시
+                showSMSTextModal(phoneNumber, message);
+            });
+        } else {
+            // 구형 브라우저: 텍스트 표시
+            showSMSTextModal(phoneNumber, message);
+        }
+    }
+}
+
+// SMS 메시지를 모달로 표시 (PC 환경용)
+function showSMSTextModal(phoneNumber, message) {
+    const modal = document.createElement('div');
+    modal.className = 'modal active';
+    modal.innerHTML = `
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2>📱 문자 메시지</h2>
+                <button class="close-btn" onclick="this.closest('.modal').remove()">×</button>
+            </div>
+            <div style="padding: 20px 0;">
+                <div style="margin-bottom: 15px;">
+                    <strong>받는 사람:</strong><br>
+                    <input type="text" value="${phoneNumber}" readonly 
+                           style="width: 100%; padding: 10px; margin-top: 5px; border: 2px solid #e0e0e0; border-radius: 8px;">
+                </div>
+                <div>
+                    <strong>메시지:</strong><br>
+                    <textarea readonly style="width: 100%; min-height: 150px; padding: 10px; margin-top: 5px; border: 2px solid #e0e0e0; border-radius: 8px; font-family: inherit;">${message}</textarea>
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button style="background: #2196F3;" onclick="copyToClipboard('${phoneNumber}', \`${message.replace(/`/g, '\\`')}\`)">복사하기</button>
+                <button style="background: #9E9E9E;" onclick="this.closest('.modal').remove()">닫기</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+}
+
+// 클립보드 복사 헬퍼 함수
+function copyToClipboard(phoneNumber, message) {
+    const textToCopy = `전화번호: ${phoneNumber}\n\n메시지:\n${message}`;
+    
+    const textArea = document.createElement('textarea');
+    textArea.value = textToCopy;
+    textArea.style.position = 'fixed';
+    textArea.style.left = '-999999px';
+    document.body.appendChild(textArea);
+    textArea.select();
+    
+    try {
+        document.execCommand('copy');
+        showAlert('전화번호와 메시지가 복사되었습니다!');
+    } catch (err) {
+        showAlert('복사에 실패했습니다. 수동으로 복사해주세요.');
+    }
+    
+    document.body.removeChild(textArea);
+}
+
 // 알림음 재생
 function playNotificationSound() {
     const audio = document.getElementById('notificationSound');
@@ -275,8 +366,7 @@ function toggleAttendance(memberIndex) {
             showAttendanceAlert(member.name, member.currentCount, targetCount);
         }
         else if (targetCount > 0 && member.currentCount >= targetCount) {
-            showAlert(`${member.name} 회원님 목표 ${targetCount}회를 달성했습니다!`);
-            
+            // 출석 완료 처리
             member.attendanceDates.forEach(date => {
                 if (!member.attendanceHistory.includes(date)) {
                     member.attendanceHistory.push(date);
@@ -289,7 +379,8 @@ function toggleAttendance(memberIndex) {
             saveToFirebase();
             renderMembers();
             
-            showAlert(`${member.name} 회원님의 출석 횟수가 초기화되었습니다. (0/${targetCount}회)\n출석 기록은 유지됩니다.`);
+            // 출석 완료 알림 모달 표시 (SMS 버튼 포함)
+            showAttendanceCompleteModal(member.name, member.phone, targetCount);
         } else if (targetCount > 0) {
             showAlert(`${member.name} 출석 체크 완료! (${member.currentCount}/${targetCount}회)`);
         } else {
@@ -315,6 +406,51 @@ function toggleAttendance(memberIndex) {
     }
 
     closeAttendanceSelectModal();
+}
+
+// 출석 완료 모달 표시 (SMS 버튼 포함)
+function showAttendanceCompleteModal(memberName, memberPhone, targetCount) {
+    const modal = document.createElement('div');
+    modal.id = 'attendanceCompleteModal';
+    modal.className = 'modal active attendance-alert-modal';
+    modal.innerHTML = `
+        <div class="modal-content" style="text-align: center; max-width: 400px;">
+            <div class="attendance-alert-icon">🎉</div>
+            <h2 style="color: #4CAF50; font-size: 28px; margin-bottom: 15px;">출석 완료!</h2>
+            <p style="font-size: 18px; color: #666; margin-bottom: 25px; line-height: 1.6;">
+                <strong>${memberName}</strong> 회원님<br>
+                목표 <strong>${targetCount}회</strong>를 달성했습니다!<br>
+                출석 횟수가 초기화되었습니다.<br>
+                <small style="color: #999;">(출석 기록은 유지됩니다)</small>
+            </p>
+            <div class="modal-buttons" style="flex-direction: column; gap: 10px;">
+                <button class="btn" style="background: #4CAF50; width: 100%; padding: 15px;" onclick="sendAttendanceCompleteSMS('${memberName}', '${memberPhone}', ${targetCount}); closeAttendanceCompleteModal();">
+                    📱 문자 메시지 보내기
+                </button>
+                <button class="btn" style="background: #2196F3; width: 100%; padding: 15px;" onclick="closeAttendanceCompleteModal()">
+                    확인
+                </button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+    
+    // 모달 외부 클릭 시 닫기
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            closeAttendanceCompleteModal();
+        }
+    });
+    
+    playNotificationSound();
+}
+
+// 출석 완료 모달 닫기
+function closeAttendanceCompleteModal() {
+    const modal = document.getElementById('attendanceCompleteModal');
+    if (modal) {
+        modal.remove();
+    }
 }
 
 // 현재 날짜로 달력 초기화
