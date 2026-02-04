@@ -1,7 +1,7 @@
 // 스케줄 관리 전역 변수
 let schedules = [
-    { id: 1, day: '', startTime: '', endTime: '' },
-    { id: 2, day: '', startTime: '', endTime: '' }
+    { id: 1, day: '', startTime: '12:00', endTime: '12:20' },
+    { id: 2, day: '', startTime: '12:00', endTime: '12:20' }
 ];
 let nextScheduleId = 3;
 
@@ -58,9 +58,9 @@ function renderSchedules() {
 
 // 스케줄 입력 이벤트 리스너 추가
 function attachScheduleEventListeners() {
-    // 모든 스케줄 입력 필드에 이벤트 리스너 추가
     document.querySelectorAll('[data-schedule-id]').forEach(element => {
         if (element.tagName === 'SELECT' || element.tagName === 'INPUT') {
+            element.removeEventListener('change', updateScheduleData); // 중복 방지
             element.addEventListener('change', updateScheduleData);
         }
     });
@@ -75,6 +75,7 @@ function updateScheduleData(event) {
     const schedule = schedules.find(s => s.id === scheduleId);
     if (schedule) {
         schedule[field] = value;
+        console.log('updateScheduleData - 스케줄 업데이트:', { scheduleId, field, value, schedule });
     }
 }
 
@@ -113,11 +114,38 @@ function removeSchedule(scheduleId) {
 
 // 스케줄 데이터 가져오기 (회원 추가/수정 시 사용)
 function getSchedulesData() {
-    return schedules.filter(s => s.day && s.startTime && s.endTime);
+    // 현재 DOM에서 직접 값을 읽어옴
+    const result = [];
+    
+    schedules.forEach(schedule => {
+        const dayEl = document.getElementById(`day${schedule.id}`);
+        const startTimeEl = document.getElementById(`startTime${schedule.id}`);
+        const endTimeEl = document.getElementById(`endTime${schedule.id}`);
+        
+        if (dayEl && startTimeEl && endTimeEl) {
+            const day = dayEl.value;
+            const startTime = startTimeEl.value;
+            const endTime = endTimeEl.value;
+            
+            // 모든 필드가 채워진 경우만 추가
+            if (day && startTime && endTime) {
+                result.push({
+                    day: day,
+                    startTime: startTime,
+                    endTime: endTime
+                });
+            }
+        }
+    });
+    
+    console.log('getSchedulesData - 최종 결과:', result);
+    return result;
 }
 
 // 스케줄 데이터 설정 (회원 편집 시 사용)
 function setSchedulesData(memberSchedules) {
+    console.log('setSchedulesData - 받은 데이터:', memberSchedules);
+    
     if (!memberSchedules || memberSchedules.length === 0) {
         schedules = [
             { id: 1, day: '', startTime: '12:00', endTime: '12:20' },
@@ -133,6 +161,8 @@ function setSchedulesData(memberSchedules) {
         }));
         nextScheduleId = schedules.length + 1;
     }
+    
+    console.log('setSchedulesData - 설정된 스케줄:', schedules);
     renderSchedules();
 }
 
@@ -143,10 +173,12 @@ function resetSchedules() {
         { id: 2, day: '', startTime: '12:00', endTime: '12:20' }
     ];
     nextScheduleId = 3;
+    console.log('resetSchedules - 스케줄 초기화됨');
     renderSchedules();
 }
 
 // 페이지 로드 시 초기화
 document.addEventListener('DOMContentLoaded', function() {
     renderSchedules();
+    console.log('schedule.js - 초기화 완료');
 });
