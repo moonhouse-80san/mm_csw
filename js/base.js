@@ -152,7 +152,6 @@ function saveToFirebase() {
 }
 
 // 회원 정규화 헬퍼
-// 회원 정규화 헬퍼 - schedules 배열 처리 추가
 function normalizeMember(member) {
     const cleaned = {};
     for (const key in member) {
@@ -164,13 +163,6 @@ function normalizeMember(member) {
                 cleaned[key] = String(member[key]);
             } else if (key === 'coach' && member[key] !== null) {
                 cleaned[key] = String(member[key]);
-            } else if (key === 'schedules' && member[key] !== null) {
-                // ⭐ 중요: schedules 배열 보존
-                if (Array.isArray(member[key])) {
-                    cleaned[key] = member[key];
-                } else {
-                    cleaned[key] = [];
-                }
             } else {
                 cleaned[key] = member[key];
             }
@@ -183,23 +175,6 @@ function normalizeMember(member) {
     if (!cleaned.coach) cleaned.coach = '';
     if (!cleaned.paymentHistory) cleaned.paymentHistory = [];
     if (!cleaned.phone) cleaned.phone = '';
-    if (!cleaned.schedules) cleaned.schedules = []; // ⭐ 스케줄 기본값 추가
-    
-    // 하위 호환: 기존 day1, day2 형식을 schedules 배열로 변환
-    if (cleaned.day1 && cleaned.startTime1 && cleaned.endTime1 && cleaned.schedules.length === 0) {
-        cleaned.schedules.push({
-            day: cleaned.day1,
-            startTime: cleaned.startTime1,
-            endTime: cleaned.endTime1
-        });
-    }
-    if (cleaned.day2 && cleaned.startTime2 && cleaned.endTime2 && cleaned.schedules.length < 2) {
-        cleaned.schedules.push({
-            day: cleaned.day2,
-            startTime: cleaned.startTime2,
-            endTime: cleaned.endTime2
-        });
-    }
     
     return cleaned;
 }

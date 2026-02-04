@@ -79,7 +79,6 @@ function sortMembers(sortBy, fromSearch) {
 }
 
 // 기본 회원 목록 렌더링
-// 기본 회원 목록 렌더링 - 스케줄 배지 부분
 function renderMembers() {
     // 코치순 정렬일 경우 코치별 렌더링 호출
     if (currentSort === 'coach') {
@@ -111,21 +110,15 @@ function renderMembers() {
 
         let scheduleBadges = '';
         
-        // ⭐ 중요: 새로운 schedules 배열 형식 사용
-        if (member.schedules && Array.isArray(member.schedules) && member.schedules.length > 0) {
-            member.schedules.forEach((schedule, idx) => {
+        // 새로운 schedules 배열 형식
+        if (member.schedules && member.schedules.length > 0) {
+            member.schedules.forEach(schedule => {
                 if (schedule.day && schedule.startTime && schedule.endTime) {
                     scheduleBadges += `<span class="schedule-badge">${dayNames[schedule.day]} ${schedule.startTime}~${schedule.endTime}</span>`;
                 }
             });
         } else {
-            // ⭐ 기존 day1, day2 형식 (하위 호환) - 디버그 로그 추가
-            console.log(`회원 ${member.name}의 스케줄 데이터:`, {
-                schedules: member.schedules,
-                day1: member.day1,
-                day2: member.day2
-            });
-            
+            // 기존 day1, day2 형식 (하위 호환)
             if (member.day1 && member.startTime1 && member.endTime1) {
                 scheduleBadges += `<span class="schedule-badge">${dayNames[member.day1]} ${member.startTime1}~${member.endTime1}</span>`;
             }
@@ -141,7 +134,7 @@ function renderMembers() {
         if (targetCount > 0) {
             attendanceCount = `
                 <span class="attendance-count" style="display: inline-flex; align-items: center; gap: 3px; padding: 2px 6px; background: 
-                #fff; color: #ff6600; border-radius: 2px; font-size: 14px; font-weight: 500; margin-left: 5px; white-space: nowrap;">
+				#fff; color: #ff6600; border-radius: 2px; font-size: 14px; font-weight: 500; margin-left: 5px; white-space: nowrap;">
                     📊 ${currentCount}/${targetCount}회
                 </span>
             `;

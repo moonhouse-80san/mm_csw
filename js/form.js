@@ -91,13 +91,12 @@ function safeParseInt(value) {
 }
 
 // 회원 추가
-// 회원 추가 함수 수정
 function addMember() {
     const name = document.getElementById('name').value.trim();
     const phone = document.getElementById('phone').value.trim();
     const registerDate = document.getElementById('registerDate').value;
     const feeValue = document.getElementById('fee').value;
-    const fee = safeParseInt(feeValue);
+    const fee = safeParseInt(feeValue); // 안전한 변환
     const email = document.getElementById('email').value.trim();
     const address = document.getElementById('address').value.trim();
     const coach = getSelectedCoach();
@@ -111,7 +110,6 @@ function addMember() {
 
     // 스케줄 데이터 가져오기
     const schedulesData = getSchedulesData();
-    console.log('📋 form.js - addMember에서 가져온 스케줄:', schedulesData);
 
     if (!name) {
         showAlert('이름을 입력해주세요!');
@@ -120,13 +118,11 @@ function addMember() {
     }
 
     // 스케줄 유효성 검사
-    if (schedulesData && schedulesData.length > 0) {
-        for (let i = 0; i < schedulesData.length; i++) {
-            const schedule = schedulesData[i];
-            if (schedule.startTime >= schedule.endTime) {
-                showAlert(`스케줄 ${i + 1}의 종료시간은 시작시간보다 커야 합니다!`);
-                return;
-            }
+    for (let i = 0; i < schedulesData.length; i++) {
+        const schedule = schedulesData[i];
+        if (schedule.startTime >= schedule.endTime) {
+            showAlert(`스케줄 ${i + 1}의 종료시간은 시작시간보다 커야 합니다!`);
+            return;
         }
     }
 
@@ -145,16 +141,17 @@ function addMember() {
         phone,
         photo: currentPhotoData || '',
         registerDate: registerDate || new Date().toISOString().split('T')[0],
-        fee: fee,
+        fee: fee, // 안전하게 변환된 값 (null 가능)
         coach: coach,
         targetCount: targetCount,
         currentCount: 0,
         attendanceDates: [],
         attendanceHistory: [],
         paymentHistory: [],
-        schedules: schedulesData || [], // ⭐ 중요: 빈 배열이어도 저장
+        schedules: schedulesData, // 배열로 저장
         email,
         address,
+        // 새로운 필드들
         gender: gender || '',
         birthYear: birthYear,
         skillLevel: skillLevel,
@@ -162,7 +159,6 @@ function addMember() {
         etc: etc
     };
 
-    console.log('💾 저장될 회원 데이터:', member);
     members.push(member);
     saveToFirebase();
     filteredMembers = [...members];
@@ -179,116 +175,6 @@ function addMember() {
     
     // 상단으로 스크롤 이동
     window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-// 회원 수정 함수 수정
-function updateMember() {
-    if (currentEditIndex === null) {
-        showAlert('수정할 회원을 선택해주세요!');
-        return;
-    }
-
-    const name = document.getElementById('name').value.trim();
-    const phone = document.getElementById('phone').value.trim();
-    const registerDate = document.getElementById('registerDate').value;
-    const feeValue = document.getElementById('fee').value;
-    const fee = safeParseInt(feeValue);
-    const email = document.getElementById('email').value.trim();
-    const address = document.getElementById('address').value.trim();
-    const coach = getSelectedCoach();
-    
-    // 새로운 필드들
-    const gender = getSelectedGender();
-    const birthYear = document.getElementById('birthYear').value ? parseInt(document.getElementById('birthYear').value) : null;
-    const skillLevel = document.getElementById('skillLevel').value ? parseInt(document.getElementById('skillLevel').value) : null;
-    const etc = document.getElementById('etc').value.trim();
-    const awards = [...currentAwards];
-
-    // 스케줄 데이터 가져오기
-    const schedulesData = getSchedulesData();
-    console.log('📋 form.js - updateMember에서 가져온 스케줄:', schedulesData);
-
-    if (!name) {
-        showAlert('이름을 입력해주세요!');
-        document.getElementById('name').focus();
-        return;
-    }
-
-    // 스케줄 유효성 검사
-    if (schedulesData && schedulesData.length > 0) {
-        for (let i = 0; i < schedulesData.length; i++) {
-            const schedule = schedulesData[i];
-            if (schedule.startTime >= schedule.endTime) {
-                showAlert(`스케줄 ${i + 1}의 종료시간은 시작시간보다 커야 합니다!`);
-                return;
-            }
-        }
-    }
-
-    // 스케줄 충돌 검사
-    const conflict = checkScheduleConflicts(schedulesData, coach, currentEditIndex);
-    if (conflict.conflict) {
-        showAlert(`코치 [${coach}] 시간 충돌!\n${conflict.memberName} 회원이 이미 ${conflict.existingTime}에 등록되어 있습니다.`);
-        return;
-    }
-
-    const targetCountInput = document.getElementById('targetCount').value;
-    const targetCount = targetCountInput === "" ? 
-                       members[currentEditIndex].targetCount || 0 : 
-                       parseInt(targetCountInput) || 0;
-
-    const existingHistory = members[currentEditIndex].attendanceHistory || [];
-    const paymentHistory = currentPaymentList || [];
-
-    // 이미지 처리: isPhotoRemoved 플래그 확인
-    let newPhoto = '';
-    if (isPhotoRemoved) {
-        newPhoto = '';
-    } else if (currentPhotoData !== null) {
-        newPhoto = currentPhotoData;
-    } else {
-        newPhoto = members[currentEditIndex].photo || '';
-    }
-
-    members[currentEditIndex] = {
-        ...members[currentEditIndex],
-        name,
-        phone,
-        photo: newPhoto,
-        registerDate: registerDate || members[currentEditIndex].registerDate,
-        fee: fee,
-        coach: coach,
-        targetCount: targetCount,
-        currentCount: members[currentEditIndex].currentCount || 0,
-        attendanceDates: members[currentEditIndex].attendanceDates || [],
-        attendanceHistory: existingHistory,
-        paymentHistory: paymentHistory,
-        schedules: schedulesData || [], // ⭐ 중요: 빈 배열이어도 저장
-        email,
-        address,
-        gender: gender || '',
-        birthYear: birthYear,
-        skillLevel: skillLevel,
-        awards: awards,
-        etc: etc
-    };
-
-    console.log('💾 수정된 회원 데이터:', members[currentEditIndex]);
-    saveToFirebase();
-    filteredMembers = [...members];
-    renderMembers();
-    renderSchedule();
-    clearForm();
-    showAlert('회원 정보가 수정되었습니다!');
-    resetLockTimer();
-    
-    const formSection = document.querySelector('.form-section');
-    if (formSection) {
-        formSection.classList.remove('form-edit-mode');
-    }
-    
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    isPhotoRemoved = false;
 }
 
 // 회원 수정
