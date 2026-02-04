@@ -103,32 +103,65 @@ function exportData() {
     }
     
     try {
-        // 회원 데이터 시트
-        const membersData = members.map(member => [
-            member.name || '',
-            member.phone || '',
-            member.email || '',
-            member.address || '',
-            member.registerDate || '',
-            member.fee || '',
-            member.coach || '',
-            member.targetCount || 0,
-            member.currentCount || 0,
-            member.day1 || '',
-            member.startTime1 || '',
-            member.endTime1 || '',
-            member.day2 || '',
-            member.startTime2 || '',
-            member.endTime2 || '',
-            member.gender || '',
-            member.birthYear || '',
-            member.skillLevel !== undefined && member.skillLevel !== null ? 
-                (member.skillLevel === -1 ? '희망' : 
-                 member.skillLevel === 0 ? '0부' : 
-                 `${member.skillLevel}부`) : '',
-            member.awards ? member.awards.join('; ') : '',
-            member.etc || ''
-        ]);
+        // 회원 데이터 시트 (새로운 스케줄 형식 반영)
+        const membersData = members.map(member => {
+            // 스케줄 데이터 추출 (새로운 형식)
+            let schedule1 = {}, schedule2 = {};
+            if (member.schedules && member.schedules.length > 0) {
+                if (member.schedules[0]) {
+                    schedule1 = {
+                        day: member.schedules[0].day || '',
+                        startTime: member.schedules[0].startTime || '',
+                        endTime: member.schedules[0].endTime || ''
+                    };
+                }
+                if (member.schedules[1]) {
+                    schedule2 = {
+                        day: member.schedules[1].day || '',
+                        startTime: member.schedules[1].startTime || '',
+                        endTime: member.schedules[1].endTime || ''
+                    };
+                }
+            } else {
+                // 기존 형식 하위 호환
+                schedule1 = {
+                    day: member.day1 || '',
+                    startTime: member.startTime1 || '',
+                    endTime: member.endTime1 || ''
+                };
+                schedule2 = {
+                    day: member.day2 || '',
+                    startTime: member.startTime2 || '',
+                    endTime: member.endTime2 || ''
+                };
+            }
+            
+            return [
+                member.name || '',
+                member.phone || '',
+                member.email || '',
+                member.address || '',
+                member.registerDate || '',
+                member.fee || '',
+                member.coach || '',
+                member.targetCount || 0,
+                member.currentCount || 0,
+                schedule1.day,
+                schedule1.startTime,
+                schedule1.endTime,
+                schedule2.day,
+                schedule2.startTime,
+                schedule2.endTime,
+                member.gender || '',
+                member.birthYear || '',
+                member.skillLevel !== undefined && member.skillLevel !== null ? 
+                    (member.skillLevel === -1 ? '희망' : 
+                     member.skillLevel === 0 ? '0부' : 
+                     `${member.skillLevel}부`) : '',
+                member.awards ? member.awards.join('; ') : '',
+                member.etc || ''
+            ];
+        });
         
         const headers = [
             '이름', '전화번호', '이메일', '주소', '등록일(YYYY-MM-DD)', 

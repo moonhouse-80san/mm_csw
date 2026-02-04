@@ -1,3 +1,4 @@
+[file content begin]
 // 스케줄 관리 전역 변수
 let schedules = [
     { id: 1, day: '', startTime: '12:00', endTime: '12:20' },
@@ -22,7 +23,7 @@ function renderSchedules() {
             <div class="form-grid" style="grid-template-columns: 1fr 2fr; margin-bottom: 10px;">
                 <div class="form-group">
                     <label for="day${schedule.id}">요일</label>
-                    <select id="day${schedule.id}" data-schedule-id="${schedule.id}" data-field="day">
+                    <select id="day${schedule.id}" data-schedule-id="${schedule.id}" data-field="day" onchange="updateScheduleField(${schedule.id}, 'day', this.value)">
                         <option value="">요일 선택</option>
                         <option value="월" ${schedule.day === '월' ? 'selected' : ''}>월요일</option>
                         <option value="화" ${schedule.day === '화' ? 'selected' : ''}>화요일</option>
@@ -40,52 +41,34 @@ function renderSchedules() {
                                value="${schedule.startTime}" 
                                data-schedule-id="${schedule.id}" 
                                data-field="startTime"
-                               step="300">
+                               step="300"
+                               onchange="updateScheduleField(${schedule.id}, 'startTime', this.value)">
+                        <span style="font-weight: bold; color: #666;">~</span>
                         <input type="time" id="endTime${schedule.id}" 
                                value="${schedule.endTime}" 
                                data-schedule-id="${schedule.id}" 
                                data-field="endTime"
-                               step="300">
+                               step="300"
+                               onchange="updateScheduleField(${schedule.id}, 'endTime', this.value)">
                     </div>
                 </div>
             </div>
         </div>
     `).join('');
-    
-    // 이벤트 리스너 추가
-    attachScheduleEventListeners();
 }
 
-// 스케줄 입력 이벤트 리스너 추가
-function attachScheduleEventListeners() {
-    // 모든 스케줄 입력 필드에 이벤트 리스너 추가
-    document.querySelectorAll('[data-schedule-id]').forEach(element => {
-        if (element.tagName === 'SELECT' || element.tagName === 'INPUT') {
-            // change와 input 이벤트 모두 처리
-            element.addEventListener('change', updateScheduleData);
-            element.addEventListener('input', updateScheduleData);
-        }
-    });
-}
-
-// 스케줄 데이터 업데이트 (즉시 schedules 배열에 반영)
-function updateScheduleData(event) {
-    const scheduleId = parseInt(event.target.dataset.scheduleId);
-    const field = event.target.dataset.field;
-    const value = event.target.value;
+// 스케줄 필드 업데이트 (명시적 호출)
+function updateScheduleField(scheduleId, field, value) {
+    console.log(`🔄 스케줄 업데이트: ID=${scheduleId}, 필드=${field}, 값=${value}`);
     
     const schedule = schedules.find(s => s.id === scheduleId);
     if (schedule) {
         schedule[field] = value;
-        // 디버깅용 로그
-        console.log('✅ 스케줄 업데이트:', { 
-            id: scheduleId, 
-            field, 
-            value, 
-            현재스케줄: schedule,
-            전체스케줄: schedules 
-        });
+        console.log(`✅ 스케줄 ${scheduleId} 업데이트 완료:`, schedule);
     }
+    
+    // 디버그: 현재 모든 스케줄 출력
+    console.log('📋 현재 모든 스케줄:', schedules);
 }
 
 // 스케줄 추가
@@ -123,47 +106,37 @@ function removeSchedule(scheduleId) {
 
 // ⭐ 핵심 수정: 스케줄 데이터 가져오기 (회원 추가/수정 시 사용)
 function getSchedulesData() {
-    console.log('📋 getSchedulesData 호출됨');
+    console.log('📋 getSchedulesData() 호출됨');
     
-    // 1. 폼에서 직접 최신 값을 읽어옴 (안전장치)
-    const freshSchedules = schedules.map(schedule => {
-        const dayEl = document.getElementById(`day${schedule.id}`);
-        const startTimeEl = document.getElementById(`startTime${schedule.id}`);
-        const endTimeEl = document.getElementById(`endTime${schedule.id}`);
-        
-        return {
-            day: dayEl ? dayEl.value : schedule.day,
-            startTime: startTimeEl ? startTimeEl.value : schedule.startTime,
-            endTime: endTimeEl ? endTimeEl.value : schedule.endTime
-        };
-    });
-    
-    console.log('📝 폼에서 읽은 스케줄:', freshSchedules);
-    
-    // 2. 유효한 스케줄만 필터링 (요일, 시작시간, 종료시간이 모두 있는 것)
-    const validSchedules = freshSchedules.filter(s => {
+    // 1. schedules 배열에서 유효한 데이터만 필터링
+    const validSchedules = schedules.filter(s => {
         const isValid = s.day && s.day !== '' && s.startTime && s.endTime;
-        if (!isValid) {
-            console.log('❌ 유효하지 않은 스케줄:', s);
-        }
+        console.log(`🔍 스케줄 ${s.id} 유효성 체크:`, { day: s.day, startTime: s.startTime, endTime: s.endTime, isValid });
         return isValid;
     });
     
     console.log('✅ 유효한 스케줄:', validSchedules);
     
-    // 3. 빈 배열이면 null 반환 (Firebase가 빈 배열을 저장하지 않는 문제 방지)
+    // 2. 유효한 스케줄이 없으면 빈 배열 반환 (null이 아닌)
     if (validSchedules.length === 0) {
-        console.log('⚠️ 유효한 스케줄이 없어서 null 반환');
-        return null;
+        console.log('⚠️ 유효한 스케줄이 없어서 빈 배열 반환');
+        return [];
     }
     
-    console.log('💾 저장할 스케줄 데이터:', validSchedules);
-    return validSchedules;
+    // 3. id 필드 제거하고 순수 데이터만 반환
+    const cleanSchedules = validSchedules.map(s => ({
+        day: s.day,
+        startTime: s.startTime,
+        endTime: s.endTime
+    }));
+    
+    console.log('💾 저장할 스케줄 데이터:', cleanSchedules);
+    return cleanSchedules;
 }
 
 // 스케줄 데이터 설정 (회원 편집 시 사용)
 function setSchedulesData(memberSchedules) {
-    console.log('📥 setSchedulesData 호출:', memberSchedules);
+    console.log('📥 setSchedulesData() 호출:', memberSchedules);
     
     if (!memberSchedules || memberSchedules.length === 0) {
         schedules = [
@@ -172,12 +145,24 @@ function setSchedulesData(memberSchedules) {
         ];
         nextScheduleId = 3;
     } else {
+        // 기존 스케줄보다 많을 경우 추가 생성
         schedules = memberSchedules.map((s, index) => ({
             id: index + 1,
             day: s.day || '',
             startTime: s.startTime || '12:00',
             endTime: s.endTime || '12:20'
         }));
+        
+        // 추가 스케줄이 2개 미만이면 빈 스케줄 추가
+        while (schedules.length < 2) {
+            schedules.push({
+                id: schedules.length + 1,
+                day: '',
+                startTime: '12:00',
+                endTime: '12:20'
+            });
+        }
+        
         nextScheduleId = schedules.length + 1;
     }
     renderSchedules();
@@ -199,3 +184,4 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('🚀 schedule.js 로드됨');
     renderSchedules();
 });
+[file content end]
