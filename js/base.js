@@ -124,31 +124,95 @@ function listenToFirebaseChanges() {
     });
 }
 
-// Firebase에 저장
+// Firebase에 저장 - 개선된 버전
 function saveToFirebase() {
+    console.log('saveToFirebase - 저장 시작');
+    console.log('saveToFirebase - members 데이터:', JSON.stringify(members, null, 2));
+    
+    // 객체 정리 함수 - undefined와 함수 제거, schedules 배열 보존
     function cleanObject(obj) {
-        const cleaned = {};
-        for (const key in obj) {
-            if (obj[key] !== undefined) {
-                if (obj[key] === null) {
-                    cleaned[key] = null;
-                } else if (typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
-                    cleaned[key] = cleanObject(obj[key]);
-                } else {
-                    cleaned[key] = obj[key];
+        if (obj === null || obj === undefined) {
+            return null;
+        }
+        
+        if (Array.isArray(obj)) {
+            return obj.map(item => cleanObject(item)).filter(item => item !== undefined);
+        }
+        
+        if (typeof obj === 'object') {
+            const cleaned = {};
+            for (const key in obj) {
+                if (obj.hasOwnProperty(key)) {
+                    const value = obj[key];
+                    
+                    // undefined와 함수는 제외
+                    if (value === undefined || typeof value === 'function') {
+                        continue;
+                    }
+                    
+                    // null은 그대로 유지
+                    if (value === null) {
+                        cleaned[key] = null;
+                        continue;
+                    }
+                    
+                    // 배열과 객체는 재귀적으로 정리
+                    if (Array.isArray(value)) {
+                        cleaned[key] = cleanObject(value);
+                    } else if (typeof value === 'object') {
+                        cleaned[key] = cleanObject(value);
+                    } else {
+                        cleaned[key] = value;
+                    }
                 }
             }
+            return cleaned;
         }
-        return cleaned;
+        
+        return obj;
     }
 
-    const membersObj = {};
-    members.forEach((member, index) => {
-        membersObj[index] = cleanObject(member);
-    });
+    try {
+        // 회원 데이터를 객체로 변환
+        const membersObj = {};
+        members.forEach((member, index) => {
+            // 각 회원 데이터 정리
+            const cleanedMember = cleanObject(member);
+            
+            // schedules 배열이 제대로 있는지 확인
+            if (cleanedMember.schedules) {
+                console.log(`회원 ${index} (${cleanedMember.name}) - schedules:`, cleanedMember.schedules);
+            }
+            
+            membersObj[index] = cleanedMember;
+        });
 
-    firebaseDb.ref('members').set(membersObj);
-    firebaseDb.ref('settings').set(cleanObject(settings));
+        console.log('saveToFirebase - 정리된 membersObj:', JSON.stringify(membersObj, null, 2));
+
+        // Firebase에 저장
+        firebaseDb.ref('members').set(membersObj)
+            .then(() => {
+                console.log('✅ Firebase 저장 성공');
+            })
+            .catch((error) => {
+                console.error('❌ Firebase 저장 실패:', error);
+                showAlert('데이터 저장에 실패했습니다: ' + error.message);
+            });
+
+        // 설정 저장
+        const cleanedSettings = cleanObject(settings);
+        firebaseDb.ref('settings').set(cleanedSettings)
+            .then(() => {
+                console.log('✅ 설정 저장 성공');
+            })
+            .catch((error) => {
+                console.error('❌ 설정 저장 실패:', error);
+            });
+            
+    } catch (error) {
+        console.error('❌ saveToFirebase 오류:', error);
+        showAlert('데이터 저장 중 오류가 발생했습니다: ' + error.message);
+    }
 }
 
 // 회원 정규화 헬퍼
@@ -163,6 +227,9 @@ function normalizeMember(member) {
                 cleaned[key] = String(member[key]);
             } else if (key === 'coach' && member[key] !== null) {
                 cleaned[key] = String(member[key]);
+            } else if (key === 'schedules' && Array.isArray(member[key])) {
+                // schedules 배열 보존
+                cleaned[key] = member[key];
             } else {
                 cleaned[key] = member[key];
             }
@@ -175,6 +242,7 @@ function normalizeMember(member) {
     if (!cleaned.coach) cleaned.coach = '';
     if (!cleaned.paymentHistory) cleaned.paymentHistory = [];
     if (!cleaned.phone) cleaned.phone = '';
+    if (!cleaned.schedules) cleaned.schedules = [];
     
     return cleaned;
 }
