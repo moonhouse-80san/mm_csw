@@ -213,14 +213,24 @@
     }
 }
 
-.form-row {
-	flex-direction: column;
-	gap: 15px;
-	align-items: stretch;
-}
+	.form-row {
+		flex-direction: column;
+		gap: 15px;
+		align-items: stretch;
+	}
 
-.form-row .form-group {
-	width: 100%;
+	.form-row .form-group {
+		width: 100%;
+	}
+
+	.schedule-container {
+		gap: 4px;
+	}
+
+	.schedule-badge {
+		padding: 3px 6px;
+		font-size: 13px;
+	}
 }
   
 @media (max-width: 400px) {
@@ -269,4 +279,9 @@
         padding: 6px 8px;
         font-size: 13px;
     }
+	
+	.schedule-badge {
+		font-size: 13px;
+		padding: 2px 4px;
+	}
 }

@@ -1,6 +1,6 @@
 // sw.js - Service Worker for 회원 관리 앱
 
-const CACHE_NAME = 'cmcsw-v1.0.0';
+const CACHE_NAME = 'mmcsw-v1.0.0';
 const urlsToCache = [
   './',
   './index.html',
