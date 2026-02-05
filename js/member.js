@@ -503,16 +503,6 @@ function editMember(index) {
     // 상단으로 스크롤 이동
     window.scrollTo({ top: 0, behavior: 'smooth' });
     
-    // 이름 입력란에 포커스 이동 (스크롤 완료 후)
-	setTimeout(() => {
-		const nameInput = document.getElementById('name');
-		if (nameInput) {
-			nameInput.focus();
-			nameInput.select();
-			nameInput.blur();
-		}
-	}, 300); // 스크롤 애니메이션 시간 고려
-    
     resetLockTimer();
 }
 
