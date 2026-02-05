@@ -56,10 +56,10 @@
         margin-bottom: 6px;
     }
 
-    .member-name {
-        font-weight: bold;
-        font-size: 20px;
-    }
+	.member-name .mcardn {
+		font-weight: bold;
+		font-size: 24px;
+	}
 
     .member-name .attendance-count {
         font-size: 11px;

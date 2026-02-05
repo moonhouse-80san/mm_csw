@@ -163,7 +163,7 @@ function renderMembers() {
                 <div class="member-header">
                     <div class="member-name" style="cursor: pointer; color: #000; text-decoration: none;" 
                          onclick="showMemberDetails(${originalIndex})">
-                        ${member.name}
+                        <span class="mcardn">${member.name}</span>
                         ${attendanceCount}
                     </div>
                     <div class="member-actions">
