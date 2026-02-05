@@ -26,7 +26,8 @@
     }
 
     .filter-buttons {
-        font-size: 11px;
+        margin-top: 5px;
+		font-size: 11px;
     }
 
     .time-group {
