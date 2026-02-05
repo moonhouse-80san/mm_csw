@@ -3,6 +3,10 @@
 		padding: 5px 20px;
 	}
 
+	.search-section {
+		padding: 10px 20px;
+	}
+
 	.form-grid {
         grid-template-columns: 1fr;
     }
