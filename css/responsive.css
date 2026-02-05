@@ -6,6 +6,10 @@
 	.search-section {
 		padding: 10px 20px;
 	}
+	
+	.search-box {
+		margin-bottom: 0px;
+	}
 
 	.form-grid {
         grid-template-columns: 1fr;
