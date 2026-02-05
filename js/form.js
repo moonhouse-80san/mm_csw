@@ -414,13 +414,17 @@ function editMember(index) {
     
     window.scrollTo({ top: 0, behavior: 'smooth' });
     
-    setTimeout(() => {
-        const nameInput = document.getElementById('name');
-        if (nameInput) {
-            nameInput.focus();
-            nameInput.select();
-        }
-    }, 300);
+setTimeout(() => {
+    const nameInput = document.getElementById('name');
+    if (nameInput) {
+        nameInput.setAttribute('readonly', 'readonly');
+        nameInput.focus();
+        nameInput.select();
+        setTimeout(() => {
+            nameInput.removeAttribute('readonly');
+        }, 100);
+    }
+}, 300);
     
     resetLockTimer();
 }

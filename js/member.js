@@ -503,15 +503,17 @@ function editMember(index) {
     // 상단으로 스크롤 이동
     window.scrollTo({ top: 0, behavior: 'smooth' });
     
-    // 이름 입력란에 포커스 이동 (스크롤 완료 후)
-    setTimeout(() => {
-        const nameInput = document.getElementById('name');
-        if (nameInput) {
-            nameInput.focus();
-            // 텍스트 선택 (편집 용이성)
-            nameInput.select();
-        }
-    }, 300); // 스크롤 애니메이션 시간 고려
+setTimeout(() => {
+    const nameInput = document.getElementById('name');
+    if (nameInput) {
+        nameInput.setAttribute('readonly', 'readonly');
+        nameInput.focus();
+        nameInput.select();
+        setTimeout(() => {
+            nameInput.removeAttribute('readonly');
+        }, 100);
+    }
+}, 300);
     
     resetLockTimer();
 }
