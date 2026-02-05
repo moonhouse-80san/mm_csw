@@ -502,7 +502,7 @@ function editMember(index) {
     
     // 상단으로 스크롤 이동
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  
+
     resetLockTimer();
 }
 
