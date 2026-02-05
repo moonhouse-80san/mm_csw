@@ -208,9 +208,14 @@
     }
 
     .content-section {
+        max-height: 300px;
         width: 100%;
         padding: 15px;
     }
+
+	.empty-state {
+		padding: 20px;
+	}
 
 	.form-row {
 		flex-direction: column;
