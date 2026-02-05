@@ -1,5 +1,9 @@
 @media (max-width: 600px) {
-    .form-grid {
+	.header {
+		padding: 5px 20px;
+	}
+
+	.form-grid {
         grid-template-columns: 1fr;
     }
 
