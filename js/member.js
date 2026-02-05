@@ -502,6 +502,20 @@ function editMember(index) {
     
     // 상단으로 스크롤 이동
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+		setTimeout(() => {
+			const nameInput = document.getElementById('name');
+			if (nameInput) {
+				nameInput.setAttribute('readonly', 'readonly');  // 읽기전용으로 설정
+				nameInput.focus();
+				nameInput.select();
+				
+				// 100ms 후 readonly 해제
+				setTimeout(() => {
+					nameInput.removeAttribute('readonly');
+				}, 100);
+			}
+		}, 300);
     
     resetLockTimer();
 }
