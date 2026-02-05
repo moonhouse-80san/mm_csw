@@ -8,7 +8,7 @@
 	}
 	
 	.search-box {
-		margin-bottom: 0px;
+		margin-bottom: 5px;
 	}
 
 	.form-grid {
@@ -222,7 +222,7 @@
     .content-section {
         max-height: 300px;
         width: 100%;
-        padding: 15px;
+        padding: 5px 15px;
     }
 
 	.empty-state {
