@@ -506,15 +506,17 @@ function editMember(index) {
 	setTimeout(() => {
 		const nameInput = document.getElementById('name');
 		if (nameInput) {
-			nameInput.readOnly = true;
+			// 1. 키보드 타입을 "none"으로 설정
+			const originalMode = nameInput.inputMode;
+			nameInput.inputMode = "none";
+			
 			nameInput.focus();
 			nameInput.select();
 
+			// 2. 약간의 지연 후 원래 상태로 복구
 			setTimeout(() => {
-				nameInput.readOnly = false;
-			}, 100);
-		}
-	}, 300);
+				nameInput.inputMode = originalMode; 
+			}, 200);
 
 	resetLockTimer();
 }
