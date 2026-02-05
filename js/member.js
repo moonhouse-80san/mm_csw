@@ -506,18 +506,13 @@ function editMember(index) {
 setTimeout(() => {
     const nameInput = document.getElementById('name');
     if (nameInput) {
-        // CSS로 클릭 방지
-        nameInput.style.pointerEvents = 'none';
-        nameInput.style.opacity = '0.5';
-        
+        nameInput.setAttribute('readonly', 'readonly');  // 읽기전용으로 설정
         nameInput.focus();
         nameInput.select();
         
-        // 잠시 후 원래 상태로 복구
+        // 100ms 후 readonly 해제
         setTimeout(() => {
-            nameInput.style.pointerEvents = '';
-            nameInput.style.opacity = '';
-            nameInput.blur();
+            nameInput.removeAttribute('readonly');
         }, 100);
     }
 }, 300);
