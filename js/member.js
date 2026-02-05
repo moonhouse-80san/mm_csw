@@ -503,18 +503,24 @@ function editMember(index) {
     // 상단으로 스크롤 이동
 	window.scrollTo({ top: 0, behavior: 'smooth' });
 
-	setTimeout(() => {
-		const nameInput = document.getElementById('name');
-		if (nameInput) {
-			nameInput.readOnly = true;
-			nameInput.focus();
-			nameInput.select();
-
-			setTimeout(() => {
-				nameInput.readOnly = false;
-			}, 100);
-		}
-	}, 300);
+setTimeout(() => {
+    const nameInput = document.getElementById('name');
+    if (nameInput) {
+        // CSS로 클릭 방지
+        nameInput.style.pointerEvents = 'none';
+        nameInput.style.opacity = '0.5';
+        
+        nameInput.focus();
+        nameInput.select();
+        
+        // 잠시 후 원래 상태로 복구
+        setTimeout(() => {
+            nameInput.style.pointerEvents = '';
+            nameInput.style.opacity = '';
+            nameInput.blur();
+        }, 100);
+    }
+}, 300);
 
 	resetLockTimer();
 }
