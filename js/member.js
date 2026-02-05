@@ -501,9 +501,22 @@ function editMember(index) {
     currentEditIndex = index;
     
     // 상단으로 스크롤 이동
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+	window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    resetLockTimer();
+	setTimeout(() => {
+		const nameInput = document.getElementById('name');
+		if (nameInput) {
+			nameInput.readOnly = true;
+			nameInput.focus();
+			nameInput.select();
+
+			setTimeout(() => {
+				nameInput.readOnly = false;
+			}, 100);
+		}
+	}, 300);
+
+	resetLockTimer();
 }
 
 // 스케줄 렌더링
